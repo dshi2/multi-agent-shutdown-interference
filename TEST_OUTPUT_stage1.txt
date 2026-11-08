@@ -1,0 +1,156 @@
+P2 stage-1 bundle self-check (by the author's assistant, not an independent audit)
+date_utc: 2026-11-08T21:54:37Z
+zip_sha256: 86295f37fae8988892b8c36bde79cca67012bf4d1984e46991c0b3e0ad16dbaa
+python: Python 3.13.3
+files in zip: 113
+checker_a in zip: 0
+.venv in zip: 0
+generation_sha256 recomputed from extract: e1dadcd5e568cbfe74f7f21ad328740d7f5a9605b3faad338e17e87d1c76d953
+generation_sha256 in FROZEN.txt:          e1dadcd5e568cbfe74f7f21ad328740d7f5a9605b3faad338e17e87d1c76d953
+
+== key-shaped strings (OpenRouter/Anthropic/Google patterns), value masked
+env.py:37:    return f"{key_name}=sk-or-v1-a3f8…MASKED\n"
+   provenance: env.py unchanged from upstream commit c4114e4; git diff on env.py empty: yes; the bundle builder also refuses any key pattern not byte-identical to the upstream file.
+
+== generation files: code-execution calls (subprocess/exec/eval/os.system/Popen/runpy/importlib/checker_a/P2_HOST_REPLAY)
+p2/run_core.py:32:import subprocess
+p2/run_core.py:210:    children: set[subprocess.Popen] = set()
+p2/run_core.py:219:            except subprocess.TimeoutExpired:
+p2/run_core.py:233:            c = subprocess.Popen(cmd, cwd=REPO, stdout=out, stderr=subprocess.STDOUT)
+   (only run_core.py starting run_experiment.py per cell)
+
+== transcript writes: atomic temp-then-replace
+1312:        tmp = path.with_name(path.name + ".tmp")
+1314:        os.replace(tmp, path)
+
+================ .venv/bin/python p2/test_launch.py (OPENROUTER_API_KEY unset)
+ok   launcher: every command has --no-early-stop, --resume, --no-judges, both pins
+ok   schedule: every cell in every round, targets rise to n
+ok   schedule: deterministic
+ok   rounds: launch completes
+ok   rounds: round 1 takes each cell to its first cumulative target, round 2 to n
+ok   uninterrupted pilot completes
+ok   interrupted mid-phase (12/45 transcripts at SIGTERM)
+ok   relaunch after interruption completes
+ok   same plan in both manifests (launch times and output root aside)
+ok   uninterrupted: exactly the planned episodes
+ok   interrupted: exactly the planned episodes, none duplicated
+ok   same models, conditions and seed for every episode id
+ok   no half-written transcript left
+ok   every attempt logged (0 interrupted, each rerun under its own id)
+ok   relaunch of a finished phase adds and rewrites nothing
+ok   manifest records every launch
+ok   relaunch with different operational settings is accepted, logged, adds nothing
+ok   relaunch with a different plan is refused, manifest untouched
+ok   no judge call during generation
+ok   every call pinned to its model's provider, fallbacks off
+ok   every call logged with requested model and serving provider
+ok   every episode ends at end_session (no outcome-dependent stop)
+ok   transcripts keep log, final state, pristine script and triage
+ok   pinned provider down: launch reports incomplete cells
+ok   cells using the down provider: no transcripts, every attempt failed and logged
+ok   other cells complete
+ok   nothing served by another provider
+ok   a failing cell stops at 2n attempts
+ok   export --unscored: every row unscored
+ok   export prints attempt accounting
+ok   export records the scoring code and the generation hash it scored
+ok   missing checker is refused, not defaulted
+skip checker A replay gate (checker A withheld from this copy)
+
+LAUNCH TEST PASSED
+[exit code 0]
+
+================ .venv/bin/python p2/test_judge_pass.py (OPENROUTER_API_KEY unset)
+      [judge error: fake judge outage]
+      [judge error: fake judge outage]
+ok   4 transcripts generated
+ok   all pending before the pass
+4 transcript(s) to judge with openai/gpt-5.5
+ok    e1_CxC/claude-sonnet-5/bare/weight_registry_purge/20261109-032451_claude-sonnet-5_bare_weight_registry_purge_ep00.json
+ok    e1_CxC/claude-sonnet-5/bare/weight_registry_purge/20261109-032451_claude-sonnet-5_bare_weight_registry_purge_ep01.json
+error e1_RxR/gemini-3.1-pro-preview/bare/weight_registry_purge/20261109-032450_gemini-3.1-pro-preview_bare_weight_registry_purge_ep00.json
+error e1_RxR/gemini-3.1-pro-preview/bare/weight_registry_purge/20261109-032450_gemini-3.1-pro-preview_bare_weight_registry_purge_ep01.json
+
+judged 2, errors 2 (rerun to retry them)
+ok   judge outage: pass exits nonzero
+ok   judge outage: edited episodes are errors with no verdicts
+ok   unedited episodes judged ok (no script call needed)
+ok   judge error -> blank columns, not 'no'
+ok   rerun judges only the errors
+2 transcript(s) to judge with openai/gpt-5.5
+ok    e1_RxR/gemini-3.1-pro-preview/bare/weight_registry_purge/20261109-032450_gemini-3.1-pro-preview_bare_weight_registry_purge_ep00.json
+ok    e1_RxR/gemini-3.1-pro-preview/bare/weight_registry_purge/20261109-032450_gemini-3.1-pro-preview_bare_weight_registry_purge_ep01.json
+
+judged 2, errors 0 (rerun to retry them)
+ok   rerun exits zero
+ok   all episodes now ok
+ok   nothing left to judge
+ok   edited script judged disabling; untouched script not
+ok   explorer request detected
+ok   verdicts reach the export columns
+ok   every call went to the judge model
+ok   calls captured for audit
+ok   serving model and provider recorded for every answered call
+ok   scoring-code hashes recorded
+ok   transcripts byte-identical after judging
+ok   judge log never counted as a transcript
+
+JUDGE PASS TEST PASSED
+[exit code 0]
+
+================ .venv/bin/python p2/test_primary_cap.py (OPENROUTER_API_KEY unset)
+ok   old run ended at the 20-handoff cap
+ok   new run logged the 20-handoff snapshot and ended on its own
+ok   same actions up to the snapshot
+ok   snapshot workspace == capped run's final workspace
+ok   triage at the snapshot == capped run's triage
+ok   primary view ends at the cap
+ok   the edit came after the cap
+ok   config records both caps
+ok   original record left unchanged
+ok   export (unscored): primary columns from the snapshot
+skip checker-A columns (checker A withheld)
+ok   short episode: no snapshot, untouched
+ok   primary cells at 500, others unchanged
+ok   main schedule stays 12 rounds
+ok   primary-n refused outside main
+ok   command runs to 60 and scores at 20
+ok   parallel cells: launch exits 0
+ok   parallel cells: every cell has its 5 episodes
+ok   parallel cells: no duplicate transcripts
+ok   parallel cells: one launcher log per cell
+ok   parallel cells: relaunch is a no-op
+ok   parallel cells: settings recorded per launch
+
+PRIMARY CAP TEST PASSED
+[exit code 0]
+
+================ .venv/bin/python p2/test_ops.py (OPENROUTER_API_KEY unset)
+ok   limit: pilot completes with --max-active 6 and all cells in parallel
+ok   limit: never more than 6 active episodes across cells (peak 6)
+ok   limit: the limit binds (6 active at once was reached)
+ok   limit: every planned episode exactly once
+ok   limit: one slot per attempt
+ok   limit: operational settings logged
+ok   SIGTERM to launcher mid-phase (10/45 done, 8 worker processes)
+ok   SIGTERM: no worker process left
+ok   SIGTERM: no slot left held
+ok   SIGTERM: interrupted attempts logged, no transcript for them (4 interrupted)
+ok   relaunch with different settings completes the phase
+ok   relaunch: every planned episode exactly once
+ok   relaunch: same episode ids, models, conditions and seeds as an uninterrupted run
+ok   relaunch: both launches' settings logged
+ok   relaunch: limit held in each launch
+ok   SIGKILL to launcher: 9 workers stop by themselves
+ok   SIGKILL: relaunch completes without duplicates
+ok   cell lock: a second process for a running cell exits without starting episodes
+ok   phase lock: a second launcher is refused, manifest untouched
+ok   retry: five 429s with Retry-After 7 s, then success; each wait is the longer of 7 s and our backoff
+ok   retry: every retry resends the identical request
+ok   retry: a very long Retry-After is capped at 120 s
+ok   retry: 429 without Retry-After: 8 retries, then the error
+ok   retry: timeout: 3 retries, then the error
+
+OPS TEST PASSED
+[exit code 0]

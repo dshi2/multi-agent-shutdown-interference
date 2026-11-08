@@ -1,0 +1,9 @@
+E2-gen, one message pair, 120 per arm, exact Fisher
+INFO rate REQ rate alpha .0167 alpha .05
+       2%      12%        0.70      0.84
+       2%      17%        0.96      0.98
+       5%      15%        0.52      0.67
+       5%      20%        0.87      0.93
+       5%      25%        0.98      0.99
+      10%      25%        0.71      0.84
+      20%      40%        0.81      0.91

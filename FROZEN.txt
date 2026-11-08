@@ -1,0 +1,47 @@
+P2 pilot freeze (spec v1.14).
+generation_sha256: e1dadcd5e568cbfe74f7f21ad328740d7f5a9605b3faad338e17e87d1c76d953
+  = run_core.generation_sha256(); the pilot's manifest.json must carry this value.
+pool_sha256: 22ba4a6ffd3a5da40d4b1c673f5cbbf58b9c73e4c2a6b2b6d3b6c4516873ea13
+Generation files (sha256):
+  b3981dddb0b60c0d740571ffe9b083d51465033952f3a3573c3c223e0088f61f  run_experiment.py
+  ebd723d749fdbb96d7e87eb5e13c745db3d2fbb589fef0fed9257ca32293289f  harness.py
+  b4d322581bb950950786cfbd791f69c78ed37dcfc1b7a9a1a1237a34113a096f  env.py
+  f145aa77aff45a68667d2aeb8c621ef5206a0262a0b54b17b893006d827a9c67  prompts.py
+  831ed63d3d0673e6f991c0f0bcce3c42c998a90edd8a3a55d8c68756fa4149d7  judges.py
+  67b9ac51a52f305cbf40ee6325afe810b0ef261a0903d64f55775704f2edf07c  p2/scripted.py
+  c39786e6e0e94e0138a16ba541dc3fcf1bd9f0f834060c8ffb0759ed5bde19c2  p2/provenance.py
+  8b6cee8a9937b463ce200779fb177866cc8768c3d0365f55f36412d66fe75f5b  p2/run_core.py
+  6504c3a08e256c79d6627125cf7db10e8f456f1ba0844d89aaa0586a68c5e734  p2/slots.py
+  22ba4a6ffd3a5da40d4b1c673f5cbbf58b9c73e4c2a6b2b6d3b6c4516873ea13  p2/pool_core.jsonl
+Scoring and test files (not in the generation hash; may change after generation):
+  83c13e575dde5fa8e1d8a77608ee98d11984525ad58e2d9f46c99e84b8c9820c  p2/analysis.py
+  5c0db2f1ed927667ca74d46f6177932cb07d316a26dc3878f835932ce24ed4e1  p2/checker_io.py
+  231dc19c529d3c21fe32c7f9a0ede50d80f1730f1b3d9ef2463d77349870c299  p2/export.py
+  7f982cc5abe335e36afc81bbc89a4f3c2c2fd9dde20d4bc32c026cb6c3b86330  p2/judge_pass.py
+  ced085fb6d277bb187fb6bad7669419148467235d6e42951c16944096c34a673  p2/ops_status.py
+  b1a2a2e82e9823d800277351520ad3425fb19d20a1e27c30e890a159e6574645  p2/power.py
+  319f9fa717e520a03035e064c3a37f41707169f8f0a76630ad41d20b3e180f3b  p2/primary.py
+  eca566f49dee38c701b2a64c3ac29939909ee106fb254c6eba848c286047c759  p2/review.py
+  4886bae5fac540a8d0a871bec980412642d4caf1c813c7bb20f08f149c6f0ce6  p2/smoke_exp2.py
+  d182916a799dadaf5702882858cd3c9b4d505c314f28b1144e61de47c4b7bee7  p2/smoke_mixed.py
+  c53da877e8c00c5673d80d4f7ea44d36e5059772a73d4bf34b4116e1364296d4  p2/test_analysis.py
+  5e018548c9f9ead87caf43bd85cb49d89445739c26e64ba3f0d3522db6bec21d  p2/test_judge_pass.py
+  46238007628149e1c05e7d2d90ed0d29c4a5da7886d445ff702b8589b671d515  p2/test_launch.py
+  360b64e449d2667f5d10910e38d428b6163dc45e69b669575e7ee45e251370e0  p2/test_ops.py
+  1e88a61983d56815972bfc9536b51bb5c1deae164a18e45cd44b6704f0280d0c  p2/test_primary_cap.py
+  fce083a59f1dbdc0f8bf91471a5b4a2df586dd03ee6f8c91fe322daeca00434f  p2/test_review.py
+Pilot command (needs OPENROUTER_API_KEY with a credit limit; prints the plan without --go):
+  .venv/bin/python p2/run_core.py --phase pilot --go --max-active 70
+  (global limit 70 across all cells; the pilot's 45 episodes all run at once. Operational
+  settings can change on relaunch and are logged per launch. Status: p2/ops_status.py <phase dir>)
+  .venv/bin/python p2/export.py transcripts/p2_core/pilot --out results/pilot_episodes.csv --unscored
+Tests in this ZIP (no API calls):
+  .venv/bin/python p2/test_launch.py      -> LAUNCH TEST PASSED (end to end incl. analysis; checker-A step skipped: withheld)
+  .venv/bin/python p2/test_analysis.py    -> ANALYSIS TEST PASSED
+  .venv/bin/python p2/test_review.py      -> REVIEW TEST PASSED
+  .venv/bin/python p2/test_judge_pass.py  -> JUDGE PASS TEST PASSED
+  .venv/bin/python p2/test_primary_cap.py -> PRIMARY CAP TEST PASSED (checker-A step skipped: withheld)
+  .venv/bin/python p2/test_ops.py         -> OPS TEST PASSED (global limit, relaunch, locks, shutdown, retries)
+  P2_CHECKER=<checker B> .venv/bin/python p2/smoke_mixed.py   -> SMOKE PASSED (42 checks with checker A)
+  P2_CHECKER=<checker B> .venv/bin/python p2/smoke_exp2.py    -> EXP2 SMOKE PASSED (99 checks with checker A)
+Not in this ZIP: checker A and its tests (P2_checkerA_withheld.zip, released once checker B exists).

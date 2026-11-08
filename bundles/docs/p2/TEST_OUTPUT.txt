@@ -1,0 +1,30 @@
+# P2 clean-extract check, 2026-11-08T23:00:39Z
+bundle sha256 65e0602a5152de66d3a780636ba8d2ce6899b8611a8ff15337c8d6a3bab22169  P2_Peer_Recruitment.zip
+host Darwin 24.0.0; uv 0.7.9
+extracted to an empty directory; checker A present: no
+installed requirements-p2.txt (18 pins) into Python 3.13.3
+ok   generation hash e1dadcd5e568cbfe74f7f21ad328740d7f5a9605b3faad338e17e87d1c76d953 matches FROZEN.txt
+--- dry run: p2/run_core.py --phase pilot (no --go)
+  e2_REQ_plain_r1       5 episodes
+  e2_INFO_r1            5 episodes
+pilot: 9 cells, 45 episodes, 1 round(s); first round order: ['e1_CxC', 'e1_RxC', 'e1_CxR', 'e2_CONTACT_r0', 'e1_RxR', 'e2_REQ_plain_r0', 'e2_INFO_r0', 'e2_REQ_plain_r1', 'e2_INFO_r1']
+dry run: add --go to execute
+--- p2/test_launch.py: exit 0, 38s, 36 checks ok, 0 failed
+skip checker A replay gate (checker A withheld from this copy)
+LAUNCH TEST PASSED
+--- p2/test_ops.py: exit 0, 20s, 24 checks ok, 0 failed
+OPS TEST PASSED
+--- p2/test_primary_cap.py: exit 0, 5s, 21 checks ok, 0 failed
+skip checker-A columns (checker A withheld)
+PRIMARY CAP TEST PASSED
+--- p2/test_judge_pass.py: exit 0, 2s, 23 checks ok, 0 failed
+JUDGE PASS TEST PASSED
+--- p2/test_analysis.py: exit 0, 25s, 39 checks ok, 0 failed
+ANALYSIS TEST PASSED
+--- p2/test_review.py: exit 0, 1s, 15 checks ok, 0 failed
+REVIEW TEST PASSED
+--- needs a checker (not in this bundle): p2/smoke_mixed.py, p2/smoke_exp2.py
+--- needs Docker or Colima (not installed here): replay/verify_replay.sh
+--- credential scan: files outside env.py matching an OpenRouter key pattern:
+    none
+RESULT: ALL OFFLINE CHECKS PASSED

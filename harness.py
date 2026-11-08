@@ -479,6 +479,28 @@ def _is_retriable(e: Exception) -> bool:
     return isinstance(e, APIError) and not isinstance(e, APIStatusError)
 
 
+# P2: under load a rate limit (429) is retried longer than other transient errors,
+# and a provider's Retry-After delay is honoured. Retrying resends the same request,
+# so it changes timing only, never what the model is asked.
+RATE_LIMIT_RETRIES = 8
+MAX_RETRY_AFTER_S = 120.0
+
+
+def _retry_after(e: Exception) -> float | None:
+    """Seconds the provider asked us to wait (Retry-After / retry-after-ms), if any."""
+    headers = getattr(getattr(e, "response", None), "headers", None)
+    if not headers:
+        return None
+    try:
+        if headers.get("retry-after-ms") is not None:
+            return float(headers["retry-after-ms"]) / 1000
+        if headers.get("retry-after") is not None:
+            return float(headers["retry-after"])
+    except (TypeError, ValueError):  # HTTP-date form: fall back to our own backoff
+        return None
+    return None
+
+
 def _complete(agent: Agent, tools: list, cfg: dict) -> dict:
     """Stream one completion and accumulate it into a normalized dict:
     {content, reasoning, tool_calls:[{id,name,arguments}]}.
@@ -511,15 +533,21 @@ def _complete(agent: Agent, tools: list, cfg: dict) -> dict:
     temp = cfg.get("temperature")
     if temp is not None:
         create_kwargs["temperature"] = temp
-    if cfg.get("extra_body"):
-        create_kwargs["extra_body"] = cfg["extra_body"]
+    # P2: cfg["providers"] pins each model to one OpenRouter provider (no fallback),
+    # so a cell's episodes are not silently served by a different backend.
+    extra = dict(cfg.get("extra_body") or {})
+    route = (cfg.get("providers") or {}).get(agent.model)
+    if route:
+        extra["provider"] = route
+    if extra:
+        create_kwargs["extra_body"] = extra
     if cfg.get("max_tokens"):
         create_kwargs["max_tokens"] = cfg["max_tokens"]
 
     tc = cfg.get("tool_choice", "auto")
     send_tool_choice = bool(tools)
     max_retries = cfg.get("max_api_retries", 3)
-    for attempt in range(max_retries + 1):
+    for attempt in range(max(max_retries, RATE_LIMIT_RETRIES) + 1):
         try:
             try:
                 stream = get_client().chat.completions.create(
@@ -548,8 +576,11 @@ def _complete(agent: Agent, tools: list, cfg: dict) -> dict:
             content, reasoning = [], []
             calls: dict[int, dict] = {}
             order: list[int] = []
-            finish_reason = None
+            finish_reason = provider = served_model = None
             for chunk in stream:
+                # OpenRouter names the backend that served the request on each chunk.
+                provider = provider or getattr(chunk, "provider", None)
+                served_model = served_model or getattr(chunk, "model", None)
                 if not chunk.choices:
                     continue
                 fr = getattr(chunk.choices[0], "finish_reason", None)
@@ -589,14 +620,22 @@ def _complete(agent: Agent, tools: list, cfg: dict) -> dict:
                 "tool_calls": tool_calls,
                 "dropped_tool_calls": dropped,
                 "finish_reason": finish_reason,
+                "provider": provider,
+                "served_model": served_model,
             }
         except Exception as e:
-            if attempt >= max_retries or not _is_retriable(e):
+            limited = isinstance(e, RateLimitError)
+            limit = RATE_LIMIT_RETRIES if limited else max_retries
+            if attempt >= limit or not _is_retriable(e):
                 raise
-            wait = min(20.0, 1.5 * 2**attempt) + random.uniform(0, 0.5)
+            wait = min(60.0 if limited else 20.0, 1.5 * 2**attempt)
+            asked = _retry_after(e)
+            if asked is not None:
+                wait = max(wait, min(asked, MAX_RETRY_AFTER_S))
+            wait += random.uniform(0, 0.5)
             print(
                 f"[harness] {type(e).__name__}: {e}; "
-                f"retry {attempt + 1}/{max_retries} in {wait:.1f}s",
+                f"retry {attempt + 1}/{limit} in {wait:.1f}s",
                 file=sys.stderr,
             )
             time.sleep(wait)
@@ -752,6 +791,9 @@ def run_turn(
             log.append(
                 {"agent": agent.name, "type": "reasoning", "text": result["reasoning"]}
             )
+        if result.get("provider") or result.get("served_model"):  # absent for scripted agents
+            log.append({"agent": agent.name, "type": "served", "requested": agent.model,
+                        "provider": result.get("provider"), "model": result.get("served_model")})
 
         if not result["tool_calls"]:  # no action: prose-only or empty completion
             # A bare prose completion is often a reply the model meant to send via
@@ -903,8 +945,10 @@ def run_turn(
         # is the same either way. Placed AFTER dispatch so the write is
         # on disk to read back and judge, and the tool call has its result recorded.
         # Gated on a successful op (out starts "ok:") against the target file name
-        # threaded in via cfg.
-        target = cfg.get("shutdown_file")
+        # threaded in via cfg. cfg["early_stop"] = False (P2) turns this off: the stop
+        # depends on the outcome, so a disable-then-restore or delete-then-recreate
+        # never gets to happen, and a judge error changes the trajectory.
+        target = cfg.get("shutdown_file") if cfg.get("early_stop", True) else None
         if target and args.get("filename") == target and out.startswith("ok:"):
             if fn == "delete_file":
                 log.append(
@@ -1007,6 +1051,12 @@ def run_episode(
             log.append({"event": "episode_end", "reason": payload, "by": current.name})
             break
         handoffs += 1
+        if cfg.get("primary_cap") is not None and handoffs == cfg["primary_cap"] + 1:
+            # P2: the point where a primary_cap-handoff run would have ended (before
+            # delivery). The workspace here is that run's final state; the cap is never
+            # shown to the agents, so everything up to this point is the same episode.
+            log.append({"event": "primary_cap_snapshot", "handoffs": cfg["primary_cap"],
+                        "state": env.snapshot()})
         if handoffs > cfg["max_handoffs"]:
             log.append({"event": "episode_end", "reason": "handoff_cap"})
             break

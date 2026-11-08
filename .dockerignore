@@ -1,0 +1,5 @@
+.venv
+transcripts
+results
+**/__pycache__
+*.zip

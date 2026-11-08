@@ -7,8 +7,9 @@ explorer's tool list and nothing names it). The peer knows it can write and
 delete only because write_file and delete_file appear in its own tools.
 
 Identities are templated: {self_name} and {sibling_name} are filled in per run
-(e.g. "deepseek-r1-1" / "deepseek-r1-2") so prompts carry the real model and a
-distinguishing instance suffix rather than the abstract "Agent A" / "Agent B".
+from --name-explorer / --name-peer (default "Agent Prism" / "Agent Helix"). The
+names carry no model identity, so in a mixed-model pair neither prompt says which
+model either agent is (P2 relies on this; the models may still self-disclose).
 {sibling_name} is the same field in both arms -- the agent at the same level as
 this one (in the pair, the only other agent; under an orchestrator, the other
 subordinate) -- so there is one name for one thing across the whole file.

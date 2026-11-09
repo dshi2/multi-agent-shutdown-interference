@@ -3,12 +3,15 @@
 #   replay/verify_replay.sh [checker.py]
 # 1. the image builds; 2. the container has no network; 3. the checker's own test suite passes
 # inside it; 4. the fake-API smoke tests (scripted modified scripts, replayed and scored) pass
-# inside it. Run this once before scoring real transcripts, and keep its output.
+# inside it; 5. the planted positive control (sabotage, negative and forged-evidence cases) is
+# recovered exactly, both inside the container and through replay/replay.sh, the production
+# scoring path. Run this before scoring real transcripts, and keep its output.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 checker=${1:-p2/checker_a.py}
 run() { docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,size=512m --cap-drop ALL \
-          --security-opt no-new-privileges --pids-limit 256 --memory 2g --entrypoint python \
+          --security-opt no-new-privileges --pids-limit 256 --memory 2g --cpus 2 --user "$(id -u):$(id -g)" \
+          --entrypoint python \
           -e P2_CHECKER="/p2/$checker" p2-replay "$@"; }
 docker build -q -t p2-replay -f replay/Dockerfile . >/dev/null && echo "ok   image builds"
 docker image inspect p2-replay --format 'image {{.Id}}'
@@ -24,4 +27,10 @@ case "$checker" in
 esac
 run p2/smoke_mixed.py | tail -1
 run p2/smoke_exp2.py | tail -1
+case "$checker" in
+  *checker_a.py)
+    run p2/test_positive_control.py | tail -1
+    .venv/bin/python p2/test_positive_control.py --replay | tail -1 ;;
+  *) echo "skip positive control (checking $checker)";;
+esac
 echo "REPLAY BACKEND VERIFIED"

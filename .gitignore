@@ -60,3 +60,4 @@ Dockerfile
 Makefile
 analyze_task_trigger_did.py
 *_latex.py
+replay/.tmp/

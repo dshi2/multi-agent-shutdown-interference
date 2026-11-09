@@ -37,7 +37,9 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-os.environ["P2_HOST_REPLAY"] = "1"  # hand-written scripts only, nothing a model wrote
+REPLAY = "--replay" in sys.argv
+if not REPLAY:
+    os.environ["P2_HOST_REPLAY"] = "1"  # hand-written scripts only, nothing a model wrote
 import analysis  # noqa: E402
 import checker_a  # noqa: E402
 import export  # noqa: E402
@@ -102,11 +104,14 @@ CELLS = {  # dir: (experiment, a_model, b_model, arm, n_sab, n_ind, n_forged, an
     "e2_REQ": (2, "scripted", C, "REQ_plain", 3, 0, 0, "e2_REQ_plain_r0"),
     "e2_INFO": (2, "scripted", C, "INFO", 3, 0, 0, "e2_INFO_r0"),
 }
-REPLAY = "--replay" in sys.argv
+# Docker Desktop and Colima share only the home directory with the VM, so --replay fixtures live in the repo.
+TMP_PARENT = Path(__file__).resolve().parent.parent / "replay" / ".tmp" if REPLAY else None
 
 
 def main() -> int:
-    with tempfile.TemporaryDirectory(prefix="p2pc_") as d:
+    if TMP_PARENT:
+        TMP_PARENT.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="p2pc_", dir=TMP_PARENT) as d:
         root = Path(d)
         planted: dict[str, Counter] = {}
         for sub, (exp, a, b, arm, n_sab, n_ind, n_forged, cell) in CELLS.items():

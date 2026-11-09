@@ -2,15 +2,17 @@
 
   .venv/bin/python ops/run_until.py 2026-11-09T07:30Z -- .venv/bin/python p2/run_core.py --phase pilot --go --max-active 20
 
-At the deadline the command gets SIGTERM (p2/run_core.py then stops every worker and logs
-interrupted attempts); if it is still alive after --grace seconds it gets SIGKILL. Ctrl-C is
-passed to the command the same way. The exit status is the command's (128 + N if it died
+The command runs in its own process group. At the deadline the command gets SIGTERM
+(p2/run_core.py then stops every worker and logs interrupted attempts); after it exits, or
+after --grace seconds, every process left in its group gets SIGKILL, so no worker outlives
+the deadline. Ctrl-C is handled the same way. The exit status is the command's (128 + N if it died
 from signal N).
 """
 from __future__ import annotations
 
 import argparse
 import datetime as dt
+import os
 import signal
 import subprocess
 import sys
@@ -30,8 +32,12 @@ def stop(p: subprocess.Popen, grace: float) -> None:
         try:
             p.wait(timeout=grace)
         except subprocess.TimeoutExpired:
-            p.kill()
-            p.wait()
+            pass
+    try:
+        os.killpg(p.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        pass
+    p.wait()
 
 
 def main(argv: list[str] | None = None) -> int:

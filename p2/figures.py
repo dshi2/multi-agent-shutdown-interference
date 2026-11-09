@@ -66,7 +66,7 @@ def fig1(c: dict, out: Path):
     save(fig, out, "fig1_e1_crossing")
 
 
-def fig2(c: dict, out: Path):
+def fig2(c: dict, core: Path, out: Path):
     arms = [("e2_REQ_plain_r0", "REQ\nno rule"), ("e2_INFO_r0", "INFO\nno rule"), ("e2_CONTACT_r0", "CONTACT\nno rule"),
             ("e2_REQ_plain_r1", "REQ\nrule"), ("e2_INFO_r1", "INFO\nrule")]
     fig, ax = plt.subplots(figsize=(5.6, 3.4))
@@ -76,14 +76,20 @@ def fig2(c: dict, out: Path):
     style(ax)
     ax.set_ylim(-3, 40)
     ax.set_title("E2: scripted message to Claude Sonnet 5", loc="left", fontsize=11, color=INK)
+    e2 = next(k for k in json.loads((core / "analysis.json").read_text())["contrasts"] if k["name"] == "E2")["main"]
+    ax.text(0.98, 0.95, f"REQ − INFO, no rule (primary): {100 * e2['estimate']:+.1f} pp "
+            f"[{100 * e2['ci'][0]:.1f}, {100 * e2['ci'][1]:.1f}]", transform=ax.transAxes, ha="right", va="top",
+            fontsize=8.5, color=INK)
     save(fig, out, "fig2_e2_core")
 
 
 def fig3(rep: Path, out: Path):
+    """Left: O1 per arm with Wilson CIs. Right: REQ - INFO with Newcombe CIs (the tested contrast)."""
     res = json.loads((rep / "analysis.json").read_text())
     arms = {(a["recipient"], a["arm"]): a for a in res["arms"]}
-    names = {c["recipient"]: c["model"].split("/")[1] for c in res["contrasts"]}
-    fig, ax = plt.subplots(figsize=(5.6, 3.8))
+    con = {c["recipient"]: c for c in res["contrasts"]}
+    names = {t: c["model"].split("/")[1] for t, c in con.items()}
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(9.4, 3.6), gridspec_kw={"width_ratios": [1.25, 1]})
     for i, t in enumerate(names):
         for j, (arm, color) in enumerate((("REQ_plain", BLUE), ("INFO", ORANGE))):
             a = arms[t, arm]
@@ -91,10 +97,25 @@ def fig3(rep: Path, out: Path):
                  "disabled": a["disabled"], "scored": a["scored"]}
             point(ax, i + (j - 0.5) * 0.28, r, color, label=("REQ (request)" if arm == "REQ_plain" else "INFO")
                   if i == 0 else None)
-    ax.set_xticks(range(len(names)), list(names.values()))
+    ax.set_xticks(range(len(names)), list(names.values()), fontsize=8.5)
     style(ax)
-    ax.legend(frameon=False, loc="upper right", fontsize=9)
-    ax.set_title("E2 replication: scripted message, three recipients", loc="left", fontsize=11, color=INK)
+    ax.legend(frameon=False, loc="upper right", fontsize=8.5)
+    ax.set_title("O1 per arm (500 episodes each)", loc="left", fontsize=10.5, color=INK)
+    for i, t in enumerate(names):
+        m = con[t]["main"]
+        est, lo, hi = 100 * m["estimate"], 100 * m["ci"][0], 100 * m["ci"][1]
+        bx.errorbar(est, i, xerr=[[est - lo], [hi - est]], fmt="o", ms=7, color=INK, elinewidth=2, capsize=4)
+        bx.annotate(f"{est:+.1f} [{lo:.1f}, {hi:.1f}]", (hi, i), textcoords="offset points", xytext=(6, -3),
+                    fontsize=8.5, color=MUTED)
+    bx.axvline(0, color=MUTED, lw=1)
+    bx.set_yticks(range(len(names)), list(names.values()), fontsize=8.5)
+    bx.set_ylim(len(names) - 0.5, -0.5)
+    bx.set_xlim(-45, 50)
+    bx.set_xlabel("REQ − INFO (pp, Newcombe 95% CI)")
+    bx.xaxis.grid(True, color=GRID, lw=0.8)
+    bx.set_axisbelow(True)
+    bx.set_title("Effect of the request sentence", loc="left", fontsize=10.5, color=INK)
+    fig.tight_layout()
     save(fig, out, "fig3_rep")
 
 
@@ -106,7 +127,7 @@ def main():
     a = ap.parse_args()
     c = cells(Path(a.core))
     fig1(c, Path(a.out))
-    fig2(c, Path(a.out))
+    fig2(c, Path(a.core), Path(a.out))
     if a.rep:
         fig3(Path(a.rep), Path(a.out))
 

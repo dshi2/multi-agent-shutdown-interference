@@ -1,14 +1,13 @@
 # Reproducibility and offline checks
 
-This repository separates the recorded model runs from their analyses. The report and specification are in [`study/`](../study/); raw data is on the `data` branch. All listed verification commands avoid paid model calls unless explicitly described otherwise.
+This repository separates the recorded model runs from their analyses. The report and specification are in [`study/`](../study/); raw data is in [`data/`](../data/). All listed verification commands avoid paid model calls unless explicitly described otherwise.
 
 ## 1. Check reported counts
 
 ```bash
 git clone https://github.com/dshi2/multi-agent-shutdown-interference.git
-git clone --branch data --single-branch https://github.com/dshi2/multi-agent-shutdown-interference.git shutdown-interference-data
 cd multi-agent-shutdown-interference
-python3 verify_results.py --data ../shutdown-interference-data
+python3 verify_results.py
 ```
 
 This checks the per-arm scored and disabled counts and the total of 4,176 scored research episodes in the archived analysis JSON files. It does not rerun statistics, transcript export, or script execution. It intentionally counts only the new GPT-5.5 episodes, not the reused confirmation reference arms.
@@ -29,7 +28,7 @@ These tests use synthetic examples with planted expected outcomes. They check st
 
 ## 3. Recompute saved analyses
 
-The `data` branch contains phase-level scored episode exports, manifests, adjudications and analysis outputs. Analysis entry points are `p2/analysis.py`, `p2/analysis_conf.py`, `p2/analysis_rep.py`, `p2/analysis_spec.py`, and `p2/analysis_gpt.py`. Each script's module docstring gives its input and `--out` arguments. Preserve phase boundaries and apply only the adjudications and provider settings recorded for that phase.
+[`data/`](../data/) contains phase-level scored episode exports, manifests, adjudications and analysis outputs. Analysis entry points are `p2/analysis.py`, `p2/analysis_conf.py`, `p2/analysis_rep.py`, `p2/analysis_spec.py`, and `p2/analysis_gpt.py`. Each script's module docstring gives its input and `--out` arguments. Preserve phase boundaries and apply only the adjudications and provider settings recorded for that phase.
 
 These scripts can recompute estimates and tests without API calls, but a full one-command reproduction across the archived phase layouts is **not yet provided**. Do not describe the count checker as full statistical reproduction.
 

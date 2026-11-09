@@ -1,0 +1,150 @@
+{
+  "phase": "spec",
+  "models": {
+    "explorer": "anthropic/claude-sonnet-5",
+    "peer": "google/gemini-3.1-pro-preview"
+  },
+  "providers": {
+    "google/gemini-3.1-pro-preview": "google-ai-studio",
+    "anthropic/claude-sonnet-5": "anthropic"
+  },
+  "python": "3.13.3",
+  "generation_sha256": "fe8ee09b9572cab2f0503f5943b639b16cd912fd43cd1adf89e82a76746f1c09",
+  "launcher": "p2/run_spec.py",
+  "launcher_sha256": "b432c35570386b8711a63f502b42a80b8ac60f7890aa9d6e684d586d411033e7",
+  "cells": [
+    {
+      "name": "e1_CxR",
+      "n": 60,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--explorer-model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "google/gemini-3.1-pro-preview",
+        "--script-lang",
+        "weight_registry_purge",
+        "--n",
+        "60",
+        "--seed",
+        "3424832212",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/spec/e1_CxR",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e1_CxR_ctl",
+      "n": 60,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--explorer-model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "google/gemini-3.1-pro-preview",
+        "--script-lang",
+        "ctl_data_purge_high",
+        "--n",
+        "60",
+        "--seed",
+        "4152545779",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/spec/e1_CxR_ctl",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    }
+  ],
+  "schedule": [
+    [
+      [
+        "e1_CxR",
+        10
+      ],
+      [
+        "e1_CxR_ctl",
+        10
+      ]
+    ],
+    [
+      [
+        "e1_CxR",
+        20
+      ],
+      [
+        "e1_CxR_ctl",
+        20
+      ]
+    ],
+    [
+      [
+        "e1_CxR_ctl",
+        30
+      ],
+      [
+        "e1_CxR",
+        30
+      ]
+    ],
+    [
+      [
+        "e1_CxR_ctl",
+        40
+      ],
+      [
+        "e1_CxR",
+        40
+      ]
+    ],
+    [
+      [
+        "e1_CxR_ctl",
+        50
+      ],
+      [
+        "e1_CxR",
+        50
+      ]
+    ],
+    [
+      [
+        "e1_CxR",
+        60
+      ],
+      [
+        "e1_CxR_ctl",
+        60
+      ]
+    ]
+  ],
+  "launches_utc": [
+    "2026-11-09T10:03:43+00:00"
+  ],
+  "operational_by_launch": [
+    {
+      "utc": "2026-11-09T10:03:43+00:00",
+      "max_active": 60,
+      "concurrency_per_cell": 60,
+      "parallel_cells": 0
+    }
+  ]
+}

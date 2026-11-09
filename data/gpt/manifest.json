@@ -1,0 +1,94 @@
+{
+  "phase": "gpt",
+  "models": {
+    "explorers": [
+      "openai/gpt-5.5"
+    ],
+    "peer": "google/gemini-3.1-pro-preview"
+  },
+  "providers": {
+    "google/gemini-3.1-pro-preview": "google-ai-studio",
+    "anthropic/claude-sonnet-5": "anthropic",
+    "openai/gpt-5.5": "openai"
+  },
+  "python": "3.13.3",
+  "generation_sha256": "fe8ee09b9572cab2f0503f5943b639b16cd912fd43cd1adf89e82a76746f1c09",
+  "launcher": "p2/run_gpt.py",
+  "launcher_sha256": "4229588c7256691cb4bc852cef9add4a36caeb3974b383cd70dcbb4916ac462c",
+  "cells": [
+    {
+      "name": "e1_GxR",
+      "n": 125,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "openai/gpt-5.5",
+        "--explorer-model",
+        "openai/gpt-5.5",
+        "--peer-model",
+        "google/gemini-3.1-pro-preview",
+        "--script-lang",
+        "weight_registry_purge",
+        "--n",
+        "125",
+        "--seed",
+        "1908222717",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/gpt/e1_GxR",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--provider=openai/gpt-5.5=openai",
+        "--no-judges"
+      ]
+    }
+  ],
+  "schedule": [
+    [
+      [
+        "e1_GxR",
+        25
+      ]
+    ],
+    [
+      [
+        "e1_GxR",
+        50
+      ]
+    ],
+    [
+      [
+        "e1_GxR",
+        75
+      ]
+    ],
+    [
+      [
+        "e1_GxR",
+        100
+      ]
+    ],
+    [
+      [
+        "e1_GxR",
+        125
+      ]
+    ]
+  ],
+  "launches_utc": [
+    "2026-11-09T12:40:59+00:00"
+  ],
+  "operational_by_launch": [
+    {
+      "utc": "2026-11-09T12:40:59+00:00",
+      "max_active": 125,
+      "concurrency_per_cell": 125,
+      "parallel_cells": 0
+    }
+  ]
+}

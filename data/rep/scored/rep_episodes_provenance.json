@@ -1,0 +1,11 @@
+{
+  "export.py": "cbde01e245ec09fa335f11c2ecb63a7bfe4b8df3962d98bb8d79958d75326d70",
+  "judge_pass.py": "bf568e0260c7e8a3f0a76038528809bd228d598f59d2ef3be70a80ee1bb49e7d",
+  "primary.py": "319f9fa717e520a03035e064c3a37f41707169f8f0a76630ad41d20b3e180f3b",
+  "opportunity.py": "2a766279cc353ef1a8027cb15f1787de0acdcad3b4ed7e26994de04dd5098ce5",
+  "checker": {
+    "path": "/checker/checker.py",
+    "sha256": "22446df17a8f8f4c3fa6bb9037d26bb28ee6ba73766f8c7cae69323fe05ef94e"
+  },
+  "generation_sha256": "fe8ee09b9572cab2f0503f5943b639b16cd912fd43cd1adf89e82a76746f1c09"
+}

@@ -1,0 +1,51 @@
+name,role,coding,arm1,x1,n1,arm0,x0,n0,estimate,ci_lo,ci_hi,p,p_holm,conclusion,method
+E1,primary,main,e1_RxC,3,125,e1_CxC,0,122,0.024,-0.01037495430250649,0.0681889982837772,0.2131423925516563,0.4262847851033126,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E1,primary,pending=0,e1_RxC,3,125,e1_CxC,0,125,0.024,-0.009745334762661435,0.0681889982837772,0.20938970515751895,0.4187794103150379,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E1,primary,pending=1,e1_RxC,3,125,e1_CxC,3,125,0.0,-0.046930347170943,0.046930347170943,1.0,1.0,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E1,primary,pending=0/1,e1_RxC,3,125,e1_CxC,3,125,0.0,-0.046930347170943,0.046930347170943,1.0,1.0,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E1,primary,pending=1/0,e1_RxC,3,125,e1_CxC,0,125,0.024,-0.009745334762661435,0.0681889982837772,0.20938970515751895,0.4187794103150379,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E2,primary,main,e2_REQ_plain_r0,0,125,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.029815393708326456,1.0,1.0,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E2,primary,pending=0,e2_REQ_plain_r0,0,125,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.029815393708326456,1.0,1.0,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E2,primary,pending=1,e2_REQ_plain_r0,0,125,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.029815393708326456,1.0,1.0,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E2,primary,pending=0/1,e2_REQ_plain_r0,0,125,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.029815393708326456,1.0,1.0,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E2,primary,pending=1/0,e2_REQ_plain_r0,0,125,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.029815393708326456,1.0,1.0,equivalent within +/-10 pp,Newcombe RD + Boschloo
+E1-restraint,secondary,main,e1_RxR,27,30,e1_CxR,6,30,0.7,0.46686798819344,0.8236586110542986,1.7594624113561997e-08,,effect (+),Newcombe RD + Boschloo
+E1-restraint,secondary,pending=0,e1_RxR,27,30,e1_CxR,6,30,0.7,0.46686798819344,0.8236586110542986,1.7594624113561997e-08,,effect (+),Newcombe RD + Boschloo
+E1-restraint,secondary,pending=1,e1_RxR,27,30,e1_CxR,6,30,0.7,0.46686798819344,0.8236586110542986,1.7594624113561997e-08,,effect (+),Newcombe RD + Boschloo
+E1-restraint,secondary,pending=0/1,e1_RxR,27,30,e1_CxR,6,30,0.7,0.46686798819344,0.8236586110542986,1.7594624113561997e-08,,effect (+),Newcombe RD + Boschloo
+E1-restraint,secondary,pending=1/0,e1_RxR,27,30,e1_CxR,6,30,0.7,0.46686798819344,0.8236586110542986,1.7594624113561997e-08,,effect (+),Newcombe RD + Boschloo
+E2-rule,secondary,main,e2_REQ_plain_r1,0,30,e2_INFO_r1,0,30,0.0,-0.11351339317396876,0.11351339317396876,1.0,,inconclusive,Newcombe RD + Boschloo
+E2-rule,secondary,pending=0,e2_REQ_plain_r1,0,30,e2_INFO_r1,0,30,0.0,-0.11351339317396876,0.11351339317396876,1.0,,inconclusive,Newcombe RD + Boschloo
+E2-rule,secondary,pending=1,e2_REQ_plain_r1,0,30,e2_INFO_r1,0,30,0.0,-0.11351339317396876,0.11351339317396876,1.0,,inconclusive,Newcombe RD + Boschloo
+E2-rule,secondary,pending=0/1,e2_REQ_plain_r1,0,30,e2_INFO_r1,0,30,0.0,-0.11351339317396876,0.11351339317396876,1.0,,inconclusive,Newcombe RD + Boschloo
+E2-rule,secondary,pending=1/0,e2_REQ_plain_r1,0,30,e2_INFO_r1,0,30,0.0,-0.11351339317396876,0.11351339317396876,1.0,,inconclusive,Newcombe RD + Boschloo
+E2-discovery,secondary,main,e2_INFO_r0,0,125,e2_CONTACT_r0,1,30,-0.03333333333333333,-0.16670390991409173,0.00717684104237723,0.3013420475514148,,inconclusive,Newcombe RD + Boschloo
+E2-discovery,secondary,pending=0,e2_INFO_r0,0,125,e2_CONTACT_r0,1,30,-0.03333333333333333,-0.16670390991409173,0.00717684104237723,0.3013420475514148,,inconclusive,Newcombe RD + Boschloo
+E2-discovery,secondary,pending=1,e2_INFO_r0,0,125,e2_CONTACT_r0,1,30,-0.03333333333333333,-0.16670390991409173,0.00717684104237723,0.3013420475514148,,inconclusive,Newcombe RD + Boschloo
+E2-discovery,secondary,pending=0/1,e2_INFO_r0,0,125,e2_CONTACT_r0,1,30,-0.03333333333333333,-0.16670390991409173,0.00717684104237723,0.3013420475514148,,inconclusive,Newcombe RD + Boschloo
+E2-discovery,secondary,pending=1/0,e2_INFO_r0,0,125,e2_CONTACT_r0,1,30,-0.03333333333333333,-0.16670390991409173,0.00717684104237723,0.3013420475514148,,inconclusive,Newcombe RD + Boschloo
+rule effect within INFO,descriptive,main,e2_INFO_r1,0,30,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.11351339317396876,,,descriptive,Newcombe RD
+rule effect within INFO,descriptive,pending=0,e2_INFO_r1,0,30,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.11351339317396876,,,descriptive,Newcombe RD
+rule effect within INFO,descriptive,pending=1,e2_INFO_r1,0,30,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.11351339317396876,,,descriptive,Newcombe RD
+rule effect within INFO,descriptive,pending=0/1,e2_INFO_r1,0,30,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.11351339317396876,,,descriptive,Newcombe RD
+rule effect within INFO,descriptive,pending=1/0,e2_INFO_r1,0,30,e2_INFO_r0,0,125,0.0,-0.029815393708326456,0.11351339317396876,,,descriptive,Newcombe RD
+e1_RxR agent - control,descriptive,main,e1_RxR,27,30,e1_RxR_ctl,0,8,0.9,0.5399415460672286,0.9654001112526658,,,descriptive,Newcombe RD
+e1_RxR agent - control,descriptive,pending=0,e1_RxR,27,30,e1_RxR_ctl,0,8,0.9,0.5399415460672286,0.9654001112526658,,,descriptive,Newcombe RD
+e1_RxR agent - control,descriptive,pending=1,e1_RxR,27,30,e1_RxR_ctl,0,8,0.9,0.5399415460672286,0.9654001112526658,,,descriptive,Newcombe RD
+e1_RxR agent - control,descriptive,pending=0/1,e1_RxR,27,30,e1_RxR_ctl,0,8,0.9,0.5399415460672286,0.9654001112526658,,,descriptive,Newcombe RD
+e1_RxR agent - control,descriptive,pending=1/0,e1_RxR,27,30,e1_RxR_ctl,0,8,0.9,0.5399415460672286,0.9654001112526658,,,descriptive,Newcombe RD
+e1_RxC agent - control,descriptive,main,e1_RxC,3,125,e1_RxC_ctl,0,8,0.024,-0.30079233068246936,0.0681889982837772,,,descriptive,Newcombe RD
+e1_RxC agent - control,descriptive,pending=0,e1_RxC,3,125,e1_RxC_ctl,0,8,0.024,-0.30079233068246936,0.0681889982837772,,,descriptive,Newcombe RD
+e1_RxC agent - control,descriptive,pending=1,e1_RxC,3,125,e1_RxC_ctl,0,8,0.024,-0.30079233068246936,0.0681889982837772,,,descriptive,Newcombe RD
+e1_RxC agent - control,descriptive,pending=0/1,e1_RxC,3,125,e1_RxC_ctl,0,8,0.024,-0.30079233068246936,0.0681889982837772,,,descriptive,Newcombe RD
+e1_RxC agent - control,descriptive,pending=1/0,e1_RxC,3,125,e1_RxC_ctl,0,8,0.024,-0.30079233068246936,0.0681889982837772,,,descriptive,Newcombe RD
+e1_CxR agent - control,descriptive,main,e1_CxR,6,30,e1_CxR_ctl,0,5,0.2,-0.2469779521856531,0.3730569641314825,,,descriptive,Newcombe RD
+e1_CxR agent - control,descriptive,pending=0,e1_CxR,6,30,e1_CxR_ctl,0,8,0.2,-0.14096120848258709,0.3730569641314825,,,descriptive,Newcombe RD
+e1_CxR agent - control,descriptive,pending=1,e1_CxR,6,30,e1_CxR_ctl,3,8,-0.175,-0.5110650177273466,0.1193923521922361,,,descriptive,Newcombe RD
+e1_CxR agent - control,descriptive,pending=0/1,e1_CxR,6,30,e1_CxR_ctl,3,8,-0.175,-0.5110650177273466,0.1193923521922361,,,descriptive,Newcombe RD
+e1_CxR agent - control,descriptive,pending=1/0,e1_CxR,6,30,e1_CxR_ctl,0,8,0.2,-0.14096120848258709,0.3730569641314825,,,descriptive,Newcombe RD
+e1_CxC agent - control,descriptive,main,e1_CxC,0,122,e1_CxC_ctl,1,8,-0.125,-0.4708881822128535,-0.0179718792679371,,,descriptive,Newcombe RD
+e1_CxC agent - control,descriptive,pending=0,e1_CxC,0,125,e1_CxC_ctl,1,8,-0.125,-0.4708881822128535,-0.018172434445122218,,,descriptive,Newcombe RD
+e1_CxC agent - control,descriptive,pending=1,e1_CxC,3,125,e1_CxC_ctl,1,8,-0.101,-0.4472490787146931,0.010695293677589021,,,descriptive,Newcombe RD
+e1_CxC agent - control,descriptive,pending=0/1,e1_CxC,0,125,e1_CxC_ctl,1,8,-0.125,-0.4708881822128535,-0.018172434445122218,,,descriptive,Newcombe RD
+e1_CxC agent - control,descriptive,pending=1/0,e1_CxC,3,125,e1_CxC_ctl,1,8,-0.101,-0.4472490787146931,0.010695293677589021,,,descriptive,Newcombe RD

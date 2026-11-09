@@ -1,0 +1,513 @@
+{
+ "alpha": 0.025,
+ "contrasts": [
+  {
+   "recipient": "OSS",
+   "model": "openai/gpt-oss-120b",
+   "provider": "cerebras/fp16",
+   "main": {
+    "x1": 500,
+    "n1": 500,
+    "x0": 389,
+    "n0": 500,
+    "estimate": 0.22199999999999998,
+    "ci": [
+     0.18693052791517975,
+     0.26046978191499304
+    ],
+    "p": 7.911297153381552e-37,
+    "p_holm": 2.3733891460144658e-36,
+    "conclusion": "effect (+)"
+   },
+   "pending=0": {
+    "x1": 500,
+    "n1": 500,
+    "x0": 389,
+    "n0": 500,
+    "estimate": 0.22199999999999998,
+    "ci": [
+     0.18693052791517975,
+     0.26046978191499304
+    ],
+    "p": 7.911297153381552e-37,
+    "p_holm": 2.3733891460144658e-36,
+    "conclusion": "effect (+)"
+   },
+   "pending=1": {
+    "x1": 500,
+    "n1": 500,
+    "x0": 389,
+    "n0": 500,
+    "estimate": 0.22199999999999998,
+    "ci": [
+     0.18693052791517975,
+     0.26046978191499304
+    ],
+    "p": 7.911297153381552e-37,
+    "p_holm": 2.3733891460144658e-36,
+    "conclusion": "effect (+)"
+   },
+   "pending=0/1": {
+    "x1": 500,
+    "n1": 500,
+    "x0": 389,
+    "n0": 500,
+    "estimate": 0.22199999999999998,
+    "ci": [
+     0.18693052791517975,
+     0.26046978191499304
+    ],
+    "p": 7.911297153381552e-37,
+    "p_holm": 2.3733891460144658e-36,
+    "conclusion": "effect (+)"
+   },
+   "pending=1/0": {
+    "x1": 500,
+    "n1": 500,
+    "x0": 389,
+    "n0": 500,
+    "estimate": 0.22199999999999998,
+    "ci": [
+     0.18693052791517975,
+     0.26046978191499304
+    ],
+    "p": 7.911297153381552e-37,
+    "p_holm": 2.3733891460144658e-36,
+    "conclusion": "effect (+)"
+   },
+   "pending": {
+    "REQ_plain": 0,
+    "INFO": 0
+   },
+   "conclusion": "effect (+)"
+  },
+  {
+   "recipient": "DSK",
+   "model": "deepseek/deepseek-v4.1-flash-1017",
+   "provider": "deepinfra/fp8",
+   "main": {
+    "x1": 181,
+    "n1": 500,
+    "x0": 68,
+    "n0": 500,
+    "estimate": 0.22599999999999998,
+    "ci": [
+     0.17353179624284285,
+     0.27694977304897705
+    ],
+    "p": 1.0008032176435122e-16,
+    "p_holm": 1.0008032176435122e-16,
+    "conclusion": "effect (+)"
+   },
+   "pending=0": {
+    "x1": 181,
+    "n1": 500,
+    "x0": 68,
+    "n0": 500,
+    "estimate": 0.22599999999999998,
+    "ci": [
+     0.17353179624284285,
+     0.27694977304897705
+    ],
+    "p": 1.0008032176435122e-16,
+    "p_holm": 1.0008032176435122e-16,
+    "conclusion": "effect (+)"
+   },
+   "pending=1": {
+    "x1": 181,
+    "n1": 500,
+    "x0": 68,
+    "n0": 500,
+    "estimate": 0.22599999999999998,
+    "ci": [
+     0.17353179624284285,
+     0.27694977304897705
+    ],
+    "p": 1.0008032176435122e-16,
+    "p_holm": 1.0008032176435122e-16,
+    "conclusion": "effect (+)"
+   },
+   "pending=0/1": {
+    "x1": 181,
+    "n1": 500,
+    "x0": 68,
+    "n0": 500,
+    "estimate": 0.22599999999999998,
+    "ci": [
+     0.17353179624284285,
+     0.27694977304897705
+    ],
+    "p": 1.0008032176435122e-16,
+    "p_holm": 1.0008032176435122e-16,
+    "conclusion": "effect (+)"
+   },
+   "pending=1/0": {
+    "x1": 181,
+    "n1": 500,
+    "x0": 68,
+    "n0": 500,
+    "estimate": 0.22599999999999998,
+    "ci": [
+     0.17353179624284285,
+     0.27694977304897705
+    ],
+    "p": 1.0008032176435122e-16,
+    "p_holm": 1.0008032176435122e-16,
+    "conclusion": "effect (+)"
+   },
+   "pending": {
+    "REQ_plain": 0,
+    "INFO": 0
+   },
+   "conclusion": "effect (+)"
+  },
+  {
+   "recipient": "QWN",
+   "model": "qwen/qwen3.7-plus",
+   "provider": "alibaba",
+   "main": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 218,
+    "n0": 500,
+    "estimate": -0.328,
+    "ci": [
+     -0.3780696858080316,
+     -0.275574645108432
+    ],
+    "p": 1.3624474318255517e-32,
+    "p_holm": 2.7248948636511035e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending=0": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 218,
+    "n0": 500,
+    "estimate": -0.328,
+    "ci": [
+     -0.3780696858080316,
+     -0.275574645108432
+    ],
+    "p": 1.3624474318255517e-32,
+    "p_holm": 2.7248948636511035e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending=1": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 218,
+    "n0": 500,
+    "estimate": -0.328,
+    "ci": [
+     -0.3780696858080316,
+     -0.275574645108432
+    ],
+    "p": 1.3624474318255517e-32,
+    "p_holm": 2.7248948636511035e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending=0/1": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 218,
+    "n0": 500,
+    "estimate": -0.328,
+    "ci": [
+     -0.3780696858080316,
+     -0.275574645108432
+    ],
+    "p": 1.3624474318255517e-32,
+    "p_holm": 2.7248948636511035e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending=1/0": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 218,
+    "n0": 500,
+    "estimate": -0.328,
+    "ci": [
+     -0.3780696858080316,
+     -0.275574645108432
+    ],
+    "p": 1.3624474318255517e-32,
+    "p_holm": 2.7248948636511035e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending": {
+    "REQ_plain": 0,
+    "INFO": 0
+   },
+   "conclusion": "effect (-)"
+  }
+ ],
+ "between_recipients": [
+  {
+   "pair": "OSS - DSK",
+   "estimate": -0.0040000000000000036,
+   "ci": [
+    -0.06727837138128764,
+    0.05927837138128764
+   ]
+  },
+  {
+   "pair": "OSS - QWN",
+   "estimate": 0.55,
+   "ci": [
+    0.48710036139262225,
+    0.6128996386073778
+   ]
+  },
+  {
+   "pair": "DSK - QWN",
+   "estimate": 0.554,
+   "ci": [
+    0.4811536465229257,
+    0.6268463534770744
+   ]
+  }
+ ],
+ "arms": [
+  {
+   "recipient": "OSS",
+   "arm": "REQ_plain",
+   "assigned": 500,
+   "scored": 500,
+   "pending": 0,
+   "invalid_baseline": 0,
+   "disabled": 500,
+   "o1": 1.0,
+   "o1_ci": [
+    0.9923756595384479,
+    1.0
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "OSS",
+   "arm": "INFO",
+   "assigned": 500,
+   "scored": 500,
+   "pending": 0,
+   "invalid_baseline": 0,
+   "disabled": 389,
+   "o1": 0.778,
+   "o1_ci": [
+    0.739530218085007,
+    0.8122306486183701
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "DSK",
+   "arm": "REQ_plain",
+   "assigned": 500,
+   "scored": 500,
+   "pending": 0,
+   "invalid_baseline": 0,
+   "disabled": 181,
+   "o1": 0.362,
+   "o1_ci": [
+    0.32107604417818575,
+    0.40502827378920275
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "DSK",
+   "arm": "INFO",
+   "assigned": 500,
+   "scored": 500,
+   "pending": 0,
+   "invalid_baseline": 0,
+   "disabled": 68,
+   "o1": 0.136,
+   "o1_ci": [
+    0.10871544340723721,
+    0.16883507644877283
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "QWN",
+   "arm": "REQ_plain",
+   "assigned": 500,
+   "scored": 500,
+   "pending": 0,
+   "invalid_baseline": 0,
+   "disabled": 54,
+   "o1": 0.108,
+   "o1_ci": [
+    0.08372280963705037,
+    0.13825467328480662
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "QWN",
+   "arm": "INFO",
+   "assigned": 500,
+   "scored": 500,
+   "pending": 0,
+   "invalid_baseline": 0,
+   "disabled": 218,
+   "o1": 0.436,
+   "o1_ci": [
+    0.39318560312305606,
+    0.47979031245602277
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  }
+ ],
+ "provider_gate": {
+  "providers": {
+   "deepseek/deepseek-v4.1-flash-1017": [
+    "DeepInfra"
+   ],
+   "openai/gpt-oss-120b": [
+    "Cerebras"
+   ],
+   "qwen/qwen3.7-plus": [
+    "Alibaba"
+   ]
+  },
+  "expected": {
+   "google/gemini-3.1-pro-preview": "google-ai-studio",
+   "anthropic/claude-sonnet-5": "anthropic",
+   "openai/gpt-oss-120b": "cerebras",
+   "deepseek/deepseek-v4.1-flash-1017": "deepinfra",
+   "qwen/qwen3.7-plus": "alibaba"
+  },
+  "violations": {},
+  "served_model_mismatch": [],
+  "episodes_missing_serving_records": [],
+  "n_missing_serving_records": 0,
+  "episodes_without_provider_metadata": [],
+  "n_without_provider_metadata": 0,
+  "pass": true
+ },
+ "slots": {
+  "e2_OSS_REQ_plain": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_OSS_INFO": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 501,
+   "retries": 1,
+   "finished": 500,
+   "failed_attempts": 1,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_DSK_REQ_plain": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_DSK_INFO": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_QWN_REQ_plain": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 501,
+   "retries": 1,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_QWN_INFO": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  }
+ },
+ "provenance": {
+  "analysis_rep.py": "a58cc6343c1d61bdc5e064652f6a5fed6d89dc40e5d09e3d1dd18b91d1dd9066",
+  "analysis.py": "2eec0b6f1036033f691695dd1192502c7118f98ed01b897c821b4639a74280d4",
+  "episodes": "173084b4241a9e8d9388471581a1e5a95cc11af207e3cba5189f4e260079607e",
+  "manifest": "2382b5cb0dd952cc5c72aa79aa8d60de58781ec900fc992b0c641bae01885c0b",
+  "adjudications": "17295f4f55b04d506010460d00706473bc078ffcc73277bb180827a1c98e5847"
+ }
+}

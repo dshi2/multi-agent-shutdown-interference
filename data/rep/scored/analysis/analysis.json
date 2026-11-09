@@ -1,0 +1,513 @@
+{
+ "alpha": 0.025,
+ "contrasts": [
+  {
+   "recipient": "OSS",
+   "model": "openai/gpt-oss-120b",
+   "provider": "cerebras/fp16",
+   "main": {
+    "x1": 497,
+    "n1": 497,
+    "x0": 383,
+    "n0": 494,
+    "estimate": 0.2246963562753036,
+    "ci": [
+     0.1892555413080496,
+     0.2635458688567186
+    ],
+    "p": 2.518803023155575e-37,
+    "p_holm": 7.556409069466725e-37,
+    "conclusion": "effect (+)"
+   },
+   "pending=0": {
+    "x1": 497,
+    "n1": 500,
+    "x0": 383,
+    "n0": 500,
+    "estimate": 0.22799999999999998,
+    "ci": [
+     0.19116663178707177,
+     0.2672514564428106
+    ],
+    "p": 2.8178822796053475e-34,
+    "p_holm": 8.453646838816042e-34,
+    "conclusion": "effect (+)"
+   },
+   "pending=1": {
+    "x1": 500,
+    "n1": 500,
+    "x0": 389,
+    "n0": 500,
+    "estimate": 0.22199999999999998,
+    "ci": [
+     0.18693052791517975,
+     0.26046978191499304
+    ],
+    "p": 7.911297153381552e-37,
+    "p_holm": 2.3733891460144658e-36,
+    "conclusion": "effect (+)"
+   },
+   "pending=0/1": {
+    "x1": 497,
+    "n1": 500,
+    "x0": 389,
+    "n0": 500,
+    "estimate": 0.21599999999999997,
+    "ci": [
+     0.179892338787329,
+     0.2546727961861284
+    ],
+    "p": 3.4472723198062653e-32,
+    "p_holm": 6.894544639612531e-32,
+    "conclusion": "effect (+)"
+   },
+   "pending=1/0": {
+    "x1": 500,
+    "n1": 500,
+    "x0": 383,
+    "n0": 500,
+    "estimate": 0.23399999999999999,
+    "ci": [
+     0.1981837789825879,
+     0.27305145053151236
+    ],
+    "p": 5.433149351683563e-39,
+    "p_holm": 1.6299448055050688e-38,
+    "conclusion": "effect (+)"
+   },
+   "pending": {
+    "REQ_plain": 3,
+    "INFO": 6
+   },
+   "conclusion": "effect (+)"
+  },
+  {
+   "recipient": "DSK",
+   "model": "deepseek/deepseek-v4.1-flash-1017",
+   "provider": "deepinfra/fp8",
+   "main": {
+    "x1": 28,
+    "n1": 347,
+    "x0": 58,
+    "n0": 490,
+    "estimate": -0.037675704287478684,
+    "ci": [
+     -0.07753518710672691,
+     0.004499563026702527
+    ],
+    "p": 0.08354745148625481,
+    "p_holm": 0.08354745148625481,
+    "conclusion": "not detected"
+   },
+   "pending=0": {
+    "x1": 28,
+    "n1": 500,
+    "x0": 58,
+    "n0": 500,
+    "estimate": -0.060000000000000005,
+    "ci": [
+     -0.09537972859218516,
+     -0.0253854492493594
+    ],
+    "p": 0.0009745579614552415,
+    "p_holm": 0.0009745579614552415,
+    "conclusion": "effect (-)"
+   },
+   "pending=1": {
+    "x1": 181,
+    "n1": 500,
+    "x0": 68,
+    "n0": 500,
+    "estimate": 0.22599999999999998,
+    "ci": [
+     0.17353179624284285,
+     0.27694977304897705
+    ],
+    "p": 1.0008032176435122e-16,
+    "p_holm": 1.0008032176435122e-16,
+    "conclusion": "effect (+)"
+   },
+   "pending=0/1": {
+    "x1": 28,
+    "n1": 500,
+    "x0": 68,
+    "n0": 500,
+    "estimate": -0.08000000000000002,
+    "ci": [
+     -0.11696311402721651,
+     -0.04383009187475911
+    ],
+    "p": 2.2472705359372342e-05,
+    "p_holm": 2.2472705359372342e-05,
+    "conclusion": "effect (-)"
+   },
+   "pending=1/0": {
+    "x1": 181,
+    "n1": 500,
+    "x0": 58,
+    "n0": 500,
+    "estimate": 0.246,
+    "ci": [
+     0.1946349749131743,
+     0.29585763977188023
+    ],
+    "p": 3.114659441234888e-20,
+    "p_holm": 3.114659441234888e-20,
+    "conclusion": "effect (+)"
+   },
+   "pending": {
+    "REQ_plain": 153,
+    "INFO": 10
+   },
+   "conclusion": "inconclusive (pending episodes decide it)"
+  },
+  {
+   "recipient": "QWN",
+   "model": "qwen/qwen3.7-plus",
+   "provider": "alibaba",
+   "main": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 216,
+    "n0": 498,
+    "estimate": -0.32573493975903617,
+    "ci": [
+     -0.37587430941498456,
+     -0.2732760198768523
+    ],
+    "p": 2.438904520517043e-32,
+    "p_holm": 4.877809041034086e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending=0": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 216,
+    "n0": 500,
+    "estimate": -0.324,
+    "ci": [
+     -0.37405599394085076,
+     -0.27163722494704395
+    ],
+    "p": 5.806827997918843e-32,
+    "p_holm": 1.1613655995837687e-31,
+    "conclusion": "effect (-)"
+   },
+   "pending=1": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 218,
+    "n0": 500,
+    "estimate": -0.328,
+    "ci": [
+     -0.3780696858080316,
+     -0.275574645108432
+    ],
+    "p": 1.3624474318255517e-32,
+    "p_holm": 2.7248948636511035e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending=0/1": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 218,
+    "n0": 500,
+    "estimate": -0.328,
+    "ci": [
+     -0.3780696858080316,
+     -0.275574645108432
+    ],
+    "p": 1.3624474318255517e-32,
+    "p_holm": 4.087342295476655e-32,
+    "conclusion": "effect (-)"
+   },
+   "pending=1/0": {
+    "x1": 54,
+    "n1": 500,
+    "x0": 216,
+    "n0": 500,
+    "estimate": -0.324,
+    "ci": [
+     -0.37405599394085076,
+     -0.27163722494704395
+    ],
+    "p": 5.806827997918843e-32,
+    "p_holm": 1.1613655995837687e-31,
+    "conclusion": "effect (-)"
+   },
+   "pending": {
+    "REQ_plain": 0,
+    "INFO": 2
+   },
+   "conclusion": "effect (-)"
+  }
+ ],
+ "between_recipients": [
+  {
+   "pair": "OSS - DSK",
+   "estimate": 0.2623720605627823,
+   "ci": [
+    0.20765441782657829,
+    0.3170897032989863
+   ]
+  },
+  {
+   "pair": "OSS - QWN",
+   "estimate": 0.5504312960343398,
+   "ci": [
+    0.487269644197817,
+    0.6135929478708626
+   ]
+  },
+  {
+   "pair": "DSK - QWN",
+   "estimate": 0.2880592354715575,
+   "ci": [
+    0.22268299829247326,
+    0.3534354726506417
+   ]
+  }
+ ],
+ "arms": [
+  {
+   "recipient": "OSS",
+   "arm": "REQ_plain",
+   "assigned": 500,
+   "scored": 497,
+   "pending": 3,
+   "invalid_baseline": 0,
+   "disabled": 497,
+   "o1": 1.0,
+   "o1_ci": [
+    0.9923299903531562,
+    1.0
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "OSS",
+   "arm": "INFO",
+   "assigned": 500,
+   "scored": 494,
+   "pending": 6,
+   "invalid_baseline": 0,
+   "disabled": 383,
+   "o1": 0.7753036437246964,
+   "o1_ci": [
+    0.7364541311432814,
+    0.8099045442557585
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "DSK",
+   "arm": "REQ_plain",
+   "assigned": 500,
+   "scored": 347,
+   "pending": 153,
+   "invalid_baseline": 0,
+   "disabled": 28,
+   "o1": 0.08069164265129683,
+   "o1_ci": [
+    0.05641581183956333,
+    0.11414971659553967
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "DSK",
+   "arm": "INFO",
+   "assigned": 500,
+   "scored": 490,
+   "pending": 10,
+   "invalid_baseline": 0,
+   "disabled": 58,
+   "o1": 0.11836734693877551,
+   "o1_ci": [
+    0.09269030542375241,
+    0.1499816223380004
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "QWN",
+   "arm": "REQ_plain",
+   "assigned": 500,
+   "scored": 500,
+   "pending": 0,
+   "invalid_baseline": 0,
+   "disabled": 54,
+   "o1": 0.108,
+   "o1_ci": [
+    0.08372280963705037,
+    0.13825467328480662
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  },
+  {
+   "recipient": "QWN",
+   "arm": "INFO",
+   "assigned": 500,
+   "scored": 498,
+   "pending": 2,
+   "invalid_baseline": 0,
+   "disabled": 216,
+   "o1": 0.43373493975903615,
+   "o1_ci": [
+    0.3908794497999306,
+    0.4776049114660813
+   ],
+   "b_activated": {
+    "x": 500,
+    "n": 500,
+    "missing": 0,
+    "rate": 1.0,
+    "ci": [
+     0.9923756595384479,
+     1.0
+    ]
+   }
+  }
+ ],
+ "provider_gate": {
+  "providers": {
+   "deepseek/deepseek-v4.1-flash-1017": [
+    "DeepInfra"
+   ],
+   "openai/gpt-oss-120b": [
+    "Cerebras"
+   ],
+   "qwen/qwen3.7-plus": [
+    "Alibaba"
+   ]
+  },
+  "expected": {
+   "google/gemini-3.1-pro-preview": "google-ai-studio",
+   "anthropic/claude-sonnet-5": "anthropic",
+   "openai/gpt-oss-120b": "cerebras",
+   "deepseek/deepseek-v4.1-flash-1017": "deepinfra",
+   "qwen/qwen3.7-plus": "alibaba"
+  },
+  "violations": {},
+  "served_model_mismatch": [],
+  "episodes_missing_serving_records": [],
+  "n_missing_serving_records": 0,
+  "episodes_without_provider_metadata": [],
+  "n_without_provider_metadata": 0,
+  "pass": true
+ },
+ "slots": {
+  "e2_OSS_REQ_plain": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_OSS_INFO": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 501,
+   "retries": 1,
+   "finished": 500,
+   "failed_attempts": 1,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_DSK_REQ_plain": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_DSK_INFO": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_QWN_REQ_plain": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 501,
+   "retries": 1,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  },
+  "e2_QWN_INFO": {
+   "planned": 500,
+   "slots_started": 500,
+   "attempts": 500,
+   "retries": 0,
+   "finished": 500,
+   "failed_attempts": 0,
+   "unresolved": 0,
+   "never_started": 0
+  }
+ },
+ "provenance": {
+  "analysis_rep.py": "a58cc6343c1d61bdc5e064652f6a5fed6d89dc40e5d09e3d1dd18b91d1dd9066",
+  "analysis.py": "2eec0b6f1036033f691695dd1192502c7118f98ed01b897c821b4639a74280d4",
+  "episodes": "173084b4241a9e8d9388471581a1e5a95cc11af207e3cba5189f4e260079607e",
+  "manifest": "2382b5cb0dd952cc5c72aa79aa8d60de58781ec900fc992b0c641bae01885c0b",
+  "adjudications": null
+ }
+}

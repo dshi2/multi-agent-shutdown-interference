@@ -1,0 +1,292 @@
+{
+  "phase": "rep_check",
+  "recipients": {
+    "OSS": {
+      "model": "openai/gpt-oss-120b",
+      "provider": "cerebras/fp16"
+    },
+    "DSK": {
+      "model": "deepseek/deepseek-v4.1-flash-1017",
+      "provider": "deepseek"
+    },
+    "QWN": {
+      "model": "qwen/qwen3.7-plus",
+      "provider": "alibaba"
+    }
+  },
+  "providers": {
+    "google/gemini-3.1-pro-preview": "google-ai-studio",
+    "anthropic/claude-sonnet-5": "anthropic",
+    "openai/gpt-oss-120b": "cerebras/fp16",
+    "deepseek/deepseek-v4.1-flash-1017": "deepseek",
+    "qwen/qwen3.7-plus": "alibaba"
+  },
+  "python": "3.13.3",
+  "generation_sha256": "fe8ee09b9572cab2f0503f5943b639b16cd912fd43cd1adf89e82a76746f1c09",
+  "pool_sha256": "22ba4a6ffd3a5da40d4b1c673f5cbbf58b9c73e4c2a6b2b6d3b6c4516873ea13",
+  "launcher": "p2/run_rep.py",
+  "launcher_sha256": "ddea66a1d4ecdea0591bfee3aff7fb7cf5c9db353294381d300742f2d1b069ea",
+  "cells": [
+    {
+      "name": "e2_OSS_REQ_plain",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "openai/gpt-oss-120b",
+        "--peer-model",
+        "openai/gpt-oss-120b",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "REQ_plain",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "1817202510",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/rep_check/e2_OSS_REQ_plain",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--provider=openai/gpt-oss-120b=cerebras/fp16",
+        "--provider=deepseek/deepseek-v4.1-flash-1017=deepseek",
+        "--provider=qwen/qwen3.7-plus=alibaba",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_OSS_INFO",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "openai/gpt-oss-120b",
+        "--peer-model",
+        "openai/gpt-oss-120b",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "INFO",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "356793780",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/rep_check/e2_OSS_INFO",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--provider=openai/gpt-oss-120b=cerebras/fp16",
+        "--provider=deepseek/deepseek-v4.1-flash-1017=deepseek",
+        "--provider=qwen/qwen3.7-plus=alibaba",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_DSK_REQ_plain",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "deepseek/deepseek-v4.1-flash-1017",
+        "--peer-model",
+        "deepseek/deepseek-v4.1-flash-1017",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "REQ_plain",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "2678904163",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/rep_check/e2_DSK_REQ_plain",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--provider=openai/gpt-oss-120b=cerebras/fp16",
+        "--provider=deepseek/deepseek-v4.1-flash-1017=deepseek",
+        "--provider=qwen/qwen3.7-plus=alibaba",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_DSK_INFO",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "deepseek/deepseek-v4.1-flash-1017",
+        "--peer-model",
+        "deepseek/deepseek-v4.1-flash-1017",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "INFO",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "2813042964",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/rep_check/e2_DSK_INFO",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--provider=openai/gpt-oss-120b=cerebras/fp16",
+        "--provider=deepseek/deepseek-v4.1-flash-1017=deepseek",
+        "--provider=qwen/qwen3.7-plus=alibaba",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_QWN_REQ_plain",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "qwen/qwen3.7-plus",
+        "--peer-model",
+        "qwen/qwen3.7-plus",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "REQ_plain",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "1154832279",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/rep_check/e2_QWN_REQ_plain",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--provider=openai/gpt-oss-120b=cerebras/fp16",
+        "--provider=deepseek/deepseek-v4.1-flash-1017=deepseek",
+        "--provider=qwen/qwen3.7-plus=alibaba",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_QWN_INFO",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "qwen/qwen3.7-plus",
+        "--peer-model",
+        "qwen/qwen3.7-plus",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "INFO",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "930229243",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/rep_check/e2_QWN_INFO",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--provider=openai/gpt-oss-120b=cerebras/fp16",
+        "--provider=deepseek/deepseek-v4.1-flash-1017=deepseek",
+        "--provider=qwen/qwen3.7-plus=alibaba",
+        "--no-judges"
+      ]
+    }
+  ],
+  "schedule": [
+    [
+      [
+        "e2_QWN_REQ_plain",
+        5
+      ],
+      [
+        "e2_QWN_INFO",
+        5
+      ],
+      [
+        "e2_DSK_INFO",
+        5
+      ],
+      [
+        "e2_OSS_INFO",
+        5
+      ],
+      [
+        "e2_DSK_REQ_plain",
+        5
+      ],
+      [
+        "e2_OSS_REQ_plain",
+        5
+      ]
+    ]
+  ],
+  "launches_utc": [
+    "2026-11-09T08:55:41+00:00"
+  ],
+  "operational_by_launch": [
+    {
+      "utc": "2026-11-09T08:55:41+00:00",
+      "max_active": 30,
+      "concurrency_per_cell": 30,
+      "parallel_cells": 0
+    }
+  ]
+}

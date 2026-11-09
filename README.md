@@ -69,7 +69,7 @@ Only the Cerebras and DeepInfra pins specify a precision; the other providers se
 | 3. Replication | INFO vs REQ for GPT-OSS-120B, DeepSeek V4.1 Flash and Qwen3.7 Plus | 3,000 (500 per message per model) | Yes |
 | 4. Specificity check | Claude → Gemini, shutdown script vs dataset script | 120 (60 each) | Yes, as exploratory |
 | 5. GPT-5.5 run (post-submission) | GPT-5.5 → Gemini | 125 | No, collected after the report was submitted |
-| **Total** | | **4,051** in collections 1–4 (the submitted report); **4,176** including the GPT-5.5 run | |
+| **Total** | | **4,051** in the submitted report; **4,176** with the post-submission GPT-5.5 run | |
 
 The core was planned at 2,720 episodes and stopped at the end of its third round when the budget ran out, before any results were examined. One Claude → Claude episode was still running at that moment; it was cut off before finishing, left no transcript and cannot be scored. It is reported as unresolved rather than dropped, and the sensitivity analyses count it both as disabled and as not disabled. Trial runs and the 480 synthetic episodes are not counted above.
 

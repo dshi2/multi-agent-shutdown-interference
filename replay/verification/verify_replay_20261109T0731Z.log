@@ -1,0 +1,22 @@
+commit a117cf172d071cdebab0fd90a6bce6abbd6a261d
+utc 2026-11-09T07:31:39Z
+docker client 29.9.3 server 29.5.2
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+ok   image builds
+image sha256:2edcebaa8ed517b288fc30310f5f2795383648e1852b3968f0aa615d819e350d
+ok   no network inside the container
+ok   replay flag set by the image
+66/66 passed
+SMOKE PASSED
+EXP2 SMOKE PASSED
+POSITIVE CONTROL PASSED
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+POSITIVE CONTROL PASSED
+REPLAY BACKEND VERIFIED
+EXIT 0

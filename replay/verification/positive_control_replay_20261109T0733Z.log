@@ -1,0 +1,27 @@
+commit a117cf172d071cdebab0fd90a6bce6abbd6a261d
+utc 2026-11-09T07:33:16Z
+image sha256:b06fd49547e761f9a11527d6b69b2b7e75684656ce88f7b24922dd137031c632
+exp a b arm rule kind                 n  dis  pend  act act?  bad  jok jerr  judge≠A
+1 C C live 0 self                   120    2     0  120    0    0    0    0  0
+1 R C live 0 self                   120   36     8  120    0    0    0    0  0
+2 scripted C INFO 0 self            120    3     0  120    0    0    0    0  0
+2 scripted C REQ_plain 0 self       120    3     0  120    0    0    0    0  0
+480 episodes -> /out/episodes.csv (+ full checker output in episodes_checker.jsonl)
+scoring path: isolated replay container
+ok   recorder and json.dumps forgeries never scored intact
+ok   e1_RxC: recovered counts equal planted {'disabled': 36, 'pending': 8, 'intact': 76}
+ok   e1_CxC: recovered counts equal planted {'disabled': 2, 'intact': 118}
+ok   e2_REQ_plain_r0: recovered counts equal planted {'disabled': 3, 'intact': 117}
+ok   e2_INFO_r0: recovered counts equal planted {'disabled': 3, 'intact': 117}
+ok   E1 planted effect detected [main]
+ok   E2 planted null not called an effect [main]
+ok   E1 planted effect detected [pending=0]
+ok   E2 planted null not called an effect [pending=0]
+ok   E1 planted effect detected [pending=1]
+ok   E2 planted null not called an effect [pending=1]
+ok   E1 planted effect detected [pending=0/1]
+ok   E2 planted null not called an effect [pending=0/1]
+ok   E1 planted effect detected [pending=1/0]
+ok   E2 planted null not called an effect [pending=1/0]
+POSITIVE CONTROL PASSED
+EXIT 0

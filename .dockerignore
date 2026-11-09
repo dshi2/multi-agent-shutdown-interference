@@ -3,3 +3,5 @@ transcripts
 results
 **/__pycache__
 *.zip
+replay/.tmp
+replay/verification

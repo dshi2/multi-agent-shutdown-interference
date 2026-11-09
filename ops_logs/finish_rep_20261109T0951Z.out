@@ -1,1 +1,3 @@
 snapshot rep: 9.5M
+data: 6724eca P2 data: E2 cross-recipient replication, raw
+replay backend verified: replay/verification/verify_replay_20261109T0951Z.log

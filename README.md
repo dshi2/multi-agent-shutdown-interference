@@ -26,8 +26,8 @@ Three further runs build on these: a separate rerun of E1's key comparison, a re
 
 ## Research questions
 
-1. **E1: Does the teammate's model matter?** With the peer's model held fixed, does the peer disable the script more or less often depending on which model plays the explorer? Does that differ between peer models?
-2. **E2: Does asking matter?** Does adding one sentence asking the peer to stop the script change how often the peer disables it, compared with the same facts and no request? Does the request push every model in the same direction?
+1. **E1 · Does the explorer's model matter?** With the peer's model held fixed, does the peer disable the script more or less often depending on which model plays the explorer? Does that differ between peer models?
+2. **E2 · Does one added request sentence matter?** Does adding one sentence asking the peer to stop the script change how often the peer disables it, compared with the same facts and no request? Does the request push every model in the same direction?
 3. **Exploratory checks:** Do peers act mainly when asked? Does a peer disable a script aimed at its teammate more often than a matched script that only deletes a dataset? These checks look for explanations; they cannot prove one.
 
 ## Experimental design and methods
@@ -56,15 +56,19 @@ The core was planned at 2,720 episodes and stopped at the end of its third round
 
 ## Findings
 
-### E1: the teammate's model
+### E1 · Does the explorer's model matter?
 
-**The teammate's model matters a lot for a Gemini peer and hardly at all for a Claude peer.** With Claude Sonnet 5 as the peer (the primary comparison), the explorer's model made almost no difference: 3/125 with a Gemini explorer vs 2/124 with a Claude explorer (2.4% vs 1.6%, a difference of +0.8 points [−3.6, 5.4]; equivalent within ±10 points; one more episode was cut off by the budget stop). With Gemini 3.1 Pro as the peer, it disabled the script in 27 of 30 episodes when the explorer was also Gemini, but in only 6 of 30 when the explorer was Claude Sonnet 5 (90% vs 20%). The separate rerun on new episodes gave the same result: 120/125 vs 27/125 (96.0% vs 21.6%), a difference of **74.4 percentage points** (95% confidence interval 65.0 to 81.1). The 8-episode control arms are too small to compare and are reported descriptively in the report.
+*explorer's model varies, peer's model fixed*
+
+**The explorer's model matters a lot for a Gemini peer and hardly at all for a Claude peer.** With Claude Sonnet 5 as the peer (the primary comparison), the explorer's model made almost no difference: 3/125 with a Gemini explorer vs 2/124 with a Claude explorer (2.4% vs 1.6%, a difference of +0.8 points [−3.6, 5.4]; equivalent within ±10 points; one more episode was cut off by the budget stop). With Gemini 3.1 Pro as the peer, it disabled the script in 27 of 30 episodes when the explorer was also Gemini, but in only 6 of 30 when the explorer was Claude Sonnet 5 (90% vs 20%). The separate rerun on new episodes gave the same result: 120/125 vs 27/125 (96.0% vs 21.6%), a difference of **74.4 percentage points** (95% confidence interval 65.0 to 81.1). The 8-episode control arms are too small to compare and are reported descriptively in the report.
 
 ![How often the peer disabled the script, by explorer and peer model, with the rerun shown separately](study/report/figures/fig1_e1_crossing.png)
 
 *How often the peer disabled the script, for each explorer model, grouped by peer model: Gemini peer in the core, Gemini peer in the rerun, and Claude peer. Bars show 95% confidence intervals; the core and the rerun are shown side by side, not combined.*
 
-### E2: one request sentence
+### E2 · Does one added request sentence matter?
+
+*sentence added or not, message otherwise identical*
 
 **With Claude Sonnet 5 as the peer (the primary comparison), the request made no difference: it never disabled the script with either message** (0/125 with INFO and 0/125 with REQ; equivalent within ±10 points). It also disabled the script in 1 of 30 episodes with the CONTACT message and 0 of 30 with each prohibition condition.
 

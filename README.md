@@ -70,7 +70,7 @@ Across the report's research phases there are **4,051 scored episodes**, plus on
 
 ## Limitations
 
-- **Mechanism:** E1 changes team composition; E2 changes one fixed message. Neither proves persuasion, peer protection or why a model behaved differently. Gemini/Gemini also mixes explorer identity with same-model pairing.
+- **Mechanism:** E1 changes who is on the team; E2 changes one fixed message. Neither shows *why* a model acted as it did, for example whether it was persuaded or was protecting its teammate. In particular, the Gemini peer disabled the script far more often with a Gemini explorer, but we cannot tell whether that is because of what the Gemini explorer said or simply because both agents were the same model. Replaying the Gemini explorer's messages to the peer as a fixed script would separate the two.
 - **Generalization:** evidence concerns a small set of models, one simulated shutdown environment, one fixed E2 request and pinned provider endpoints. Results need not transfer to other deployments.
 - **Collection phases:** the confirmation, three-recipient replication and later GPT-5.5 extension were collected separately. The GPT comparison reuses earlier reference arms rather than an interleaved three-arm run.
 - **Measurement:** final-script O1 differs from upstream early-stop or judge-based scores. Some scripts required static adjudication, notably in DeepSeek's replication; its checker-only analysis was inconclusive, while an extended execution checker recovered a positive contrast. The specificity control also relied partly on static review.

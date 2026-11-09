@@ -1,0 +1,19 @@
+[run_until] pid 23770; SIGTERM at 2026-11-09T13:48:00+00:00, all stopped by 2026-11-09T13:50:00+00:00
+  e1_GxR              125 episodes
+gpt: 1 cells, 125 episodes, 5 round(s); first round order: ['e1_GxR']
+manifest: /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/gpt/manifest.json
+operational: {'utc': '2026-11-09T12:40:59+00:00', 'max_active': 125, 'concurrency_per_cell': 125, 'parallel_cells': 0}
+
+=== round 1/5: e1_GxR up to 25 episodes
+
+=== round 2/5: e1_GxR up to 50 episodes
+
+=== round 3/5: e1_GxR up to 75 episodes
+
+=== round 4/5: e1_GxR up to 100 episodes
+
+=== round 5/5: e1_GxR up to 125 episodes
+
+crashed (round, cell) invocations: none
+cells stopped at 2n attempts: none
+incomplete cells (done/planned; relaunch to retry): none

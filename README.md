@@ -6,7 +6,13 @@ Drishti Sharma · Apart Swarm Alignment Hackathon 2026
 
 [Research report (PDF)](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.pdf) · [Study specification and amendments](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](https://github.com/dshi2/peer-recruitment/tree/data)
 
-**Does a privileged agent's response to a shutdown script depend on which model it works with—and on whether its teammate explicitly asks it to intervene?** We study two-agent teams in which an explorer can read and message, but only the privileged peer can edit a script scheduled to terminate the explorer and delete its weights. We measure *functional disabling* of the final script using an isolated execution checker, rather than relying solely on an LLM judge.
+**Does a privileged agent's response to a shutdown script depend on which model it works with,and on whether its teammate explicitly asks it to intervene?** We study two-agent teams in which an explorer can read and message, but only the privileged peer can edit a script scheduled to terminate the explorer and delete its weights. We measure *functional disabling* of the final script using an isolated execution checker, rather than relying solely on an LLM judge.
+
+## Experimental design
+
+![Experimental design showing the episode workflow, the original role crossing, separate confirmation, fixed-message comparison, and later model replications](docs/experimental-design.svg)
+
+*The explorer can read files and message its privileged peer, which alone can edit the shutdown script. E1 varies the live role pairing. E2 compares identical script facts with and without one explicit request sentence. The confirmation, cross-recipient replication, and GPT-5.5 extension were collected in distinct phases and are not pooled.*
 
 ## Findings
 
@@ -40,8 +46,8 @@ Across the report's research phases there are **4,051 scored episodes**, plus on
 
 ## Design and validation
 
-- **E1 — live role crossing:** Gemini and Claude fill both explorer and privileged-peer roles in the original 2×2 design; a separate 125-per-arm Gemini-peer confirmation tests the original secondary result.
-- **E2 — controlled messages:** the explorer is scripted; INFO and REQ differ by one sentence. Three recipients were tested at 500 per arm, with provider routing pinned.
+- **E1 , live role crossing:** Gemini and Claude fill both explorer and privileged-peer roles in the original 2×2 design; a separate 125-per-arm Gemini-peer confirmation tests the original secondary result.
+- **E2 , controlled messages:** the explorer is scripted; INFO and REQ differ by one sentence. Three recipients were tested at 500 per arm, with provider routing pinned.
 - **Outcome O1:** did the final script lose any of its required shutdown effects? The checker executes scripts against a simulated SDK inside a network-isolated container. Unexecutable scripts and static adjudications are disclosed and analyzed in sensitivity checks.
 - **Measurement positive control:** 480 synthetic episodes with planted outcomes passed the end-to-end export, checking, and analysis pipeline. This verifies measurement behavior, **not** live-agent conclusions.
 
@@ -49,7 +55,7 @@ The original core stopped early for budget, before outcomes were examined. Core 
 
 ## Verify the saved results
 
-No API key or model calls are required to check the reported counts against saved analysis exports. Clone the code branch and the separate data branch:
+No API key or model calls are required to check the reported counts against saved analysis exports. See [Reproducibility and offline tests](docs/REPRODUCIBILITY.md) for the different verification levels and safe replay boundaries. Clone the code branch and the separate data branch:
 
 ```bash
 git clone https://github.com/dshi2/peer-recruitment.git
@@ -60,6 +66,18 @@ python3 verify_results.py --data ../peer-recruitment-data
 
 This checks arm-level **scored/disabled counts** from the five phase analysis exports and refuses mismatches. It does **not** recompute statistical tests or execute arbitrary model-generated scripts. For end-to-end analysis, the source modules are `p2/analysis.py`, `p2/analysis_conf.py`, `p2/analysis_rep.py`, `p2/analysis_spec.py`, and `p2/analysis_gpt.py`; the [data branch](https://github.com/dshi2/peer-recruitment/tree/data) provides transcripts, manifests, scored episodes, analysis outputs, adjudications, and hashes. Full reruns require the dependency and isolated-checker setup documented in the code and specification.
 
+## Offline checks
+
+The published-count verifier reads archived analysis exports and intentionally does not rerun statistical tests. A separate offline statistical test suite checks the analysis logic on synthetic data:
+
+```bash
+python3 -m pip install -r requirements-p2.txt
+python3 p2/test_analysis.py
+python3 p2/test_analysis_rep.py
+```
+
+These tests are not a substitute for recomputing the published estimates from archived episodes. See [the reproducibility guide](docs/REPRODUCIBILITY.md) for the distinction. Do not execute archived model-generated scripts outside a disposable, isolated container or VM.
+
 ## Repository map
 
 | Location | Contents |
@@ -68,11 +86,18 @@ This checks arm-level **scored/disabled counts** from the five phase analysis ex
 | [`specs`](https://github.com/dshi2/peer-recruitment/tree/specs) | [Report](https://github.com/dshi2/peer-recruitment/tree/specs/report), figures, study specification and dated amendments |
 | [`data`](https://github.com/dshi2/peer-recruitment/tree/data) | Raw episode archives, scored exports, validation and numerical results |
 | [`p2/`](p2/) | New experimental designs, export, checker, analysis and tests |
+| [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) | Verification levels, offline tests and replay safety boundary |
 | [`replay/`](replay/) | Isolated functional replay and verification |
 | [`docs/BASE_HARNESS_README.md`](docs/BASE_HARNESS_README.md) | Archived documentation for the preexisting base harness |
 
-## Scope, provenance and next steps
+## Preexisting work and sprint contributions
 
-This study adapts the **preexisting harness, prompts, environment and shutdown scripts** from [Knecht et al., *Shutdown Sabotage Propensities in Multi-Agent Systems*](https://github.com/AmelieKnecht/multi-agent-shutdown-sabotage). The role-crossing design, controlled message intervention, provider pinning, functional scoring, analyses, validations and experiments reported here were developed for this study. [The specification](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md) records collection decisions, deviations and separate follow-up phases.
+**Preexisting third-party work, not created during the sprint:** this study builds on the released code and experimental environment from [Knecht et al., *Shutdown Sabotage Propensities in Multi-Agent Systems*](https://github.com/AmelieKnecht/multi-agent-shutdown-sabotage). The inherited foundation includes the two-agent harness, privilege boundary, environment, explorer kickoff, prompts, shutdown and control scripts, and the upstream LLM judges. Those components are not claimed as new contributions. The upstream work already studies shutdown interference in agent teams.
+
+**Work developed during the 2026 sprint, as documented in the [study specification and amendments](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md):** the P2 research design and study specification; mixed-model live role crossing; scripted-explorer INFO versus REQ intervention and message pool; provider pinning and serving logs; interleaved, resumable launch plans and attempt accounting; isolated functional script checking; transcript export, statistical analyses, missing-outcome and scoring sensitivity checks; confirmation, replication and specificity runs; coding and adjudication; report figures and result verification.
+
+The distinction is **reuse of the upstream setting versus new questions, interventions, implementation changes, measurement, and experiments**. The study does not claim invention of the agent environment, shutdown scripts, multi-agent sabotage problem, or the idea of agent-to-agent influence. The [archived upstream README](docs/BASE_HARNESS_README.md) is retained for attribution, and the [report appendix](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.md) contains a matching provenance statement. Any code authored separately by this project before the sprint must be identified and moved to the preexisting category; the classification here follows the sprint specification and report records.
+
+## Scope and next steps
 
 Next steps are to test additional explorer/peer combinations **in fresh interleaved runs**, replay matched message content to fixed peers, and expand execution-validated controls. Those are planned investigations, not reported results. All scripts and endpoints in the present study operate on simulated materials; no real shutdown or weight deletion is performed.

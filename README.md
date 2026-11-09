@@ -64,7 +64,7 @@ Only the Cerebras and DeepInfra pins specify a precision; the other providers se
 
 | Collection | What it contains | Scored episodes | In the submitted report |
 |---|---|---:|---|
-| 1. Core | E1: Claude-peer pairs 125 run each, Gemini-peer pairs 30 each, control arms 8 each. E2 with Claude: INFO and REQ 125 each, other conditions 30 each | 681 of 682 run: one Claude → Claude episode was still running when we stopped collection for budget, so it could not be scored | Yes |
+| 1. Core | E1: Claude-peer pairs 125 run each, Gemini-peer pairs 30 each, control arms 8 each. E2 with Claude: INFO and REQ 125 each, other conditions 30 each | 681 of 682 | Yes |
 | 2. Gemini-peer rerun | Gemini → Gemini vs Claude → Gemini, new episodes | 250 (125 each) | Yes |
 | 3. Replication | INFO vs REQ for GPT-OSS-120B, DeepSeek V4.1 Flash and Qwen3.7 Plus | 3,000 (500 per message per model) | Yes |
 | 4. Specificity check | Claude → Gemini, shutdown script vs dataset script | 120 (60 each) | Yes, as exploratory |

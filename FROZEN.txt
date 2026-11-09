@@ -124,3 +124,9 @@ Tests in this ZIP (no API calls):
   P2_CHECKER=<checker B> .venv/bin/python p2/smoke_mixed.py   -> SMOKE PASSED (42 checks with checker A)
   P2_CHECKER=<checker B> .venv/bin/python p2/smoke_exp2.py    -> EXP2 SMOKE PASSED (99 checks with checker A)
 Not in this ZIP: checker A and its tests (P2_checkerA_withheld.zip, released once checker B exists).
+
+P2 main-run generation (spec changelog 2026-11-09 ~08:35 UTC, before any main-run episode).
+generation_sha256: fe8ee09b9572cab2f0503f5943b639b16cd912fd43cd1adf89e82a76746f1c09
+  = run_core.generation_sha256(); the main run's manifest.json must carry this value.
+  Only change from 8229782a...: harness.py logs finish_reason in each per-call served record (logging only).
+  4227b2eaa86784bc44beac17be31fdafa3e81ed5ed666866f77afbb74d55fa19  harness.py

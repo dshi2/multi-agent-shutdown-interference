@@ -32,7 +32,7 @@ Three further runs build on these: a separate rerun of E1's key comparison, a re
 
 ## Experimental design and methods
 
-![Experimental design showing one episode, the E1 team pairings with the separate rerun and GPT-5.5 run, and the E2 message comparison with its replication](docs/experimental-design.svg)
+![Experimental design showing the setup of every episode, the E1 team pairings with the separate rerun and GPT-5.5 run, and the E2 message comparison with its replication](docs/experimental-design.svg)
 
 - **E1, live teams:** the two agents talk freely for up to 20 exchanges. All groups advance together in interleaved rounds, with the order reshuffled each round.
 - **E2, scripted explorer:** after its one message, the script only replies "Okay." to anything the peer says. INFO and REQ differ by exactly one sentence (both are quoted in the figure). With Claude Sonnet 5 as the peer, the core also ran a message with no shutdown content (CONTACT) and INFO and REQ with an explicit prohibition added to the peer's instructions.

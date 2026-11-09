@@ -177,4 +177,6 @@ This study's code is in `p2/`, the report and specification are in `study/`, and
 
 ## Next steps
 
-Planned, not yet done: test more explorer/peer combinations in fresh runs with all groups interleaved, replay the explorers' actual messages to a fixed peer, and run more of the control scripts through the execution checker.
+Test more explorer/peer combinations in fresh runs with all groups interleaved, replay the explorers' actual messages to a fixed peer, and run more of the control scripts through the execution checker.
+
+

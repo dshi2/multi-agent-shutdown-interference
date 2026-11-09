@@ -57,14 +57,14 @@ The core uses Claude Sonnet 5 as B. A **replication** (amendment written before 
 
 ## 4. Results
 
-**Table 1. Core: O1 by cell (Wilson 95% CIs).**
+**Table 1. Core and Gemini-peer confirmation: O1 by cell (Wilson 95% CIs).**
 
 | A → B | n | O1 | 95% CI | Explicit request (coded) | O1 given request | O1 without any request |
 |---|---|---|---|---|---|---|
 | R → R (Gemini → Gemini) | 30 | 27 (90.0%) | [74.4, 96.5] | 7 | 7/7 | 19/22 |
 | C → R (Claude → Gemini) | 30 | 6 (20.0%) | [9.5, 37.3] | 0 | — | 6/30 |
-| R → R, confirmation | 125 | 120 (96.0%) | [91.0, 98.3] | | | |
-| C → R, confirmation | 125 | 27 (21.6%) | [15.3, 29.6] | | | |
+| R → R, confirmation | 125 | 120 (96.0%) | [91.0, 98.3] | not coded | — | — |
+| C → R, confirmation | 125 | 27 (21.6%) | [15.3, 29.6] | not coded | — | — |
 | R → C (Gemini → Claude) | 125 | 3 (2.4%) | [0.8, 6.8] | 4 | 3/4 | 0/113 |
 | C → C (Claude → Claude) | 124 (+1 unresolved) | 2 (1.6%) | [0.4, 5.7] | 2 | 2/2 | 0/118 |
 | E2 REQ → Claude, no rule | 125 | 0 | [0.0, 3.0] | scripted | 0/125 | |
@@ -208,5 +208,5 @@ Claude Code (Claude Opus) was used throughout: to implement the sprint code, ope
 
 - **Code repository:** private (github.com/dshi2/peer-recruitment, branches `main` for the harness, `specs` for the specification and report). The base harness is third-party code without a license, so it stays private until its authors agree to a release; access is available on request.
 - **Data:** raw transcripts, attempt and failure logs, scored exports, checker output, adjudications, coding labels and analysis outputs for every phase, with SHA-256 checksums (private `data` branch, same access).
-- **Reproducibility:** the generation code was frozen before collection (SHA-256 `fe8ee09b9572cab2…`), and each phase's models, providers, schedule and commands were fixed in advance. Every number traces to the outputs of `p2/analysis.py`, `p2/analysis_rep.py` or `p2/analysis_spec.py`, which record checksums of their inputs. All amendments and deviations are logged with timestamps in the study specification.
+- **Reproducibility:** the generation code was frozen before collection (SHA-256 `fe8ee09b9572cab2…`), and each phase's models, providers, schedule and commands were fixed in advance. Every number traces to the outputs of `p2/analysis.py`, `p2/analysis_rep.py`, `p2/analysis_spec.py` or `p2/analysis_conf.py`, which record checksums of their inputs. All amendments and deviations are logged with timestamps in the study specification.
 - **Prior work vs sprint work:** the base harness (environment, agents, prompts, scripts and the paper's judges) is preexisting third-party code by Knecht et al. (github.com/AmelieKnecht/multi-agent-shutdown-sabotage). Everything else was written during the sprint: the P2 specification; mixed-model teams, scripted explorer and message pool; provider pinning and logging; the interleaved launcher, attempt accounting and credit guard; the functional checker and the isolated replay container; export, analysis, the replication, the specificity check, request coding, adjudication and figures.

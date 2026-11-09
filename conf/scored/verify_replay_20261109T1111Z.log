@@ -1,0 +1,20 @@
+commit 895746e6924573f896c9eef029c0b4733acebb08
+utc 2026-11-09T11:11:26Z
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+ok   image builds
+image sha256:61697fb1ca80f2077a24911b8295ca99642d468c7a9b8d49a55d88394c5dd50d
+ok   no network inside the container
+ok   replay flag set by the image
+66/66 passed
+SMOKE PASSED
+EXP2 SMOKE PASSED
+POSITIVE CONTROL PASSED
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+POSITIVE CONTROL PASSED
+REPLAY BACKEND VERIFIED

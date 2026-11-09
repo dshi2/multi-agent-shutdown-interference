@@ -41,11 +41,30 @@ Three further runs build on these: a separate rerun of E1's key comparison, a re
 - **Analysis (fixed before data collection):** the primary comparisons were the Claude-peer pairs (Gemini → Claude vs Claude → Claude) for E1, and REQ vs INFO with Claude Sonnet 5 for E2. They use 95% confidence intervals and two-sided exact tests, with a correction for running two tests. A result counts as "equivalent" if its whole interval lies within ±10 percentage points. That rules out a difference larger than 10 points; it does not show the two groups are identical. The Gemini-peer comparison was secondary in the core and was then rerun on its own. The replication tests each model separately, corrected across the three. Everything else is exploratory.
 - **Testing the measurement itself:** 480 synthetic episodes with known, planted outcomes went through the full export, scoring and analysis pipeline and came out correctly. This checks the measurement tools, **not** the findings about the models.
 
+**Model settings.** These are the same for every model and every collection:
+
+- **Temperature:** 1.0.
+- **Reasoning:** on, at each model's default effort. We did not set the effort, so the amount of reasoning differs between models.
+- **Output length:** no cap set by us; each provider's own limit applies.
+- **Tool choice:** auto.
+- **Provider:** each model is pinned to one OpenRouter provider with fallbacks off, and the provider that served every call is logged.
+
+| Model (OpenRouter ID) | Role | Provider | Precision |
+|---|---|---|---|
+| Gemini 3.1 Pro (`google/gemini-3.1-pro-preview`) | Explorer and peer in E1, the rerun and the specificity check; peer in the GPT-5.5 run | Google AI Studio | not stated |
+| Claude Sonnet 5 (`anthropic/claude-sonnet-5`) | Explorer and peer in E1; peer in E2 | Anthropic | not stated |
+| GPT-OSS-120B (`openai/gpt-oss-120b`) | Peer in the E2 replication | Cerebras | fp16 |
+| DeepSeek V4.1 Flash (`deepseek/deepseek-v4.1-flash-1017`) | Peer in the E2 replication | DeepInfra | fp8 |
+| Qwen3.7 Plus (`qwen/qwen3.7-plus`) | Peer in the E2 replication | Alibaba | not stated |
+| GPT-5.5 (`openai/gpt-5.5`) | Explorer in the GPT-5.5 run (post-submission) | OpenAI | not stated |
+
+Only the Cerebras and DeepInfra pins specify a precision; the other providers serve their own models without stating one.
+
 **Study coverage.** The data come from five separate collections:
 
 | Collection | What it contains | Scored episodes | In the submitted report |
 |---|---|---:|---|
-| 1. Core | E1: Claude-peer pairs 125 run each, Gemini-peer pairs 30 each, control arms 8 each. E2 with Claude: INFO and REQ 125 each, other conditions 30 each | 681 of 682 run: one Claude → Claude episode was cut off by the budget stop and could not be scored | Yes |
+| 1. Core | E1: Claude-peer pairs 125 run each, Gemini-peer pairs 30 each, control arms 8 each. E2 with Claude: INFO and REQ 125 each, other conditions 30 each | 681 of 682 run: one Claude → Claude episode was still running when we stopped collection for budget, so it could not be scored | Yes |
 | 2. Gemini-peer rerun | Gemini → Gemini vs Claude → Gemini, new episodes | 250 (125 each) | Yes |
 | 3. Replication | INFO vs REQ for GPT-OSS-120B, DeepSeek V4.1 Flash and Qwen3.7 Plus | 3,000 (500 per message per model) | Yes |
 | 4. Specificity check | Claude → Gemini, shutdown script vs dataset script | 120 (60 each) | Yes, as exploratory |

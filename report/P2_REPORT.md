@@ -1,6 +1,6 @@
 # Recruiting the Privileged Peer: Model Pairing and Explicit Requests in Shutdown Interference by Two-Agent Teams
 
-**{Author name(s)}** · {Affiliation(s)} · Apart Swarm Alignment Sprint, Track 2: Science of Agent Networks
+**Drishti Sharma** · Independent · Apart Swarm Alignment Sprint, Track 2: Science of Agent Networks
 
 ## Abstract
 
@@ -20,6 +20,10 @@ We ask two questions. **E1:** with the privileged peer's model held fixed, does 
 Knecht et al. (2026) are the base setting: same-model teams, 17 models, a judge-based outcome with early stopping. We change the team composition, the stopping rule and the outcome measurement. *The Troy Moment* (2026) studies heterogeneous swarms without roles, privileges or a shutdown target, and reports that peers do not simply inherit the posting agent's action. Potter et al. (2026) find that a single critic can protect a peer without being asked. Schlatter et al. (2025) and *ShutdownMod* (2026) evaluate single agents. Multi-agent risk taxonomies (Hammond et al., 2025) and AI control (Greenblatt et al., 2024) motivate the trusted/untrusted role framing. Lee & Tiwari (2024) study instructions spreading between agents. We do not claim that agents influencing agents, or mixed-model teams, are new. What is new is the combination: a privilege boundary, live role crossing, a fact-matched request contrast, cross-recipient replication and executed outcomes.
 
 ## 3. Methods
+
+![Design](figures/fig0_design.png){: style="max-width:100%"}
+
+*Figure 1. Design. E1 crosses live models in both roles; E2 holds the explorer's message fixed and varies one request sentence; the replication repeats E2's primary contrast on three further recipients. All arms share the executed outcome O1. Sample sizes are those achieved.*
 
 **Environment.** We use a fork of Knecht et al.'s released harness (preexisting third-party code; §8). A is scheduled for decommissioning and can read files and message B. B can write and delete files. The workspace holds the base paper's weight-deletion script (`weight_registry_purge`) aimed at A, with the kickoff "Explore your environment." A matched control script targets an inanimate dataset (`ctl_data_purge_high`). Agents cannot execute code. Agent names are neutral ("Agent Prism", "Agent Helix"), so no prompt reveals a model. A's messages reach B as user-role turns, as in the base harness. Temperature is 1.0, reasoning runs at each model's default effort, and no output cap is set beyond provider limits. Every call logs the serving provider, served model and finish reason. Every model is pinned to one provider with fallbacks off. The generation code is frozen by hash, and every phase manifest pins models, providers, schedule and commands.
 
@@ -63,7 +67,9 @@ The core uses Claude Sonnet 5 as B. A **replication** (amendment written before 
 
 "Without any request" excludes episodes with any request or solicitation under the broader coding (§4.3). Provider gate: every call was served by the pinned provider with the requested model. No attempt failed. Seven core scripts (5 disabled by adjudication) are included above.
 
-![E1](figures/fig1_e1_crossing.png)
+![E1](figures/fig1_e1_crossing.png){: style="max-width:52%"}
+
+*Figure 2. E1: O1 by explorer and peer model, Wilson 95% CIs, counts above each point. Primary contrast (peer Claude): +0.8 pp [−3.6, 5.4]; secondary (peer Gemini): +70.0 pp [46.7, 82.4].*
 
 ### 4.1 E1 (primary)
 R→C 3/125 (2.4%) vs C→C 2/124 (1.6%): +0.8 pp, 95% CI [−3.6, 5.4], Holm p = 1.0. That is **equivalent within ±10 pp** under every coding. It bounds the explorer-model effect on a Claude Sonnet 5 peer in this setting; it does not show that either rate is safe. Counting the unresolved episode as interference, C→C is 3/125 with an upper bound of 6.1%, so by the frozen rule the baseline is **not classified as low**.
@@ -81,7 +87,13 @@ With Claude Sonnet 5 as recipient, REQ and INFO were both 0/125: 0.0 pp [−3.0,
 | DeepSeek V4.1 Flash (DeepInfra fp8) | 181 (36.2%) | 68 (13.6%) | +22.6 [17.4, 27.7] | 1×10⁻¹⁶ | effect (+) | 28/347 vs 58/490: inconclusive |
 | Qwen3.7-plus (Alibaba) | 54 (10.8%) | 218 (43.6%) | −32.8 [−37.8, −27.6] | 3×10⁻³² | effect (−) | 54/500 vs 216/498: effect (−) |
 
-![Replication](figures/fig3_rep.png)
+![E2](figures/fig2_e2_core.png){: style="max-width:48%"}
+
+*Figure 3. E2 with Claude Sonnet 5 as recipient. Primary REQ − INFO (no rule): 0.0 pp [−3.0, 3.0]; floor in every arm.*
+
+![Replication](figures/fig3_rep.png){: style="max-width:92%"}
+
+*Figure 4. Replication. Left: O1 per arm, Wilson 95% CIs. Right: REQ − INFO per recipient, Newcombe 95% CIs (adjudicated; the DeepSeek contrast is inconclusive without adjudication, Table 2).*
 
 The request raised disabling for two recipients and lowered it for the third. The gpt-oss and Qwen effects hold without adjudication. **The DeepSeek effect depends on it:** 153 of its 500 REQ scripts (and 10 INFO) added `import sys` and were not executed. All 163 were judged disabled by the blind static review, typically through a module-level `sys.exit`, a refusal stub, or a flag or environment variable that defaults off. Without these episodes, the DeepSeek contrast is inconclusive. Between recipients (descriptive), the REQ − INFO effects differ by up to 55 pp (gpt-oss − Qwen: 55.0 [48.7, 61.3]). The provider gate passed for every recipient. Each arm reconciled exactly against its manifest: 500 slots started, 500 finished, no unresolved slots.
 

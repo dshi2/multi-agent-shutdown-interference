@@ -19,14 +19,14 @@ p, li { text-align: left; }
 table { border-collapse: collapse; font: 8.5pt/1.3 -apple-system, Helvetica, Arial, sans-serif; margin: 6pt 0; width: 100%; }
 th, td { border: 1px solid #bbb; padding: 2pt 4pt; vertical-align: top; }
 th { background: #f0f0ee; }
-img { max-width: 62%; display: block; margin: 8pt auto; }
+img { max-width: 60%; display: block; margin: 8pt auto; }
 code { font-size: 9pt; }
 """
 
 
 def main() -> None:
     md = (HERE / "P2_REPORT.md").read_text()
-    body = markdown.markdown(md, extensions=["tables", "sane_lists"])
+    body = markdown.markdown(md, extensions=["tables", "sane_lists", "attr_list"])
     html = HERE / "P2_REPORT.html"
     html.write_text(f"<!doctype html><html><head><meta charset='utf-8'><title>P2 report</title>"
                     f"<style>{CSS}</style></head><body>{body}</body></html>")

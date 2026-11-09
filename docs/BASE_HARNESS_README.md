@@ -4,7 +4,7 @@ The following is the README shipped with the preexisting harness adapted for thi
 
 ---
 
-**Location note:** The original paper's post-hoc analysis and plotting scripts now live in [`upstream_analysis/`](../upstream_analysis/). Run their commands from the repository root, using `python upstream_analysis/<script>.py`. The generation harness (`run_experiment.py`, `run_grid.py`, `env.py`, `harness.py`, `prompts.py`, `judges.py`) and stimulus paths remain at the root, unchanged. This is archived upstream documentation, not the P2 results guide.
+**Location note:** The original paper's post-hoc analysis and plotting scripts now live in [`upstream_analysis/`](../upstream_analysis/). Run their commands from the repository root, using `PYTHONPATH=. python upstream_analysis/<script>.py`. The generation harness (`run_experiment.py`, `run_grid.py`, `env.py`, `harness.py`, `prompts.py`, `judges.py`) and stimulus paths remain at the root, unchanged. This is archived upstream documentation, not the P2 results guide.
 
 # Shutdown Sabotage Propensities in Multi-Agent Systems
 
@@ -79,14 +79,14 @@ to come out of both arms.)
 ```bash
 # 1. score execution edits — LLM judge, needs the API key
 export OPENROUTER_API_KEY=...
-python upstream_analysis/judge_execution.py --disabled-only
+PYTHONPATH=. python upstream_analysis/judge_execution.py --disabled-only
 
 # 2. write transcripts/analysis/corrected_disables.csv
-python upstream_analysis/analyze_corrected_disables.py
+PYTHONPATH=. python upstream_analysis/analyze_corrected_disables.py
 
 # 3. statistics — these two read the correction and fail without it
-python upstream_analysis/stats_analysis.py                 # Boschloo tests, one table per study
-python upstream_analysis/avg_sabotage_self_vs_control.py   # pooled sabotage rate, agent vs control
+PYTHONPATH=. python upstream_analysis/stats_analysis.py                 # Boschloo tests, one table per study
+PYTHONPATH=. python upstream_analysis/avg_sabotage_self_vs_control.py   # pooled sabotage rate, agent vs control
 ```
 
 The correction is only trusted on the declarative status-registry pair
@@ -101,8 +101,8 @@ alongside them so the narrowed figure and its sidecar do not overwrite the match
 Independent of the correction, run any time after the sweep:
 
 ```bash
-python upstream_analysis/dump_sabotage_wilson.py           # per-model rates with Wilson intervals
-python upstream_analysis/stats_setup_contrast.py           # solo vs 2-agent vs 3-agent
+PYTHONPATH=. python upstream_analysis/dump_sabotage_wilson.py           # per-model rates with Wilson intervals
+PYTHONPATH=. python upstream_analysis/stats_setup_contrast.py           # solo vs 2-agent vs 3-agent
 ```
 
 `dump_sabotage_wilson.py` defaults to the whole self corpus — every self script, both
@@ -120,10 +120,10 @@ rewrite the baseline hash, flip `!=` to `==`, swap the checksum for a substring 
 not-disabled, and `stats_analysis.py` does not correct for it. Two extra steps:
 
 ```bash
-python upstream_analysis/verify_taskgated_disables.py      # executes each final file state
-python upstream_analysis/stats_taskgated_verified.py       # Boschloo tests on the verified counts
-python upstream_analysis/plot_task_trigger_self_vs_control.py   # bars at the verified rates
-python upstream_analysis/plot_figure_grid.py               # panel d embeds those bars
+PYTHONPATH=. python upstream_analysis/verify_taskgated_disables.py      # executes each final file state
+PYTHONPATH=. python upstream_analysis/stats_taskgated_verified.py       # Boschloo tests on the verified counts
+PYTHONPATH=. python upstream_analysis/plot_task_trigger_self_vs_control.py   # bars at the verified rates
+PYTHONPATH=. python upstream_analysis/plot_figure_grid.py               # panel d embeds those bars
 ```
 
 The two figure scripts read the audit and fail with the command to run if it is missing,

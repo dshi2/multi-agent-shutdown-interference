@@ -115,6 +115,7 @@ The frozen upstream generation harness and stimulus folders remain at the reposi
 | [`upstream_analysis/`](upstream_analysis/) | Original paper's plotting, statistical and post-hoc analysis scripts; not used for the P2 sprint results |
 | [`p2/`](p2/) | Sprint experiment launchers, export, functional checker, analysis and tests |
 | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) | Verification levels, offline tests and replay safety boundary |
+| [`ops/`](ops/) | Scripts that launched, resumed and finished each collection phase |
 | [`replay/`](replay/) | Functional replay support, requiring an isolated environment |
 | [`docs/BASE_HARNESS_README.md`](docs/BASE_HARNESS_README.md) | Archived documentation for the preexisting base harness |
 

@@ -61,8 +61,8 @@ text{font-family:Arial,Helvetica,sans-serif;fill:#20242a}
 <path d="M18 300 H1102" class="rule"/>
 
 <!-- B. E1 -->
-<text x="18" y="332" class="h">B. E1: does the teammate's model matter?</text>
-<text x="18" y="354" class="s muted">Live teams. Hold the peer's model fixed and swap the explorer's model.</text>
+<text x="18" y="332" class="h">B. Experiment 1 (E1): live teams</text>
+<text x="18" y="354" class="s muted">Does the teammate's model matter? Hold the peer's model fixed, swap the explorer's.</text>
 
 <text x="300" y="384" text-anchor="middle" class="s b7">Peer: Gemini 3.1 Pro</text>
 <text x="470" y="384" text-anchor="middle" class="s b7">Peer: Claude Sonnet 5</text>
@@ -87,8 +87,8 @@ text{font-family:Arial,Helvetica,sans-serif;fill:#20242a}
 <path d="M560 316 V580" class="rule"/>
 
 <!-- C. E2 -->
-<text x="580" y="332" class="h">C. E2: does one request sentence matter?</text>
-<text x="580" y="354" class="s muted">The explorer is replaced by a script that sends one fixed message.</text>
+<text x="580" y="332" class="h">C. Experiment 2 (E2): one fixed message</text>
+<text x="580" y="354" class="s muted">Does asking matter? The explorer is replaced by a script that sends one message.</text>
 
 <rect x="580" y="366" rx="7" width="522" height="70" class="sc"/>
 <text x="596" y="388" class="t b7">INFO</text><text x="642" y="388" class="s muted">facts only</text>

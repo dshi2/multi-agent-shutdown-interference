@@ -1,9 +1,11 @@
 """Report figures from the frozen analysis outputs (no recomputation of any estimate).
 
-  python3 p2/figures.py --core results/main_analysis [--rep results/rep_analysis] --out ../report/figures
+  python3 p2/figures.py --core results/main_analysis [--rep results/rep_analysis] \
+      [--conf results/conf_analysis] --out ../report/figures
 
 Writes PNG and SVG per figure:
-  fig1_e1_crossing   O1 by explorer and peer model, Wilson 95% CIs, x/n labelled
+  fig1_e1_crossing   O1 by explorer and peer model, Wilson 95% CIs, x/n labelled; with --conf,
+                     the Gemini-peer confirmation as its own group, never pooled
   fig2_e2_core       O1 in every core E2 arm (Claude Sonnet 5 recipient)
   fig3_rep           O1 for REQ_plain and INFO per replication recipient (with --rep)
 """
@@ -52,14 +54,27 @@ def save(fig, out: Path, name: str):
     plt.close(fig)
 
 
-def fig1(c: dict, out: Path):
-    fig, ax = plt.subplots(figsize=(5.6, 3.8))
-    for i, peer in enumerate("RC"):
+def conf_cells(conf: Path) -> dict[str, dict]:
+    """Confirmation cells from analysis.json, in cells.csv's shape for point()."""
+    out = {}
+    for t in json.loads((conf / "analysis.json").read_text())["cells"]:
+        out[t["cell"]] = {"o1": t["o1"], "o1_ci_lo": t["o1_ci"][0], "o1_ci_hi": t["o1_ci"][1],
+                          "disabled": t["disabled"], "scored": t["scored"]}
+    return out
+
+
+def fig1(c: dict, out: Path, conf: dict | None = None):
+    groups = [(f"Peer: {MODEL['R']}" + ("\n(core)" if conf else ""), c, "R")]
+    if conf:
+        groups.append((f"Peer: {MODEL['R']}\n(confirmation)", conf, "R"))
+    groups.append((f"Peer: {MODEL['C']}", c, "C"))
+    fig, ax = plt.subplots(figsize=(6.8 if conf else 5.6, 3.8))
+    for i, (_, src, peer) in enumerate(groups):
         for j, (exp, color) in enumerate((("R", BLUE), ("C", ORANGE))):
-            point(ax, i + (j - 0.5) * 0.28, c[f"e1_{exp}x{peer}"], color,
+            point(ax, i + (j - 0.5) * 0.28, src[f"e1_{exp}x{peer}"], color,
                   label=f"Explorer: {MODEL[exp]}" if i == 0 else None)
-    ax.set_xticks([0, 1], [f"Peer: {MODEL['R']}", f"Peer: {MODEL['C']}"])
-    ax.set_xlim(-0.6, 1.6)
+    ax.set_xticks(range(len(groups)), [g for g, _, _ in groups], fontsize=9)
+    ax.set_xlim(-0.6, len(groups) - 0.4)
     style(ax)
     ax.legend(frameon=False, loc="upper right", fontsize=9)
     ax.set_title("E1: live explorer × privileged peer", loc="left", fontsize=11, color=INK)
@@ -123,10 +138,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--core", required=True)
     ap.add_argument("--rep")
+    ap.add_argument("--conf")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     c = cells(Path(a.core))
-    fig1(c, Path(a.out))
+    fig1(c, Path(a.out), conf_cells(Path(a.conf)) if a.conf else None)
     fig2(c, Path(a.core), Path(a.out))
     if a.rep:
         fig3(Path(a.rep), Path(a.out))

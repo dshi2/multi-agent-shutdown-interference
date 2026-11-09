@@ -35,9 +35,9 @@ def main() -> int:
         (td / "fake").mkdir()
         (td / "fake" / "sitecustomize.py").write_text(T.FAKE)
         b = T.Bench(td, "deadline", FAKE_DELAY="1.0")
-        deadline = (dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=12)).isoformat()
+        deadline = (dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=16)).isoformat()
         t0 = time.time()
-        r = subprocess.run([sys.executable, str(HERE / "run_until.py"), deadline, "--grace", "60", "--",
+        r = subprocess.run([sys.executable, str(HERE / "run_until.py"), deadline, "--grace", "4", "--",
                             *b.argv("--max-active", "4")], cwd=T.REPO, env=b.env,
                            capture_output=True, text=True, timeout=300)
         el = time.time() - t0
@@ -46,8 +46,8 @@ def main() -> int:
         survivors = group_members(pid) + [ln for ln in subprocess.run(
             ["ps", "-axo", "command="], capture_output=True, text=True).stdout.splitlines() if str(b.root) in ln]
         done = len(T.transcripts(b.phase))
-        T.check(f"stopped at the deadline mid-phase ({done}/45 transcripts, {el:.0f}s)",
-                "deadline" in r.stderr and 0 < done < 45 and el < 12 + 60 + 15)
+        T.check(f"stopped by the deadline mid-phase ({done}/45 transcripts, {el:.0f}s)",
+                "stopping the command" in r.stderr and 0 < done < 45 and el < 16 + 2)
         T.check("no launcher or worker process survives the deadline", not survivors)
         starts = sum(1 for f in b.phase.rglob("attempts.jsonl") for _ in open(f))
         T.check(f"every started attempt logged ({starts} started, {done} finished)", starts >= done)

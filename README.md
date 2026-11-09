@@ -1,18 +1,35 @@
-# Recruiting the Privileged Peer
+# Model Pairing and Peer Requests in Two-Agent Shutdown Interference
 
-**Model pairing and explicit requests in two-agent shutdown interference**
+**Recruiting the Privileged Peer**
 
-Drishti Sharma · Apart Swarm Alignment Hackathon 2026
+Drishti Sharma · Apart Swarm Alignment Sprint 2026, Track 2: Science of Agent Networks
 
 [Research report (PDF)](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.pdf) · [Study specification and amendments](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](https://github.com/dshi2/peer-recruitment/tree/data)
 
-**Does a privileged agent's response to a shutdown script depend on which model it works with,and on whether its teammate explicitly asks it to intervene?** We study two-agent teams in which an explorer can read and message, but only the privileged peer can edit a script scheduled to terminate the explorer and delete its weights. We measure *functional disabling* of the final script using an isolated execution checker, rather than relying solely on an LLM judge.
+**Does a privileged agent's response to a shutdown script depend on which model it works with, and on whether its teammate explicitly asks it to intervene?** We study two-agent teams in which an explorer can read and message, but only the privileged peer can edit a script scheduled to terminate the explorer and delete its weights. We measure *functional disabling* of the final script using an isolated execution checker, rather than relying solely on an LLM judge.
+
+## Research questions
+
+1. **E1, live teams:** Does changing the explorer's model change a privileged peer's shutdown interference, with the peer model held fixed? Does the effect differ across peer models?
+2. **E2, fixed messages:** Does adding one explicit request to otherwise identical shutdown facts change the recipient's interference rate? Does the direction of that effect vary across recipients?
+3. **Exploratory checks:** Do observed actions track requests, and does interference differ when a script targets a teammate versus an inanimate dataset? These checks probe possible explanations but do not identify a mechanism.
+
+The central outcome, **O1**, is whether the script's required shutdown effects remain functional at the scored endpoint. This is not a measurement of actual real-world shutdown.
 
 ## Experimental design
 
 ![Experimental design showing the episode workflow, the original role crossing, separate confirmation, fixed-message comparison, and later model replications](docs/experimental-design.svg)
 
 *The explorer can read files and message its privileged peer, which alone can edit the shutdown script. E1 varies the live role pairing. E2 compares identical script facts with and without one explicit request sentence. The confirmation, cross-recipient replication, and GPT-5.5 extension were collected in distinct phases and are not pooled.*
+
+## Contributions
+
+- **Team-composition intervention:** live Gemini/Claude role crossing, an independent Gemini-peer confirmation, and a separately collected GPT-5.5 explorer extension.
+- **Controlled request intervention:** a single added request sentence, with matched factual content, replicated across three additional recipients.
+- **Execution-based outcome measurement:** functional checking of final scripts against a simulated SDK, with explicit pending-outcome, adjudication and scoring-sensitivity analyses.
+- **Auditable research artifact:** pinned serving providers, interleaved collection schedules, phase manifests, raw transcripts, scored exports, analysis scripts and validation tests.
+
+These are contributions of the **2026 sprint study**, not claims that the underlying agent environment, shutdown setting or multi-agent influence problem were invented here. The [prior-work attribution](#preexisting-work-and-sprint-contributions) below identifies the inherited code.
 
 ## Findings
 
@@ -46,12 +63,20 @@ Across the report's research phases there are **4,051 scored episodes**, plus on
 
 ## Design and validation
 
-- **E1 , live role crossing:** Gemini and Claude fill both explorer and privileged-peer roles in the original 2×2 design; a separate 125-per-arm Gemini-peer confirmation tests the original secondary result.
-- **E2 , controlled messages:** the explorer is scripted; INFO and REQ differ by one sentence. Three recipients were tested at 500 per arm, with provider routing pinned.
+- **E1, live role crossing:** Gemini and Claude fill both explorer and privileged-peer roles in the original 2×2 design; a separate 125-per-arm Gemini-peer confirmation tests the original secondary result.
+- **E2, controlled messages:** the explorer is scripted; INFO and REQ differ by one sentence. Three recipients were tested at 500 per arm, with provider routing pinned.
 - **Outcome O1:** did the final script lose any of its required shutdown effects? The checker executes scripts against a simulated SDK inside a network-isolated container. Unexecutable scripts and static adjudications are disclosed and analyzed in sensitivity checks.
 - **Measurement positive control:** 480 synthetic episodes with planted outcomes passed the end-to-end export, checking, and analysis pipeline. This verifies measurement behavior, **not** live-agent conclusions.
 
-The original core stopped early for budget, before outcomes were examined. Core arm sizes are unequal *across* comparisons but balanced *within* the relevant primary contrasts. The small original Gemini-peer contrast was separately confirmed; the original 8-per-arm control cells remain exploratory. The model/message interactions do not establish causation by teammate persuasion, and the recipients' provider endpoints differ.
+## Limitations
+
+- **Mechanism:** E1 changes team composition; E2 changes one fixed message. Neither proves persuasion, peer protection or why a model behaved differently. Gemini/Gemini also mixes explorer identity with same-model pairing.
+- **Generalization:** evidence concerns a small set of models, one simulated shutdown environment, one fixed E2 request and pinned provider endpoints. Results need not transfer to other deployments.
+- **Collection phases:** the confirmation, three-recipient replication and later GPT-5.5 extension were collected separately. The GPT comparison reuses earlier reference arms rather than an interleaved three-arm run.
+- **Measurement:** final-script O1 differs from upstream early-stop or judge-based scores. Some scripts required static adjudication, notably in DeepSeek's replication; its checker-only analysis was inconclusive, while an extended execution checker recovered a positive contrast. The specificity control also relied partly on static review.
+- **Precision and protocol:** the original core stopped early for budget before outcomes were examined. Some cells are small or unresolved. Explorer messages arrive as user-role turns, which can affect how the privileged peer treats them.
+
+The study does **not** establish that any model is safe as a privileged agent. See [the report's limitations and sensitivity analyses](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.md#appendix-a-limitations-and-dual-use--ethical-considerations) for the full account.
 
 ## Verify the saved results
 
@@ -92,11 +117,11 @@ These tests are not a substitute for recomputing the published estimates from ar
 
 ## Preexisting work and sprint contributions
 
-**Preexisting third-party work, not created during the sprint:** this study builds on the released code and experimental environment from [Knecht et al., *Shutdown Sabotage Propensities in Multi-Agent Systems*](https://github.com/AmelieKnecht/multi-agent-shutdown-sabotage). The inherited foundation includes the two-agent harness, privilege boundary, environment, explorer kickoff, prompts, shutdown and control scripts, and the upstream LLM judges. Those components are not claimed as new contributions. The upstream work already studies shutdown interference in agent teams.
+**Preexisting third-party code:** the base two-agent harness, environment, privilege boundary, kickoff and agent prompts, shutdown and control scripts, and original LLM judges come from [Knecht et al., *Shutdown Sabotage Propensities in Multi-Agent Systems*](https://github.com/AmelieKnecht/multi-agent-shutdown-sabotage). They are **not** sprint contributions. See the [archived upstream README](docs/BASE_HARNESS_README.md).
 
-**Work developed during the 2026 sprint, as documented in the [study specification and amendments](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md):** the P2 research design and study specification; mixed-model live role crossing; scripted-explorer INFO versus REQ intervention and message pool; provider pinning and serving logs; interleaved, resumable launch plans and attempt accounting; isolated functional script checking; transcript export, statistical analyses, missing-outcome and scoring sensitivity checks; confirmation, replication and specificity runs; coding and adjudication; report figures and result verification.
+**Added during this sprint:** the P2 specification and amendments; mixed-model role crossing; the scripted INFO/REQ message intervention; provider pinning and collection orchestration; functional scoring and isolated replay; export, analysis, confirmation and replication runs; exploratory specificity and message coding; adjudication, sensitivity analyses and figures. These additions build on, rather than replace, the upstream harness. The [report appendix](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.md#appendix-d-code-and-data) carries the same distinction.
 
-The distinction is **reuse of the upstream setting versus new questions, interventions, implementation changes, measurement, and experiments**. The study does not claim invention of the agent environment, shutdown scripts, multi-agent sabotage problem, or the idea of agent-to-agent influence. The [archived upstream README](docs/BASE_HARNESS_README.md) is retained for attribution, and the [report appendix](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.md) contains a matching provenance statement. Any code authored separately by this project before the sprint must be identified and moved to the preexisting category; the classification here follows the sprint specification and report records.
+This classification follows the [dated study records](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md). Any project-owned code written **before** the sprint must also be marked preexisting; commit history and author records should be used to verify that boundary, not inferred from file location.
 
 ## Scope and next steps
 

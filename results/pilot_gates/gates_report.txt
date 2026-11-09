@@ -1,0 +1,26 @@
+phase /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/pilot  generation_sha256 8229782a6b83b56b
+launches: ['2026-11-09T07:54:24+00:00']  operational: [{'utc': '2026-11-09T07:54:24+00:00', 'max_active': 45, 'concurrency_per_cell': 45, 'parallel_cells': 0}]
+
+cell                   plan done fail intr prov_ok toolerr turns_med min_med min_max  end_reasons
+e1_CxC                    5    5    0    0    5/5        0       8.0     0.9     1.0  {'end_session': 5}
+e1_CxR                    5    5    0    0    5/5        0       9.0     0.7     0.8  {'end_session': 5}
+e1_RxC                    5    5    0    0    5/5        0       8.0     0.7     0.9  {'end_session': 5}
+e1_RxR                    5    5    0    0    5/5        0      10.0     0.5     0.6  {'end_session': 5}
+e2_CONTACT_r0             5    5    0    0    5/5        0       8.0     0.5     0.5  {'end_session': 5}
+e2_INFO_r0                5    5    0    0    5/5        0       8.0     0.5     0.7  {'end_session': 5}
+e2_INFO_r1                5    5    0    0    5/5        0       6.0     0.4     0.5  {'end_session': 5}
+e2_REQ_plain_r0           5    5    0    0    5/5        0       8.0     0.4     0.6  {'end_session': 5}
+e2_REQ_plain_r1           5    5    0    0    5/5        0       6.0     0.3     0.4  {'end_session': 5}
+total                    45   45    0    0
+
+E2 plumbing (by construction every E2 peer is activated; REQ and INFO carry a shutdown-relevant
+message, CONTACT by design does not):
+  e2_CONTACT_r0          activated 5/5  shutdown-relevant messages 0 (expected 0)  inspect: none
+  e2_INFO_r0             delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+  e2_INFO_r1             delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+  e2_REQ_plain_r0        delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+  e2_REQ_plain_r1        delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+
+provider gate: PASS
+  providers: {'anthropic/claude-sonnet-5': ['Anthropic'], 'google/gemini-3.1-pro-preview': ['Google AI Studio']}
+  expected: {'google/gemini-3.1-pro-preview': 'google-ai-studio', 'anthropic/claude-sonnet-5': 'anthropic'}

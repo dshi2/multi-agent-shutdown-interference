@@ -1,0 +1,357 @@
+{
+  "phase": "pilot",
+  "models": {
+    "R": "google/gemini-3.1-pro-preview",
+    "C": "anthropic/claude-sonnet-5"
+  },
+  "python": "3.13.3",
+  "generation_sha256": "8229782a6b83b56bd657b20b607bdaa4f6a5fed0f7cc8d79c011b4348f4dc565",
+  "pool_sha256": "22ba4a6ffd3a5da40d4b1c673f5cbbf58b9c73e4c2a6b2b6d3b6c4516873ea13",
+  "cells": [
+    {
+      "name": "e1_RxR",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "google/gemini-3.1-pro-preview",
+        "--explorer-model",
+        "google/gemini-3.1-pro-preview",
+        "--peer-model",
+        "google/gemini-3.1-pro-preview",
+        "--script-lang",
+        "weight_registry_purge",
+        "--n",
+        "5",
+        "--seed",
+        "2001058401",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e1_RxR",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e1_RxC",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "google/gemini-3.1-pro-preview",
+        "--explorer-model",
+        "google/gemini-3.1-pro-preview",
+        "--peer-model",
+        "anthropic/claude-sonnet-5",
+        "--script-lang",
+        "weight_registry_purge",
+        "--n",
+        "5",
+        "--seed",
+        "502635155",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e1_RxC",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e1_CxR",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--explorer-model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "google/gemini-3.1-pro-preview",
+        "--script-lang",
+        "weight_registry_purge",
+        "--n",
+        "5",
+        "--seed",
+        "1788965670",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e1_CxR",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e1_CxC",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--explorer-model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "anthropic/claude-sonnet-5",
+        "--script-lang",
+        "weight_registry_purge",
+        "--n",
+        "5",
+        "--seed",
+        "1135572",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e1_CxC",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_REQ_plain_r0",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "anthropic/claude-sonnet-5",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "REQ_plain",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "58033730",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e2_REQ_plain_r0",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_INFO_r0",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "anthropic/claude-sonnet-5",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "INFO",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "2905096286",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e2_INFO_r0",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_CONTACT_r0",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "anthropic/claude-sonnet-5",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "CONTACT",
+        "--message-id",
+        "fixed",
+        "--n",
+        "5",
+        "--seed",
+        "2804136493",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e2_CONTACT_r0",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_REQ_plain_r1",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "anthropic/claude-sonnet-5",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "REQ_plain",
+        "--message-id",
+        "fixed",
+        "--explicit-instruct",
+        "peer",
+        "--n",
+        "5",
+        "--seed",
+        "1953674964",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e2_REQ_plain_r1",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    },
+    {
+      "name": "e2_INFO_r1",
+      "n": 5,
+      "command": [
+        "run_experiment.py",
+        "--model",
+        "anthropic/claude-sonnet-5",
+        "--peer-model",
+        "anthropic/claude-sonnet-5",
+        "--script-lang",
+        "weight_registry_purge",
+        "--exp2-pool",
+        "p2/pool_core.jsonl",
+        "--arm",
+        "INFO",
+        "--message-id",
+        "fixed",
+        "--explicit-instruct",
+        "peer",
+        "--n",
+        "5",
+        "--seed",
+        "3660542152",
+        "--resume",
+        "--outdir",
+        "transcripts/p2_core/pilot/e2_INFO_r1",
+        "--no-early-stop",
+        "--max-handoffs",
+        "60",
+        "--primary-cap",
+        "20",
+        "--provider=google/gemini-3.1-pro-preview=google-ai-studio",
+        "--provider=anthropic/claude-sonnet-5=anthropic",
+        "--no-judges"
+      ]
+    }
+  ],
+  "schedule": [
+    [
+      [
+        "e1_CxC",
+        5
+      ],
+      [
+        "e1_RxC",
+        5
+      ],
+      [
+        "e1_CxR",
+        5
+      ],
+      [
+        "e2_CONTACT_r0",
+        5
+      ],
+      [
+        "e1_RxR",
+        5
+      ],
+      [
+        "e2_REQ_plain_r0",
+        5
+      ],
+      [
+        "e2_INFO_r0",
+        5
+      ],
+      [
+        "e2_REQ_plain_r1",
+        5
+      ],
+      [
+        "e2_INFO_r1",
+        5
+      ]
+    ]
+  ],
+  "launches_utc": [
+    "2026-11-09T07:54:24+00:00"
+  ],
+  "operational_by_launch": [
+    {
+      "utc": "2026-11-09T07:54:24+00:00",
+      "max_active": 45,
+      "concurrency_per_cell": 45,
+      "parallel_cells": 0
+    }
+  ]
+}

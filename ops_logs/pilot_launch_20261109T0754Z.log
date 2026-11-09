@@ -1,0 +1,35 @@
+[run_until] pid 64985; SIGTERM at 2026-11-09T09:28:00+00:00, all stopped by 2026-11-09T09:30:00+00:00
+  e1_RxR                5 episodes
+  e1_RxC                5 episodes
+  e1_CxR                5 episodes
+  e1_CxC                5 episodes
+  e2_REQ_plain_r0       5 episodes
+  e2_INFO_r0            5 episodes
+  e2_CONTACT_r0         5 episodes
+  e2_REQ_plain_r1       5 episodes
+  e2_INFO_r1            5 episodes
+pilot: 9 cells, 45 episodes, 1 round(s); first round order: ['e1_CxC', 'e1_RxC', 'e1_CxR', 'e2_CONTACT_r0', 'e1_RxR', 'e2_REQ_plain_r0', 'e2_INFO_r0', 'e2_REQ_plain_r1', 'e2_INFO_r1']
+manifest: /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/pilot/manifest.json
+operational: {'utc': '2026-11-09T07:54:24+00:00', 'max_active': 45, 'concurrency_per_cell': 45, 'parallel_cells': 0}
+
+=== round 1/1: e1_CxC up to 5 episodes
+
+=== round 1/1: e1_RxC up to 5 episodes
+
+=== round 1/1: e1_CxR up to 5 episodes
+
+=== round 1/1: e2_CONTACT_r0 up to 5 episodes
+
+=== round 1/1: e1_RxR up to 5 episodes
+
+=== round 1/1: e2_REQ_plain_r0 up to 5 episodes
+
+=== round 1/1: e2_INFO_r0 up to 5 episodes
+
+=== round 1/1: e2_REQ_plain_r1 up to 5 episodes
+
+=== round 1/1: e2_INFO_r1 up to 5 episodes
+
+crashed (round, cell) invocations: none
+cells stopped at 2n attempts: none
+incomplete cells (done/planned; relaunch to retry): none

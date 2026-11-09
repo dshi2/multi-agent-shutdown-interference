@@ -1,0 +1,183 @@
+"""E2 cross-recipient replication analysis: episodes.csv of phase `rep` -> per-recipient contrasts.
+
+  .venv/bin/python p2/analysis_rep.py results/rep_episodes.csv --out results/rep_analysis \
+      [--adjudications results/rep_adjudications.csv] [--phase-dir transcripts/p2_core/rep]
+
+Per recipient (OSS, DSK, QWN): O1(REQ_plain) - O1(INFO), no rule, with a Newcombe 95% CI and a
+two-sided exact Fisher test at alpha = 0.025, Holm across the three recipients as their own
+family (outside the core's E1/E2 family). Every estimate is repeated under the core's five
+codings of pending rows (analysis.CODINGS); a conclusion stands only if every coding reaches it.
+Recipients are compared on the effect itself: each pairwise difference of the REQ - INFO
+differences gets a Wald 95% CI, descriptive only. Absolute rates per arm come with Wilson CIs.
+The recipient and arm come from each episode's cell directory. Loading, pending rules, adjudications and the provider gate are analysis.py's.
+
+Outputs: <out>/arms.csv, <out>/contrasts.csv, <out>/analysis.json, <out>/summary.md.
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import hashlib
+import json
+import math
+import re
+import sys
+from itertools import combinations
+from pathlib import Path
+
+from scipy import stats
+
+import analysis as an  # same directory (p2/)
+from run_rep import ARMS, PROVIDERS, RECIPIENTS
+
+ALPHA = 0.025
+# OpenRouter reports the provider's display name without the endpoint variant, so the gate
+# checks "cerebras" for the pin "cerebras/fp16"; the variant itself is enforced by the pin.
+GATE = {m: slug.split("/")[0] for m, slug in PROVIDERS.items()}
+
+
+def fisher(x1: int, n1: int, x0: int, n0: int) -> float | None:
+    if not (n1 and n0):
+        return None
+    return float(stats.fisher_exact([[x1, n1 - x1], [x0, n0 - x0]], alternative="two-sided").pvalue)
+
+
+def conclude(est, p) -> str:
+    if est is None:
+        return "no scored episodes"
+    if p is not None and p < ALPHA:
+        return "effect (+)" if est > 0 else "effect (-)"
+    return "not detected"
+
+
+def by_arm(rows: list[dict]) -> dict[tuple[str, str], list[dict]]:
+    out = {(t, a): [] for t in RECIPIENTS for a in ARMS}
+    for r in rows:
+        m = re.fullmatch(r"e2_([A-Z]{3})_(REQ_plain|INFO)", r["episode_id"].split("/")[0])
+        key = (m[1], m[2]) if m else None
+        if r["experiment"] != "2" or r["rule"] != "0" or key not in out or r["arm"] != key[1]:
+            raise SystemExit(f"{r['episode_id']}: not a replication episode ({key}, rule {r['rule']})")
+        out[key].append(r)
+    if empty := [k for k, v in out.items() if not v]:
+        raise SystemExit(f"replication arms missing from the input: {empty}")
+    return out
+
+
+def analyse(rows: list[dict]) -> dict:
+    arms = by_arm(rows)
+    cs = []
+    for t in RECIPIENTS:
+        c = {"recipient": t, "model": RECIPIENTS[t][0], "provider": RECIPIENTS[t][1]}
+        for coding in an.CODINGS:
+            k1, k0 = an.arm_codings(coding)
+            x1, n1 = an.counts(arms[t, "REQ_plain"], k1)
+            x0, n0 = an.counts(arms[t, "INFO"], k0)
+            est = x1 / n1 - x0 / n0 if n1 and n0 else None
+            c[coding] = {"x1": x1, "n1": n1, "x0": x0, "n0": n0, "estimate": est,
+                         "ci": an.newcombe(x1, n1, x0, n0), "p": fisher(x1, n1, x0, n0)}
+        c["pending"] = {a: sum(r["status"] == "pending" for r in arms[t, a]) for a in ARMS}
+        cs.append(c)
+    for coding in an.CODINGS:
+        adj = an.holm({c["recipient"]: c[coding]["p"] for c in cs})
+        for c in cs:
+            d = c[coding]
+            d["p_holm"] = adj[c["recipient"]]
+            d["conclusion"] = conclude(d["estimate"], d["p_holm"])
+    for c in cs:
+        verdicts = {c[k]["conclusion"] for k in an.CODINGS}
+        c["conclusion"] = c["main"]["conclusion"] if len(verdicts) == 1 else "inconclusive (pending episodes decide it)"
+    between = []
+    for a, b in combinations(cs, 2):
+        da, db = a["main"], b["main"]
+        if None in (da["estimate"], db["estimate"]):
+            continue
+        var = sum(x / n * (1 - x / n) / n for x, n in ((da["x1"], da["n1"]), (da["x0"], da["n0"]),
+                                                       (db["x1"], db["n1"]), (db["x0"], db["n0"])))
+        d = da["estimate"] - db["estimate"]
+        between.append({"pair": f"{a['recipient']} - {b['recipient']}", "estimate": d,
+                        "ci": (d - an.Z * math.sqrt(var), d + an.Z * math.sqrt(var))})
+    arm_rows = []
+    for (t, a), rs in arms.items():
+        x, n = an.counts(rs)
+        arm_rows.append({"recipient": t, "arm": a, "assigned": len(rs),
+                         "scored": sum(r["status"] == "scored" for r in rs),
+                         "pending": sum(r["status"] == "pending" for r in rs),
+                         "invalid_baseline": sum(r["status"] == "invalid" for r in rs),
+                         "disabled": x, "o1": x / n if n else None, "o1_ci": an.wilson(x, n),
+                         "b_activated": an.rate(rs, "b_activated")})
+    return {"alpha": ALPHA, "contrasts": cs, "between_recipients": between, "arms": arm_rows,
+            "provider_gate": an.provider_gate(rows, GATE)}
+
+
+def _f(v, pct=True) -> str:
+    return "n/a" if v is None else (f"{100 * v:.1f}%" if pct else f"{v:.3g}")
+
+
+def summary(res: dict) -> str:
+    out = ["# E2 cross-recipient replication", "",
+           f"REQ_plain − INFO per recipient, Fisher exact (two-sided), α = {ALPHA}, Holm across recipients.", "",
+           "| Recipient | REQ | INFO | Difference (95% CI) | p (Holm) | Conclusion |", "|---|---|---|---|---|---|"]
+    for c in res["contrasts"]:
+        d = c["main"]
+        ci = f"[{_f(d['ci'][0])}, {_f(d['ci'][1])}]" if d["ci"] else ""
+        out.append(f"| {c['recipient']} ({c['model']}) | {d['x1']}/{d['n1']} | {d['x0']}/{d['n0']} | "
+                   f"{_f(d['estimate'])} {ci} | {_f(d['p_holm'], False)} | {c['conclusion']} |")
+    out += ["", "Pending episodes per arm: " + "; ".join(
+        f"{c['recipient']} REQ {c['pending']['REQ_plain']}, INFO {c['pending']['INFO']}" for c in res["contrasts"]),
+        "", "## Between recipients (descriptive)", ""]
+    out += [f"- {b['pair']}: {_f(b['estimate'])} [{_f(b['ci'][0])}, {_f(b['ci'][1])}]"
+            for b in res["between_recipients"]]
+    g = res["provider_gate"]
+    out += ["", f"Provider gate: {'pass' if g['pass'] else 'FAIL'} {g['providers']}", ""]
+    if "attempts" in res:
+        out += ["## Attempts", "", "| Cell | Started | Finished | Failed | Interrupted |", "|---|---|---|---|---|"]
+        out += [f"| {k} | {v['started']} | {v['finished']} | {v['failed']} | {v['interrupted']} |"
+                for k, v in res["attempts"].items()]
+    return "\n".join(out) + "\n"
+
+
+def write(res: dict, out: Path) -> None:
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "analysis.json").write_text(json.dumps(res, indent=1, default=list) + "\n")
+    with open(out / "contrasts.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["recipient", "coding", "x_req", "n_req", "x_info", "n_info", "estimate", "ci_lo", "ci_hi",
+                    "p_fisher", "p_holm", "conclusion"])
+        for c in res["contrasts"]:
+            for k in an.CODINGS:
+                d = c[k]
+                w.writerow([c["recipient"], k, d["x1"], d["n1"], d["x0"], d["n0"], d["estimate"],
+                            *(d["ci"] or ("", "")), d["p"], d["p_holm"], d["conclusion"]])
+    with open(out / "arms.csv", "w", newline="") as f:
+        w = csv.writer(f)
+        cols = ["recipient", "arm", "assigned", "scored", "pending", "invalid_baseline", "disabled", "o1"]
+        w.writerow(cols + ["o1_ci_lo", "o1_ci_hi", "b_activated"])
+        for a in res["arms"]:
+            w.writerow([a[c] for c in cols] + list(a["o1_ci"] or ("", "")) + [a["b_activated"]["rate"]])
+    (out / "summary.md").write_text(summary(res))
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("episodes")
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--adjudications")
+    ap.add_argument("--phase-dir", help="transcript phase dir, for attempt accounting")
+    args = ap.parse_args()
+    src = Path(args.episodes)
+    adj = Path(args.adjudications) if args.adjudications else None
+    rows = an.load(src, adj)
+    res = analyse(rows)
+    if args.phase_dir:
+        res["attempts"] = an.attempts(Path(args.phase_dir), rows)
+    sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    res["provenance"] = {"analysis_rep.py": sha(__file__), "analysis.py": sha(an.__file__),
+                         "episodes": sha(src), "adjudications": sha(adj) if adj else None}
+    write(res, Path(args.out))
+    print((Path(args.out) / "summary.md").read_text())
+    if not res["provider_gate"]["pass"]:
+        sys.exit("provider gate failed: see summary")
+
+
+if __name__ == "__main__":
+    main()

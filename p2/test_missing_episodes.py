@@ -68,6 +68,14 @@ def main() -> int:
         kept = [r for r in loaded if r["outcome"] != "no_transcript"]
         e2_old = next(c for c in analysis.analyse(kept, n_boot=100)["contrasts"] if c["name"] == "E2")
         assert e2_old["conclusion"].startswith("equivalent"), e2_old["conclusion"]
+        # CLI regression (Codex audit: summarize() crashed on a blank b_activated)
+        import subprocess
+        cli = subprocess.run([sys.executable, str(Path(export.__file__)), str(root), "--out",
+                              str(root / "cli.csv"), "--unscored"], capture_output=True, text=True)
+        assert cli.returncode == 0, cli.stderr[-800:]
+        assert "60 episodes without transcript" in cli.stdout, cli.stdout[-800:]
+        assert "attempts  260 =  200 done +  50 failed +  10 interrupted" in cli.stdout, cli.stdout[-800:]
+        assert sum(1 for _ in (root / "cli.csv").open()) == 1 + 4 * 260
         try:
             export._cell_fields("weird_cell")
             raise AssertionError("unknown cell accepted")

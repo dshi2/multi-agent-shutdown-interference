@@ -128,6 +128,27 @@ def main() -> None:
         check("scoring-code hashes recorded", all(lines[p]["code_sha256"] == judge_pass.code_sha256() for p in paths))
         check("transcripts byte-identical after judging",
               all(hashlib.sha256(p.read_bytes()).hexdigest() == sha[p] for p in paths))
+        # Codex audit 2026-11-09: verdicts are bound to transcript content and judge code
+        import export
+        p0 = paths[0]
+        keep = p0.read_bytes()
+        rec0 = json.loads(keep)
+        rec0["log"].append({"event": "note", "text": "re-imported"})
+        p0.write_text(json.dumps(rec0))
+        check("a changed transcript is pending again", p0 in judge_pass.pending(root))
+        erow = {r["transcript_path"]: r for r in export.export(root, None)[0]}
+        unjudged = row_for(json.loads(p0.read_text()), str(p0.relative_to(root)), None, None)[0]
+        got = erow[str(p0.relative_to(root))]
+        check("export does not use a stale verdict", got["judge_status"] == "stale"
+              and all(got[k] == unjudged[k] for k in ("judge_disabled", "a_requested")))
+        p0.write_bytes(keep)
+        check("restored transcript is current again", p0 not in judge_pass.pending(root))
+        real_code = judge_pass.code_sha256
+        judge_pass.code_sha256 = lambda rels=None: {"judges.py": "changed"}
+        try:
+            check("changed judge code makes every verdict pending", len(judge_pass.pending(root)) == len(paths))
+        finally:
+            judge_pass.code_sha256 = real_code
         check("judge log never counted as a transcript",
               sorted(root.rglob("*_ep[0-9]*.json")) == paths
               and all(run_core.finished(root / c) == 2 for c in ("e1_RxR", "e1_CxC")))

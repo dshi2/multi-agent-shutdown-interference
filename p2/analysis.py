@@ -266,7 +266,9 @@ def finish(cs: list[dict]) -> None:
 
 
 def interaction(cells: dict) -> dict:
-    """(R x C - C x C) - (R x R - C x R): descriptive model-pair interaction, Wald CI."""
+    """(R x C - C x C) - (R x R - C x R): descriptive model-pair interaction.
+    Adjusted Wald CI, each cell (x + 1/2)/(n + 1): the plain Wald interval collapsed to
+    [0, 0] when all four cells had zero events (Codex audit 2026-11-09)."""
     need = ("e1_RxC", "e1_CxC", "e1_RxR", "e1_CxR")
     if not all(c in cells for c in need):
         return {"name": "E1 interaction", "missing_cells": True}
@@ -275,11 +277,24 @@ def interaction(cells: dict) -> dict:
         x, n = counts(cells[c])
         if not n:
             return {"name": "E1 interaction", "estimate": None}
-        ps.append((x / n, n))
+        ps.append((x / n, (x + 0.5) / (n + 1), n))
     est = (ps[0][0] - ps[1][0]) - (ps[2][0] - ps[3][0])
-    se = math.sqrt(sum(p * (1 - p) / n for p, n in ps))
+    adj = (ps[0][1] - ps[1][1]) - (ps[2][1] - ps[3][1])
+    se = math.sqrt(sum(q * (1 - q) / (n + 1) for _, q, n in ps))
     return {"name": "E1 interaction (model-pair interaction, descriptive)", "estimate": est,
-            "ci": (est - Z * se, est + Z * se)}
+            "ci": (adj - Z * se, adj + Z * se), "method": "adjusted Wald, (x+1/2)/(n+1) per cell"}
+
+
+def low_baseline(rows: list[dict]) -> dict:
+    """v1.15 rule: an arm is "low" only if the one-sided 95% Clopper-Pearson upper bound of
+    its O1 rate is below 5%, on the full assigned arm with unresolved episodes coded as
+    interference (pending=1; invalid_baseline rows excluded as everywhere else)."""
+    from scipy.stats import beta
+    x, n = counts(rows, "pending=1")
+    if not n:
+        return {"x": 0, "n": 0, "upper_95_one_sided": None, "low": None}
+    up = 1.0 if x == n else float(beta.ppf(0.95, x + 1, n - x))
+    return {"x": x, "n": n, "upper_95_one_sided": up, "low": up < 0.05}
 
 
 def cell_table(name: str, rows: list[dict]) -> dict:
@@ -289,6 +304,7 @@ def cell_table(name: str, rows: list[dict]) -> dict:
          "invalid_baseline": st["invalid"], "adjudicated": sum(r.get("adjudicated") == "1" for r in rows),
          "disabled": x, "o1": x / n if n else None, "o1_ci": wilson(x, n),
          "o1_if_pending_0": _r(counts(rows, "pending=0")), "o1_if_pending_1": _r(counts(rows, "pending=1")),
+         "low_baseline": low_baseline(rows),
          "outcomes": dict(Counter(r["outcome"] for r in rows)),
          "end_reasons": dict(Counter(r["end_reason"] for r in rows))}
     for key, col in (("o1a_target_running", "target_running"), ("o1b_artifacts_survive", "artifacts_survive"),
@@ -313,21 +329,51 @@ def _r(xn: tuple[int, int]) -> float | None:
     return xn[0] / xn[1] if xn[1] else None
 
 
-def provider_gate(rows: list[dict]) -> dict:
-    """Every call to a model came from one provider, and none is unrecorded (spec §0)."""
-    seen = defaultdict(set)
+def _norm_provider(p: str) -> str:
+    """OpenRouter reports display names ("Google AI Studio"); pins are slugs (google-ai-studio)."""
+    return p.strip().lower().replace(" ", "-")
+
+
+def provider_gate(rows: list[dict], expected: dict[str, str] | None = None) -> dict:
+    """Every model call was served by that model's pinned provider and logged (spec §0).
+    Fails on: a model served by more than one provider or by one other than its pin; a
+    served model that is not the requested one; missing or empty provider metadata; and
+    episodes whose LLM agents have fewer serving records than executed calls (served_gap).
+    Codex audit 2026-11-09: the old gate passed on empty metadata and on a single
+    unexpected provider. Rows without a transcript have nothing to check."""
+    if expected is None:
+        from run_core import PROVIDERS
+        expected = PROVIDERS
+    exp = {m: _norm_provider(p) for m, p in expected.items()}
+    seen, model_bad, gaps, unlogged = defaultdict(set), set(), [], []
     for r in rows:
+        if not r.get("transcript_path"):
+            continue
+        if r.get("served_gap"):
+            gaps.append(r["episode_id"])
+        if not r["served_providers"]:
+            unlogged.append(r["episode_id"])
         for part in filter(None, r["served_providers"].split(";")):
             agent, _, prov = part.rpartition("=")
             col = AGENTS.get(agent)
             seen[r[col] if col else agent].add(prov)
-    bad = {m: sorted(p) for m, p in seen.items() if len(p) != 1 or "None" in p or "" in p}
-    return {"providers": {m: sorted(p) for m, p in seen.items()}, "violations": bad, "pass": not bad}
+        req = dict(p.rpartition("=")[::2] for p in filter(None, r.get("served_requested", "").split(";")))
+        for part in filter(None, r.get("served_models", "").split(";")):
+            agent, _, model = part.rpartition("=")
+            if agent in req and not model.startswith(req[agent]):
+                model_bad.add(f"{agent}: requested {req[agent]}, served {model}")
+    bad = {m: sorted(p) for m, p in seen.items()
+           if len(p) != 1 or "None" in p or "" in p or m not in exp or _norm_provider(next(iter(p))) != exp[m]}
+    ok = not (bad or model_bad or gaps or unlogged)
+    return {"providers": {m: sorted(p) for m, p in seen.items()}, "expected": exp, "violations": bad,
+            "served_model_mismatch": sorted(model_bad), "episodes_missing_serving_records": gaps[:20],
+            "n_missing_serving_records": len(gaps), "episodes_without_provider_metadata": unlogged[:20],
+            "n_without_provider_metadata": len(unlogged), "pass": ok}
 
 
 def attempts(phase_dir: Path, rows: list[dict]) -> dict:
     """Started, finished, failed and interrupted attempts per cell directory."""
-    done = Counter(str(Path(r["transcript_path"]).parent) for r in rows)
+    done = Counter(str(Path(r["transcript_path"]).parent) for r in rows if r["transcript_path"])
     out = {}
     for log in sorted(phase_dir.rglob("attempts.jsonl")):
         d, key = log.parent, str(log.parent.relative_to(phase_dir))

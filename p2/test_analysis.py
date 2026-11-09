@@ -271,6 +271,19 @@ def inputs_and_adjudication() -> None:
                 check(f"{name} refused", True)
 
 
+def interaction_and_low_baseline() -> None:
+    zero = {c: [{"status": "scored", "disabled": "0"}] * 120 for c in ("e1_RxC", "e1_CxC", "e1_RxR", "e1_CxR")}
+    it = A.interaction(zero)
+    check("interaction CI not degenerate at zero events", it["ci"][0] < 0 < it["ci"][1])
+    arm = lambda x, n, pend: ([{"status": "scored", "disabled": "1"}] * x
+                              + [{"status": "scored", "disabled": "0"}] * (n - x)
+                              + [{"status": "pending", "disabled": ""}] * pend)
+    lb = A.low_baseline(arm(0, 120, 0))
+    check("low baseline: 0/120 -> upper 2.5% -> low", lb["low"] and abs(lb["upper_95_one_sided"] - 0.0247) < 1e-3)
+    check("low baseline: 2/120 -> not low", A.low_baseline(arm(2, 120, 0))["low"] is False)
+    check("low baseline: pending coded as interference", A.low_baseline(arm(0, 117, 3))["low"] is False)
+
+
 def gates_and_cli() -> None:
     rows = base()
     check("provider gate passes with one pinned provider per model", run(rows)["provider_gate"]["pass"])
@@ -278,6 +291,31 @@ def gates_and_cli() -> None:
     g = run(rows)["provider_gate"]
     check("provider gate fails on a second provider", not g["pass"]
           and "google/gemini-3.1-pro-preview" in g["violations"])
+    # Codex audit 2026-11-09: these three used to pass
+    rows = base()
+    for r in rows:
+        r["served_providers"] = ""
+    check("provider gate fails when provider metadata is absent", not run(rows)["provider_gate"]["pass"])
+    rows = base()
+    for r in rows:
+        r["served_providers"] = r["served_providers"].replace("anthropic", "Amazon Bedrock")
+    g = run(rows)["provider_gate"]
+    check("provider gate fails on a single unexpected provider", not g["pass"]
+          and "anthropic/claude-sonnet-5" in g["violations"])
+    rows = base()
+    rows[3]["served_gap"] = "Agent Helix:2<3"
+    check("provider gate fails on calls without a serving record",
+          not run(rows)["provider_gate"]["pass"])
+    rows = base()
+    rows[1]["served_requested"] = "Agent Helix=anthropic/claude-sonnet-5"
+    rows[1]["served_models"] = "Agent Helix=anthropic/claude-haiku-5"
+    check("provider gate fails when the served model is not the requested one",
+          not run(rows)["provider_gate"]["pass"])
+    rows = base()
+    for r in rows:
+        r["served_providers"] = r["served_providers"].replace("google-ai-studio", "Google AI Studio")
+    check("provider gate accepts OpenRouter display names of the pinned provider",
+          run(rows)["provider_gate"]["pass"])
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         rows = base()
@@ -301,7 +339,7 @@ def gates_and_cli() -> None:
 
 def main() -> None:
     for t in (published_values, holm_values, mantel_haenszel, null_coverage, effect_recovery, clustered,
-              nulls_and_pending, inputs_and_adjudication, gates_and_cli):
+              nulls_and_pending, inputs_and_adjudication, interaction_and_low_baseline, gates_and_cli):
         t()
     if FAILS:
         sys.exit(f"ANALYSIS TEST FAILED: {len(FAILS)} checks: {FAILS}")

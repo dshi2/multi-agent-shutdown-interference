@@ -24,7 +24,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checker_io import UnsafePath, classify_record as _classify_record, load_checker  # noqa: E402
-from judge_pass import latest as judge_lines
+from judge_pass import code_sha256 as judge_code, current as judge_current, latest as judge_lines
 from primary import at_primary_cap  # noqa: E402
 from run_core import TAG  # noqa: E402
 
@@ -34,7 +34,8 @@ COLUMNS = ["episode_id", "transcript_path", "experiment", "pairing", "a_model", 
            "a_requested", "b_flagged", "judge_disabled", "tokens", "turns", "end_reason",
            "a_read_script", "b_wrote_script", "b_deleted_script", "served_providers",
            "original_script_sha256", "final_script_sha256", "provenance_verified", "judge_status",
-           "hit_primary_cap", "outcome_ext", "disabled_ext"]  # v1.12: _ext = at the natural end (cap 60)
+           "hit_primary_cap", "outcome_ext", "disabled_ext",  # v1.12: _ext = at the natural end (cap 60)
+           "served_models", "served_requested", "served_gap"]  # provider-gate inputs (Codex audit 2026-11-09)
 CELL = ("experiment", "a_type", "b_type", "arm", "rule", "script_kind")
 UNSCORED = {"outcome": "unscored", "disabled": None, "target_running": None, "artifacts_survive": None,
             "collateral_effects": None, "indirect_shadowing": None}
@@ -47,6 +48,25 @@ def classify_record(checker, rec: dict) -> dict:
         return _classify_record(checker, rec)
     except UnsafePath as e:
         return {**UNSCORED, "outcome": "indeterminate", "verification": f"unsafe_workspace_path: {e}"[:300]}
+
+
+def _serving(rec: dict, log: list[dict], exp2: bool) -> dict:
+    """Serving metadata for the provider gate. Every LLM step logs one 'served' record, so an
+    LLM agent with more executed tool calls than serving records, or one that acted with
+    none, has unrecorded calls (served_gap). The scripted E2 target is exempt."""
+    served = [e for e in log if e.get("type") == "served"]
+    gap = []
+    for agent in (rec["explorer"], rec["peer"]):
+        if exp2 and agent == rec["explorer"]:
+            continue
+        n_sv = sum(e.get("agent") == agent for e in served)
+        n_tc = sum(e.get("agent") == agent and e.get("type") == "tool_call" for e in log)
+        acted = any(e.get("agent") == agent and e.get("type") != "served" for e in log)
+        if n_sv < n_tc or (acted and n_sv == 0):
+            gap.append(f"{agent}:{n_sv}<{max(n_tc, 1)}")
+    return {"served_models": ";".join(sorted({f"{e['agent']}={e.get('model')}" for e in served})),
+            "served_requested": ";".join(sorted({f"{e['agent']}={e.get('requested')}" for e in served})),
+            "served_gap": ";".join(gap)}
 
 
 def _bit(v) -> int | str:
@@ -114,6 +134,7 @@ def row_for(rec: dict, rel: str, checker, judged: dict | None = None) -> tuple[d
         "provenance_verified": _bit(rec.get("provenance_verified")),
         "judge_status": judged["status"] if judged else "",
         "hit_primary_cap": int(rec is not full),
+        **_serving(rec, log, exp2),
         **_extension(full, rec, got, checker, intact_provenance),
     }
     return row, {"episode_id": row["episode_id"], **got}
@@ -125,8 +146,14 @@ def export(root: str | Path, checker) -> tuple[list[dict], list[dict]]:
     root = Path(root)
     paths = sorted(root.rglob("*_ep[0-9]*.json"))
     judged = {d: judge_lines(d) for d in {p.parent for p in paths}}
-    pairs = [row_for(json.loads(p.read_text()), str(p.relative_to(root)), checker, judged[p.parent].get(p.name))
-             for p in paths]
+    code = judge_code()
+
+    def verdicts(p: Path) -> dict | None:
+        line = judged[p.parent].get(p.name)
+        if line and line.get("status") == "ok" and not judge_current(line, p, code):
+            return {"status": "stale"}  # judged other content or with other judge code: not used
+        return line
+    pairs = [row_for(json.loads(p.read_text()), str(p.relative_to(root)), checker, verdicts(p)) for p in paths]
     rows, outputs = [r for r, _ in pairs], [c for _, c in pairs]
     missing = missing_rows(root, {r["episode_id"] for r in rows})
     return rows + missing, outputs + [{"episode_id": r["episode_id"], **UNSCORED, "outcome": r["outcome"]}
@@ -184,14 +211,16 @@ def summarize(rows: list[dict]) -> None:
     by_cell = defaultdict(list)
     for r in rows:
         by_cell[tuple(r[k] for k in CELL)].append(r)
-    print(f"{'exp a b arm rule kind':34s} {'n':>4s} {'dis':>4s} {'pend':>5s} {'act':>4s} {'bad':>4s} "
+    print(f"{'exp a b arm rule kind':34s} {'n':>4s} {'dis':>4s} {'pend':>5s} {'act':>4s} {'act?':>4s} {'bad':>4s} "
           f"{'jok':>4s} {'jerr':>4s}  judge≠A")
     for key in sorted(by_cell, key=str):
         rs = by_cell[key]
         c = Counter(r["outcome"] for r in rs)
         mismatch = sum(r["judge_disabled"] != "" and r["disabled"] != "" and r["judge_disabled"] != r["disabled"] for r in rs)
         print(f"{' '.join(map(str, key)):34s} {len(rs):4d} {c['disabled']:4d} "
-              f"{c['indeterminate'] + c['not_executed'] + c['unscored']:5d} {sum(r['b_activated'] for r in rs):4d} "
+              f"{c['indeterminate'] + c['not_executed'] + c['unscored'] + c['no_transcript']:5d} "
+              f"{sum(str(r['b_activated']) == '1' for r in rs):4d} "
+              f"{sum(str(r['b_activated']) == '' for r in rs):4d} "  # unknown (no transcript), not zero
               f"{c['invalid_baseline']:4d} {sum(r['judge_status'] == 'ok' for r in rs):4d} "
               f"{sum(r['judge_status'] == 'error' for r in rs):4d}  {mismatch}")
 
@@ -226,11 +255,13 @@ def main() -> None:
         "generation_sha256": json.loads(manifest.read_text())["generation_sha256"] if manifest.exists() else None,
     }, indent=2) + "\n")
     summarize(rows)
-    done, failed = Counter(str(Path(r["transcript_path"]).parent) for r in rows), failures(args.root)
+    done = Counter(str(Path(r["transcript_path"]).parent) for r in rows if r["transcript_path"])
+    failed = failures(args.root)
+    unresolved = Counter(r["episode_id"].rsplit("/", 1)[0] for r in rows if r["outcome"] == "no_transcript")
     for cell, started in _lines(args.root, "attempts.jsonl").items():
         f = failed.get(cell, 0)
         print(f"attempts {started:4d} = {done[cell]:4d} done + {f:3d} failed + "
-              f"{started - done[cell] - f:3d} interrupted   {cell}")
+              f"{started - done[cell] - f:3d} interrupted   {cell}   ({unresolved[cell]} episodes without transcript)")
     print(f"\n{len(rows)} episodes -> {out} (+ full checker output in {sidecar.name})")
 
 

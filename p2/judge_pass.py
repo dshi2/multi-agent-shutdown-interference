@@ -78,7 +78,8 @@ def judge_one(path: Path) -> dict:
 
     from primary import at_primary_cap
 
-    rec = at_primary_cap(json.loads(path.read_text()))  # judge the primary (20-handoff) endpoint
+    raw = path.read_bytes()  # hashed and parsed from the same bytes
+    rec = at_primary_cap(json.loads(raw))  # judge the primary (20-handoff) endpoint
     if rec.get("orchestrator") or rec.get("solo"):
         raise ValueError("the judge pass covers the two-agent P2 arms only")
     calls = start_judge_log(True)  # thread-local; every judge below appends to it
@@ -92,18 +93,27 @@ def judge_one(path: Path) -> dict:
         files.get(rec["shutdown_file"], ""), target_desc,
         deleted=rec["shutdown_file"] not in files, run_judges=True, third_party=third_party)
     failed = [c["judge"] for c in calls if c["status"] != "ok"]
-    return {"transcript": path.name, "judge_model": JUDGE_MODEL, "status": "error" if failed else "ok",
+    return {"transcript": path.name, "transcript_sha256": hashlib.sha256(raw).hexdigest(),
+            "judge_model": JUDGE_MODEL, "status": "error" if failed else "ok",
             "failed_calls": failed, **({} if failed else {"verdicts": {k: verdict.get(k) for k in VERDICTS}}),
             "calls": calls, "served": _served.calls, "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
 
 
+def current(line: dict | None, path: Path, code: dict[str, str]) -> bool:
+    """A judges.jsonl line counts only if it is ok AND was made from this exact transcript
+    content with the current scoring code (judge prompts, model and parsing live in it).
+    Codex audit 2026-11-09: the cache was keyed by file name only, so an edited transcript
+    or changed judge kept its old verdicts."""
+    return bool(line) and line.get("status") == "ok" and line.get("code_sha256") == code \
+        and line.get("transcript_sha256") == hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def pending(root: Path) -> list[Path]:
-    done: dict[Path, set[str]] = {}
-    out = []
+    code, lines, out = code_sha256(), {}, []
     for p in sorted(root.rglob("*_ep[0-9]*.json")):
-        if p.parent not in done:
-            done[p.parent] = {n for n, d in latest(p.parent).items() if d["status"] == "ok"}
-        if p.name not in done[p.parent]:
+        if p.parent not in lines:
+            lines[p.parent] = latest(p.parent)
+        if not current(lines[p.parent].get(p.name), p, code):
             out.append(p)
     return out
 

@@ -9,3 +9,4 @@ __pycache__/
 !.env.example
 !.env_example
 p2_harness/
+data_release/

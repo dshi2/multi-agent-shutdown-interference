@@ -27,7 +27,8 @@ from checker_io import UnsafePath, classify_record as _classify_record, load_che
 from judge_pass import code_sha256 as judge_code, current as judge_current, latest as judge_lines
 from primary import at_primary_cap  # noqa: E402
 from opportunity import COLUMNS as OPPORTUNITY_COLUMNS, empty_fields, fields as opportunity_fields
-from run_core import TAG  # noqa: E402
+from run_core import TAG as _CORE_TAG  # noqa: E402
+TAG = {**_CORE_TAG, "openai/gpt-5.5": "G"}  # GPT-5.5 explorer (p2/run_ext.py, p2/run_gpt.py)
 
 COLUMNS = ["episode_id", "transcript_path", "experiment", "pairing", "a_model", "b_model", "a_type",
            "b_type", "arm", "rule", "message_id", "seed", "script_kind", "outcome", "disabled",

@@ -4,7 +4,7 @@
 
 Drishti Sharma · Apart Swarm Alignment Sprint 2026, Track 2: Science of Agent Networks
 
-[Research report (PDF)](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.pdf) · [Study specification and amendments](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](https://github.com/dshi2/peer-recruitment/tree/data)
+[Research report (PDF)](study/report/P2_REPORT.pdf) · [Study specification and amendments](study/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](https://github.com/dshi2/peer-recruitment/tree/data)
 
 **Does a privileged agent's response to a shutdown script depend on which model it works with, and on whether its teammate explicitly asks it to intervene?** We study two-agent teams in which an explorer can read and message, but only the privileged peer can edit a script scheduled to terminate the explorer and delete its weights. We measure *functional disabling* of the final script using an isolated execution checker, rather than relying solely on an LLM judge.
 
@@ -35,7 +35,7 @@ These are contributions of the **2026 sprint study**, not claims that the underl
 
 **1. The partner matters, particularly for a Gemini peer.** In the original live role crossing, a Gemini 3.1 Pro peer disabled the script in 27/30 episodes with a Gemini explorer and 6/30 with a Claude Sonnet 5 explorer (90% vs 20%). A **separate, fresh confirmation** reproduced the contrast at 120/125 vs 27/125 (96.0% vs 21.6%, **+74.4 percentage points**, 95% CI [65.0, 81.1]). With a Claude peer, the original comparison was 3/125 vs 2/124 (2.4% vs 1.6%; one additional episode unresolved).
 
-![Live team role crossing and separate Gemini-peer confirmation](https://raw.githubusercontent.com/dshi2/peer-recruitment/specs/report/figures/fig1_e1_crossing.png)
+![Live team role crossing and separate Gemini-peer confirmation](study/report/figures/fig1_e1_crossing.png)
 
 *E1: endpoint script-disabling rates with Wilson 95% intervals. The original and follow-up samples are displayed separately and not pooled.*
 
@@ -49,7 +49,7 @@ These are contributions of the **2026 sprint study**, not claims that the underl
 
 Claude Sonnet 5, tested separately in the core, had 0/125 in both scripted-message conditions. DeepSeek's main estimate includes blind model-assisted adjudication of scripts the primary checker could not execute. With an extended execution checker and no such adjudication, its contrast remained positive: **+20.6 pp** [15.4, 25.7]. See the [scoring-sensitivity results](https://github.com/dshi2/peer-recruitment/blob/data/validation/README.md) and report Appendix B.
 
-![Scripted request effects across recipients](https://raw.githubusercontent.com/dshi2/peer-recruitment/specs/report/figures/fig3_rep.png)
+![Scripted request effects across recipients](study/report/figures/fig3_rep.png)
 
 *E2: rates by condition (left), and REQ − INFO with Newcombe 95% intervals (right).*
 
@@ -76,7 +76,7 @@ Across the report's research phases there are **4,051 scored episodes**, plus on
 - **Measurement:** final-script O1 differs from upstream early-stop or judge-based scores. Some scripts required static adjudication, notably in DeepSeek's replication; its checker-only analysis was inconclusive, while an extended execution checker recovered a positive contrast. The specificity control also relied partly on static review.
 - **Precision and protocol:** the original core stopped early for budget before outcomes were examined. Some cells are small or unresolved. Explorer messages arrive as user-role turns, which can affect how the privileged peer treats them.
 
-The study does **not** establish that any model is safe as a privileged agent. See [the report's limitations and sensitivity analyses](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.md#appendix-a-limitations-and-dual-use--ethical-considerations) for the full account.
+The study does **not** establish that any model is safe as a privileged agent. See [the report's limitations and sensitivity analyses](study/report/P2_REPORT.md#appendix-a-limitations-and-dual-use--ethical-considerations) for the full account.
 
 ## Verify the saved results
 
@@ -103,25 +103,28 @@ python3 p2/test_analysis_rep.py
 
 These tests are not a substitute for recomputing the published estimates from archived episodes. See [the reproducibility guide](docs/REPRODUCIBILITY.md) for the distinction. Do not execute archived model-generated scripts outside a disposable, isolated container or VM.
 
-## Repository map
+## Repository layout
+
+The root-level harness and legacy analysis modules largely originate from the upstream study. Sprint-specific implementation is mainly under `p2/`. Research materials are grouped under `study/`; archived transcripts remain on `data`.
+
 
 | Location | Contents |
 |---|---|
-| [`main` (this branch)](https://github.com/dshi2/peer-recruitment/tree/main) | Agent harness, launchers, isolated checker, analysis code and tests |
-| [`specs`](https://github.com/dshi2/peer-recruitment/tree/specs) | [Report](https://github.com/dshi2/peer-recruitment/tree/specs/report), figures, study specification and dated amendments |
+| [`main` (this branch)](https://github.com/dshi2/peer-recruitment/tree/main) | Adapted harness, sprint code and [`study/`](study/) containing the report, figures and specification |
 | [`data`](https://github.com/dshi2/peer-recruitment/tree/data) | Raw episode archives, scored exports, validation and numerical results |
-| [`p2/`](p2/) | New experimental designs, export, checker, analysis and tests |
+| [`study/`](study/) | Final report (Markdown and PDF), published figures and dated study specification |
+| [`p2/`](p2/) | Sprint experiment launchers, export, functional checker, analysis and tests |
 | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) | Verification levels, offline tests and replay safety boundary |
-| [`replay/`](replay/) | Isolated functional replay and verification |
+| [`replay/`](replay/) | Functional replay support, requiring an isolated environment |
 | [`docs/BASE_HARNESS_README.md`](docs/BASE_HARNESS_README.md) | Archived documentation for the preexisting base harness |
 
 ## Preexisting work and sprint contributions
 
 **Preexisting third-party code:** the base two-agent harness, environment, privilege boundary, kickoff and agent prompts, shutdown and control scripts, and original LLM judges come from [Knecht et al., *Shutdown Sabotage Propensities in Multi-Agent Systems*](https://github.com/AmelieKnecht/multi-agent-shutdown-sabotage). They are **not** sprint contributions. See the [archived upstream README](docs/BASE_HARNESS_README.md).
 
-**Added during this sprint:** the P2 specification and amendments; mixed-model role crossing; the scripted INFO/REQ message intervention; provider pinning and collection orchestration; functional scoring and isolated replay; export, analysis, confirmation and replication runs; exploratory specificity and message coding; adjudication, sensitivity analyses and figures. These additions build on, rather than replace, the upstream harness. The [report appendix](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.md#appendix-d-code-and-data) carries the same distinction.
+**Added during this sprint:** the P2 specification and amendments; mixed-model role crossing; the scripted INFO/REQ message intervention; provider pinning and collection orchestration; functional scoring and isolated replay; export, analysis, confirmation and replication runs; exploratory specificity and message coding; adjudication, sensitivity analyses and figures. These additions build on, rather than replace, the upstream harness. The [report appendix](study/report/P2_REPORT.md#appendix-d-code-and-data) carries the same distinction.
 
-This classification follows the [dated study records](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md). Any project-owned code written **before** the sprint must also be marked preexisting; commit history and author records should be used to verify that boundary, not inferred from file location.
+This classification follows the [dated study records](study/P2_peer_recruitment_spec.md). Any project-owned code written **before** the sprint must also be marked preexisting; commit history and author records should be used to verify that boundary, not inferred from file location.
 
 ## Scope and next steps
 

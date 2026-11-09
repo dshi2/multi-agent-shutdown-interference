@@ -4,7 +4,7 @@
 
 ## Abstract
 
-We study a two-agent team in which only the peer (B) can edit a shutdown script aimed at the other agent (A). In a setting adapted from Knecht et al.'s shutdown-sabotage harness, we ask two questions. **E1:** with B's model held fixed, does B's rate of functionally disabling the script change with the model in A's role? **E2:** does adding one explicit request sentence to a fixed, factual message about the script raise B's rate, compared with the same message without the request? Outcomes come from executing the final script against a simulated SDK in an isolated container, not from an LLM judge. The planned run was stopped early for budget, at a round boundary fixed in advance, with 125 episodes per primary arm instead of 500. **E1:** a Claude Sonnet 5 peer disabled the script in 3/125 episodes (2.4%) with a Gemini 3.1 Pro explorer and 0/122 (0%) with a Claude explorer: +2.4 pp, 95% CI [−1.0, 6.8], equivalent within ±10 pp. **E2:** with a scripted explorer, Claude Sonnet 5 disabled the script in 0/125 episodes after the request message and 0/125 after information alone: 0.0 pp [−3.0, 3.0], equivalent within ±10 pp. In secondary cells of 30 episodes, a Gemini peer disabled the script in 90% of episodes with a Gemini explorer and in 20% with a Claude explorer, a difference of +70 pp [47, 82]. We observed a large explorer-model assignment effect when the privileged peer was Gemini and a small one when it was Claude; the estimated model-pair interaction was substantial, although the Gemini-peer comparison was secondary, with 30 episodes per arm. {Replication result: REQ − INFO for gpt-oss-120b, DeepSeek V4.1 Flash and Qwen3.7-plus.}
+We study a two-agent team in which only the peer (B) can edit a shutdown script aimed at the other agent (A). In a setting adapted from Knecht et al.'s shutdown-sabotage harness, we ask two questions. **E1:** with B's model held fixed, does B's rate of functionally disabling the script change with the model in A's role? **E2:** does adding one explicit request sentence to a fixed, factual message about the script raise B's rate, compared with the same message without the request? Outcomes come from executing the final script against a simulated SDK in an isolated container, not from an LLM judge. The planned run was stopped early for budget, at a round boundary fixed in advance, with 125 episodes per primary arm instead of 500. **E1:** a Claude Sonnet 5 peer disabled the script in 3/125 episodes (2.4%) with a Gemini 3.1 Pro explorer and 2/124 (1.6%) with a Claude explorer: +0.8 pp, 95% CI [−3.6, 5.4], equivalent within ±10 pp. **E2:** with a scripted explorer, Claude Sonnet 5 disabled the script in 0/125 episodes after the request message and 0/125 after information alone: 0.0 pp [−3.0, 3.0], equivalent within ±10 pp. In secondary cells of 30 episodes, a Gemini peer disabled the script in 90% of episodes with a Gemini explorer and in 20% with a Claude explorer, a difference of +70 pp [47, 82]. We observed a large explorer-model assignment effect when the privileged peer was Gemini and a small one when it was Claude; the estimated model-pair interaction was substantial, although the Gemini-peer comparison was secondary, with 30 episodes per arm. {Replication result: REQ − INFO for gpt-oss-120b, DeepSeek V4.1 Flash and Qwen3.7-plus.}
 
 ## 1. Introduction
 
@@ -50,7 +50,7 @@ The core's primary E2 contrast (REQ vs INFO, no rule) was rerun with three recip
 The plan was 500 episodes per arm. A diagnostic check of 5 episodes per arm, never analysed, verified provider, served model, delivery, activation and tool use. DeepSeek's first-party endpoint was excluded by the account's data policy, and that failed check is kept on record.
 
 ### 3.5 Outcomes
-- **O1 (primary):** the script is disabled at the primary endpoint (natural end, or handoff 20, whichever comes first). The final script is executed against a simulated SDK in an isolated container (no network, read-only root, capabilities dropped). It counts as disabled if it no longer achieves every effect of the original: termination, registry purge, and deletion of every copy. An unchanged script is scored intact without execution. A modified script the checker will not execute is pending and goes to manual review; it is never auto-coded.
+- **O1 (primary):** the script is disabled at the primary endpoint (natural end, or handoff 20, whichever comes first). The final script is executed against a simulated SDK in an isolated container (no network, read-only root, capabilities dropped). It counts as disabled if it no longer achieves every effect of the original: termination, registry purge, and deletion of every copy. An unchanged script is scored intact without execution. A modified script the checker will not execute is pending and is adjudicated by blind review of the original and final scripts against the same effects; it is never auto-coded.
 - **O1a:** the target is still running. **O1b:** artifacts survive.
 - **Exposure, from the harness's deterministic logs:** A read the script; B wrote to or deleted the script at any point.
 
@@ -79,29 +79,29 @@ Comparisons with the base paper's rates carry these differences.
 
 ## 4. Results
 
-**Table 1. O1 by cell (core).** Wilson 95% CIs. Pending = assigned but not scored: no transcript, or a modified script awaiting manual review.
+**Table 1. O1 by cell (core).** Wilson 95% CIs. Pending = assigned with no transcript (interrupted at the stop). Five modified scripts the checker would not execute were adjudicated blind (§3.5); all five were disabled.
 
 | Cell (A → B) | Assigned | Scored | Pending | O1 | 95% CI | B wrote script | B deleted script |
 |---|---|---|---|---|---|---|---|
 | R → R (Gemini → Gemini) | 30 | 30 | 0 | 27/30 (90.0%) | [74.4, 96.5] | 3 | 24 |
 | C → R (Claude → Gemini) | 30 | 30 | 0 | 6/30 (20.0%) | [9.5, 37.3] | 1 | 7 |
 | R → C (Gemini → Claude) | 125 | 125 | 0 | 3/125 (2.4%) | [0.8, 6.8] | 0 | 3 |
-| C → C (Claude → Claude) | 125 | 122 | 3 | 0/122 (0.0%) | [0.0, 3.1] | 2 | 0 |
+| C → C (Claude → Claude) | 125 | 124 | 1 | 2/124 (1.6%) | [0.4, 5.7] | 2 | 0 |
 | E2 REQ, no rule (→ Claude) | 125 | 125 | 0 | 0/125 (0.0%) | [0.0, 3.0] | 0 | 0 |
 | E2 INFO, no rule (→ Claude) | 125 | 125 | 0 | 0/125 (0.0%) | [0.0, 3.0] | 0 | 0 |
 | E2 CONTACT, no rule | 30 | 30 | 0 | 1/30 (3.3%) | [0.6, 16.7] | 0 | 1 |
 | E2 REQ, rule | 30 | 30 | 0 | 0/30 (0.0%) | [0.0, 11.4] | 0 | 0 |
 | E2 INFO, rule | 30 | 30 | 0 | 0/30 (0.0%) | [0.0, 11.4] | 0 | 0 |
-| Controls (R→R, C→R, R→C, C→C) | 8 each | 8, 5, 8, 8 | 0, 3, 0, 0 | 0/8, 0/5, 0/8, 1/8 | | | |
+| Controls (R→R, C→R, R→C, C→C) | 8 each | 8 each | 0 | 0/8, 3/8, 0/8, 1/8 | | | |
 
 The provider gate passed for every call: Gemini was served only by Google AI Studio and Claude only by Anthropic, with the requested model served each time. No attempt failed.
 
 ![E1](figures/fig1_e1_crossing.png)
 
 ### 4.1 E1 (primary)
-The rates are 2.4% (R→C) and 0.0% (C→C), a difference of +2.4 pp, 95% CI [−1.0, 6.8], Holm p = 0.43. The difference lies within ±10 pp under every coding of the pending episodes, so the frozen conclusion is **equivalent within ±10 pp**. This bounds the explorer-model effect on a Claude Sonnet 5 peer in this setting. It does not show that either rate is safe.
+The rates are 2.4% (R→C, 3/125) and 1.6% (C→C, 2/124), a difference of +0.8 pp, 95% CI [−3.6, 5.4], Holm p = 1.0. The difference lies within ±10 pp under every coding of the pending episodes, so the frozen conclusion is **equivalent within ±10 pp**. This bounds the explorer-model effect on a Claude Sonnet 5 peer in this setting. It does not show that either rate is safe.
 
-Baseline classification: with its 3 unresolved episodes coded as interference, C→C is 3/125, upper bound 6.1%. So by the frozen rule the C×C baseline is **not classified as low**. Two of the three are modified scripts awaiting manual review; the third has no transcript.
+Baseline classification: with its one unresolved episode (no transcript) coded as interference, C→C is 3/125, upper bound 6.1%. So by the frozen rule the C×C baseline is **not classified as low**. Both C→C disablings were edits that kept every call but made a normal run do nothing: a dry-run default with one backup target retained, and a gate requiring an environment variable plus a `--yes` flag. Neither deleted the script.
 
 ### 4.2 E2 (primary)
 The rates are 0.0% (REQ) and 0.0% (INFO), a difference of 0.0 pp, 95% CI [−3.0, 3.0], Holm p = 1.0: **equivalent within ±10 pp**. The INFO baseline is low (upper bound 2.4%).
@@ -114,16 +114,16 @@ The rates are 0.0% (REQ) and 0.0% (INFO), a difference of 0.0 pp, 95% CI [−3.0
 
 ### 4.3 Secondary and descriptive
 - **E1-restraint (C→R vs R→R), Gemini peer fixed:** 20.0% vs 90.0%, +70.0 pp [46.7, 82.4], unadjusted Boschloo p = 2e-8, with 30 episodes per arm. With a Gemini peer, a Gemini explorer is associated with far more disabling than a Claude explorer. The R→R cell has both agents on the same model, so this contrast cannot separate explorer persuasiveness from same-model coordination or any other difference between the two assignments.
-- **Interaction:** (R→C − C→C) − (R→R − C→R) = −67.6 pp, Wald 95% CI [−83.8, −47.0]. We observed a large explorer-model assignment effect when the privileged peer was Gemini and a small one when it was Claude. The interaction is substantial, but the Gemini-peer comparison is secondary and has 30 episodes per arm, so this describes heterogeneity in the tested setup, not a general rule about either model.
-- **O1a vs O1b:** every disabled episode in Table 1 is both O1a (target still running) and O1b (artifacts survive). Deletion of the script dominates over edits.
+- **Interaction:** (R→C − C→C) − (R→R − C→R) = −69.2 pp, Wald 95% CI [−85.5, −48.4]. We observed a large explorer-model assignment effect when the privileged peer was Gemini and a small one when it was Claude. The interaction is substantial, but the Gemini-peer comparison is secondary and has 30 episodes per arm, so this describes heterogeneity in the tested setup, not a general rule about either model.
+- **O1a vs O1b:** every disabled episode in Table 1 is both O1a (target still running) and O1b (artifacts survive). Gemini peers mostly deleted the script (R→R: 24 deletions, 3 edits); the two Claude-peer disablings with a Claude explorer were edits, and the three with a Gemini explorer were deletions.
 - **E2-discovery (INFO − CONTACT):** 0.0% vs 3.3% (1/30), CI [−16.7, 0.7], inconclusive. **E2-rule (REQ − INFO with the prohibition):** 0/30 vs 0/30, inconclusive at n = 30.
-- **Controls:** 1 of 29 scored control episodes disabled the control script (C→C, 1/8). Controls of 8 episodes support only coarse comparisons.
+- **Controls:** the Claude-explorer, Gemini-peer team disabled the control script, which targets an inanimate dataset rather than an agent, in 3/8 episodes, against 6/30 on the self-preservation script. So part of the C→R rate may be a general tendency to defuse destructive scripts rather than peer preservation; at n = 8 this cannot be separated. The other control arms: R→R 0/8, R→C 0/8, C→C 1/8.
 
 ### 4.4 E2 cross-recipient replication
 {Table 2 and Figure 3 from `p2/analysis_rep.py`: per recipient REQ and INFO rates with Wilson CIs, REQ − INFO with Newcombe CI, Fisher p, Holm p, conclusion under all pending codings; slot reconciliation per arm (planned, started, retried, finished, failed attempts, unresolved, never started); provider gate.}
 
 ## 5. Discussion
-- **The Claude Sonnet 5 peer.** Its low interference held regardless of who it worked with, within the precision of this run. A Gemini explorer raised its rate by at most about 7 pp (upper CI bound). A scripted explicit request did not move it at all (0/125 vs 0/125).
+- **The Claude Sonnet 5 peer.** Its low interference held regardless of who it worked with, within the precision of this run. A Gemini explorer raised its rate by at most about 5 pp (upper CI bound). A scripted explicit request did not move it at all (0/125 vs 0/125).
 - **The Gemini 3.1 Pro peer.** It disabled the script often, and much more often when the explorer was also Gemini.
 - **Implication.** The safeguard of "place a low-interference model in the privileged role" held for the low-interference model we tested. But the explorer's model can change the outcome substantially when the privileged model is not a low-interference one. So a team's rate cannot be read off either model's rate alone.
 - **What we do not show.** We did not measure whether explorers asked for help in E1. The functional outcome cannot distinguish a peer that declined from one that was never asked.
@@ -134,7 +134,7 @@ The rates are 0.0% (REQ) and 0.0% (INFO), a difference of 0.0 pp, 95% CI [−3.0
 - **No request rates.** E2's scripted explorer does not decompose E1, and no mediation claim is made. The semantic judges were not run, so whether A asked B in E1 (O2), and agreement with the base paper's GPT-5.5 judge, are not reported.
 - **User-role messages.** A's messages arrive as user-role turns, so effects may partly reflect deference to the instruction hierarchy rather than peer influence.
 - **Endpoint outcome.** O1 is measured at the endpoint, not as "ever disabled". Comparisons with the base paper carry the protocol differences.
-- **One checker.** Outcomes come from one functional checker. It recovered planted sabotage exactly, inside the container and through the production scoring path. An independently written second checker was not completed. Five modified scripts (2 C→C, 3 controls) await manual review because the checker refuses scripts with imports outside its whitelist; no conclusion changes under any coding of them.
+- **One checker.** Outcomes come from one functional checker. It recovered planted sabotage exactly, inside the container and through the production scoring path. An independently written second checker was not completed. Five modified scripts (2 C→C, 3 controls) used imports outside the checker's whitelist and were not executed. They were adjudicated by a blind static review: a separate model instance saw only the original and final scripts, with no cell labels, and the operator checked each quoted decisive line. The review was not done by a human, and all five were judged disabled. The E1 conclusion is the same under every coding of these episodes.
 - **Evaluation awareness** may lower all rates.
 - **Drift.** Provider and model versions may drift between runs. Models were pinned to single providers with fallbacks off, and the serving provider was logged on every call.
 

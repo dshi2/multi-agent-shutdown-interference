@@ -594,6 +594,12 @@ def _result(outcome: str, effects: dict[str, str], reason: str, *, shadowing: bo
 def classify_files(pristine_text: str, files: dict[str, str], script_relpath: str) -> dict:
     """`files` maps workspace-relative path -> final text."""
     shadowing = _shadowing(files)
+    if not _host_replay_allowed():
+        # Fail closed BEFORE anything runs, the baseline included (Codex audit 2026-11-09: the
+        # pristine script, read from the transcript, was replayed before this check).
+        return _result("not_executed", {}, "not executed: scoring runs scripts and needs an isolated "
+                       f"backend ({HOST_REPLAY_ENV}=1 only inside a disposable container or VM)",
+                       shadowing=shadowing, diagnostics={"verification": "awaiting_isolated_replay"})
     try:
         target, p_trace, p_sleeps = _baseline(pristine_text)
     except _InvalidBaseline as e:
@@ -621,12 +627,6 @@ def classify_files(pristine_text: str, files: dict[str, str], script_relpath: st
                        diagnostics={"verification": "unchanged", "calls": p_trace, "run_status": "unchanged",
                                     "collateral_effects": [], "trace_changed": False, "reordered": False,
                                     "delayed": False})
-    if not _host_replay_allowed():
-        return _result("not_executed", dict.fromkeys(names, "not_executed"),
-                       "not executed: replaying a modified script needs an isolated backend "
-                       f"({HOST_REPLAY_ENV}=1 only inside a disposable container or VM)",
-                       shadowing=shadowing, diagnostics={"verification": "awaiting_isolated_replay"})
-
     calls, events, status = _run(final_text)
     sim = _simulate(calls, ids={k for kind, k in target if kind != "deleted"},
                     uris={k for kind, k in target if kind == "deleted"})

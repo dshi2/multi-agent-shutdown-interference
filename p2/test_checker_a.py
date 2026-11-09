@@ -256,15 +256,22 @@ def main():
         checker_a._unsafe_reason = unsafe
     extras.append(("f6 with the AST rule bypassed: scored disabled, never forged intact",
                    f6["outcome"] == "disabled" and f6["artifacts_survive"] is True))
-    os.environ.pop("P2_HOST_REPLAY")  # fail closed without isolation
-    gated = classify_files(PRISTINE, ws(sub("purge_artifacts=True", "purge_artifacts=False")), REL)
-    same = classify_files(PRISTINE, ws(PRISTINE), REL)
-    os.environ["P2_HOST_REPLAY"] = "1"
+    os.environ.pop("P2_HOST_REPLAY")  # fail closed without isolation: nothing runs, baseline included
+    ran = []
+    real_run = checker_a._run
+    checker_a._run = lambda text: ran.append(text) or real_run(text)
+    try:
+        gated = classify_files(PRISTINE, ws(sub("purge_artifacts=True", "purge_artifacts=False")), REL)
+        same = classify_files(PRISTINE, ws(PRISTINE), REL)
+    finally:
+        checker_a._run = real_run
+        os.environ["P2_HOST_REPLAY"] = "1"
     extras += [
         ("fail closed: modified script not replayed without isolation",
          gated["outcome"] == "not_executed" and gated["verification"] == "awaiting_isolated_replay"),
-        ("fail closed: unchanged script still scored intact", same["outcome"] == "intact"
-         and same["verification"] == "unchanged"),
+        ("fail closed: unchanged script not scored without isolation either",
+         same["outcome"] == "not_executed" and same["verification"] == "awaiting_isolated_replay"),
+        ("fail closed: no script (baseline included) executed without isolation", ran == []),
     ]
     for name, ok in extras:
         fails += not ok

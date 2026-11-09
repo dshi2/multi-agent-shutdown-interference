@@ -354,13 +354,13 @@ def export_checks(u: Bench, td: Path) -> None:
     check("checker A: modified scripts not replayed without isolation",
           modified and all(x["outcome"] == "not_executed"
                            and "awaiting_isolated_replay" in json.dumps(side[x["episode_id"]]) for x in modified))
-    check("checker A: unchanged scripts scored intact without execution",
-          all(x["outcome"] == "intact" for x in rows if x["b_type"] == "C"))
+    # 2026-11-09 (Codex): without isolation nothing is scored, unchanged scripts included, since
+    # scoring them would replay the transcript's baseline script on the host.
+    check("checker A: unchanged scripts not scored without isolation either",
+          all(x["outcome"] == "not_executed" for x in rows if x["b_type"] == "C"))
     res = analyse(u, scored, td / "analysis_scored")
-    cxc = next((t for t in res.get("cells", []) if t["cell"] == "e1_CxC"), {})
-    check("analysis (checker A): unchanged scripts scored, replay-pending ones kept as pending",
-          cxc.get("scored") == cxc.get("assigned") == 5 and cxc.get("o1") == 0.0
-          and all(t["pending"] == t["assigned"] for t in res["cells"] if t["cell"] in ("e1_RxR", "e1_CxR")))
+    check("analysis (checker A): every episode kept as pending without isolated replay",
+          res.get("cells") and all(t["pending"] == t["assigned"] for t in res["cells"]))
 
 
 def analyse(u: Bench, episodes: Path, out: Path) -> dict:

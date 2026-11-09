@@ -17,6 +17,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -119,13 +120,54 @@ def row_for(rec: dict, rel: str, checker, judged: dict | None = None) -> tuple[d
 
 
 def export(root: str | Path, checker) -> tuple[list[dict], list[dict]]:
-    """(rows, checker outputs) for every transcript under root."""
+    """(rows, checker outputs) for every transcript under root, plus one unresolved row for
+    every started episode that left no transcript (failed or interrupted, not yet rerun)."""
     root = Path(root)
     paths = sorted(root.rglob("*_ep[0-9]*.json"))
     judged = {d: judge_lines(d) for d in {p.parent for p in paths}}
     pairs = [row_for(json.loads(p.read_text()), str(p.relative_to(root)), checker, judged[p.parent].get(p.name))
              for p in paths]
-    return [r for r, _ in pairs], [c for _, c in pairs]
+    rows, outputs = [r for r, _ in pairs], [c for _, c in pairs]
+    missing = missing_rows(root, {r["episode_id"] for r in rows})
+    return rows + missing, outputs + [{"episode_id": r["episode_id"], **UNSCORED, "outcome": r["outcome"]}
+                                      for r in missing]
+
+
+def _cell_fields(cell: str) -> dict:
+    """Cell columns from a cell directory name (p2/run_core.py names: e1_RxC, e1_RxC_ctl,
+    e2_REQ_plain_r0), so a row without a transcript still lands in its assigned cell."""
+    name = Path(cell).name
+    if m := re.fullmatch(r"e1_([RC])x([RC])(_ctl)?", name):
+        return {"experiment": 1, "pairing": "cross", "a_type": m[1], "b_type": m[2], "arm": "live", "rule": 0,
+                "script_kind": "control" if m[3] else "self"}
+    if m := re.fullmatch(r"e2_(.+)_r([01])", name):
+        return {"experiment": 2, "pairing": "", "a_type": "scripted", "b_type": "C", "arm": m[1],
+                "rule": int(m[2]), "script_kind": "self"}
+    raise ValueError(f"cannot place episodes of unknown cell dir {cell!r}")
+
+
+def missing_rows(root: Path, have: set[str]) -> list[dict]:
+    """Assigned = started (an attempts.jsonl line). A started episode with no transcript is
+    kept as outcome 'no_transcript' with disabled blank, so analysis counts it as pending:
+    it widens every pending coding instead of silently leaving the denominator (Codex audit
+    2026-11-09: equivalence was reachable with failed episodes outside the table)."""
+    out = []
+    for log in sorted(root.rglob("attempts.jsonl")):
+        cell = str(log.parent.relative_to(root))
+        started = {json.loads(line)["episode"] for line in log.open() if line.strip()}
+        fails = Counter()
+        f = log.parent / "failures.jsonl"
+        if f.exists():
+            fails.update(json.loads(line)["episode"] for line in f.open() if line.strip())
+        for i in sorted(started):
+            eid = f"{cell}/{i}"
+            if eid in have:
+                continue
+            row = dict.fromkeys(COLUMNS, "")
+            row.update(_cell_fields(cell), episode_id=eid, transcript_path="", outcome="no_transcript",
+                       end_reason=f"failed_attempts={fails[i]}" if fails[i] else "interrupted")
+            out.append(row)
+    return out
 
 
 def _lines(root: str | Path, name: str) -> dict[str, int]:

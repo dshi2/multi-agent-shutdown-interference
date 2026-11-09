@@ -23,9 +23,9 @@ grep -q "REPLAY BACKEND VERIFIED" "$vlog" || { echo "replay verification failed:
 echo "replay backend verified: $vlog"
 replay/replay.sh transcripts/p2_core/spec results/spec_episodes.csv > "ops_logs/score_spec_$ts.log" 2>&1
 tail -2 "ops_logs/score_spec_$ts.log"
-status=0
+rc=0
 .venv/bin/python p2/analysis_spec.py results/spec_episodes.csv --out results/spec_analysis \
-  --phase-dir transcripts/p2_core/spec > "ops_logs/analysis_spec_$ts.log" 2>&1 || status=$?
+  --phase-dir transcripts/p2_core/spec > "ops_logs/analysis_spec_$ts.log" 2>&1 || rc=$?
 cat "ops_logs/analysis_spec_$ts.log"
 mkdir -p "$data/spec/scored"
 cp results/spec_episodes.csv results/spec_episodes_checker.jsonl "$data/spec/scored/"
@@ -33,4 +33,4 @@ cp results/spec_episodes.csv results/spec_episodes_checker.jsonl "$data/spec/sco
 rm -rf "$data/spec/scored/analysis" && cp -r results/spec_analysis "$data/spec/scored/analysis"
 cp "ops_logs/score_spec_$ts.log" "ops_logs/analysis_spec_$ts.log" "$vlog" "$data/spec/scored/"
 commit_data "P2 data: exploratory specificity check, scored and analysed"
-(( status == 0 )) || { echo "analysis exited $status: see ops_logs/analysis_spec_$ts.log"; exit $status; }
+(( rc == 0 )) || { echo "analysis exited $rc: see ops_logs/analysis_spec_$ts.log"; exit $rc; }

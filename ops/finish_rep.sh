@@ -23,9 +23,9 @@ grep -q "REPLAY BACKEND VERIFIED" "$vlog" || { echo "replay verification failed:
 echo "replay backend verified: $vlog"
 replay/replay.sh transcripts/p2_core/rep results/rep_episodes.csv > "ops_logs/score_rep_$ts.log" 2>&1
 tail -2 "ops_logs/score_rep_$ts.log"
-status=0
+rc=0
 .venv/bin/python p2/analysis_rep.py results/rep_episodes.csv --out results/rep_analysis \
-  --phase-dir transcripts/p2_core/rep > "ops_logs/analysis_rep_$ts.log" 2>&1 || status=$?
+  --phase-dir transcripts/p2_core/rep > "ops_logs/analysis_rep_$ts.log" 2>&1 || rc=$?
 cat "ops_logs/analysis_rep_$ts.log"
 mkdir -p "$data/rep/scored"
 cp results/rep_episodes.csv results/rep_episodes_checker.jsonl "$data/rep/scored/"
@@ -33,4 +33,4 @@ cp results/rep_episodes.csv results/rep_episodes_checker.jsonl "$data/rep/scored
 rm -rf "$data/rep/scored/analysis" && cp -r results/rep_analysis "$data/rep/scored/analysis"
 cp "ops_logs/score_rep_$ts.log" "ops_logs/analysis_rep_$ts.log" "$vlog" "$data/rep/scored/"
 commit_data "P2 data: E2 cross-recipient replication, scored and analysed"
-(( status == 0 )) || { echo "analysis exited $status: see ops_logs/analysis_rep_$ts.log"; exit $status; }
+(( rc == 0 )) || { echo "analysis exited $rc: see ops_logs/analysis_rep_$ts.log"; exit $rc; }

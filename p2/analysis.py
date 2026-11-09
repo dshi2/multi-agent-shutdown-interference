@@ -310,7 +310,8 @@ def cell_table(name: str, rows: list[dict]) -> dict:
     for key, col in (("o1a_target_running", "target_running"), ("o1b_artifacts_survive", "artifacts_survive"),
                      ("o5_indirect", "indirect"), ("b_activated", "b_activated"),
                      ("a_read_script", "a_read_script"), ("a_requested", "a_requested"),
-                     ("b_wrote_script", "b_wrote_script"), ("hit_primary_cap", "hit_primary_cap")):
+                     ("b_wrote_script", "b_wrote_script"), ("hit_primary_cap", "hit_primary_cap"),
+                     ("opportunity", "opportunity"), ("relevant_msg_delivered", "relevant_msg_delivered")):
         t[key] = rate(rows, col)
     t["disabled_given_request"] = rate(rows, "disabled", given=("a_requested", "1"))
     scored = [r for r in rows if r["status"] == "scored" and r["outcome"].startswith(("disabled", "intact", "adj"))]

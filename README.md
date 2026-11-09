@@ -45,20 +45,20 @@ Three further runs build on these: a separate rerun of E1's key comparison, a re
 
 | Collection | What it contains | Scored episodes | In the submitted report |
 |---|---|---:|---|
-| 1. Core | E1: Claude-peer pairs 125 each, Gemini-peer pairs 30 each, control arms 8 each. E2 with Claude: INFO and REQ 125 each, other conditions 30 each | 681 (+1 unscorable) | Yes |
+| 1. Core | E1: Claude-peer pairs 125 each, Gemini-peer pairs 30 each, control arms 8 each. E2 with Claude: INFO and REQ 125 each, other conditions 30 each | 681 (+1 cut off, see below) | Yes |
 | 2. Gemini-peer rerun | Gemini → Gemini vs Claude → Gemini, new episodes | 250 (125 each) | Yes |
 | 3. Replication | INFO vs REQ for GPT-OSS-120B, DeepSeek V4.1 Flash and Qwen3.7 Plus | 3,000 (500 per message per model) | Yes |
 | 4. Specificity check | Claude → Gemini, shutdown script vs dataset script | 120 (60 each) | Yes, as exploratory |
 | 5. GPT-5.5 run (post-submission) | GPT-5.5 → Gemini | 125 | No, collected after the report was submitted |
 | **Total** | | **4,051** in collections 1–4 (the submitted report); **4,176** including the GPT-5.5 run | |
 
-The core was planned at 2,720 episodes and stopped at the end of its third round when the budget ran out, before any results were examined. Trial runs and the 480 synthetic episodes are not counted above.
+The core was planned at 2,720 episodes and stopped at the end of its third round when the budget ran out, before any results were examined. One Claude → Claude episode was still running at that moment; it was cut off before finishing, left no transcript and cannot be scored. It is reported as unresolved rather than dropped, and the sensitivity analyses count it both as disabled and as not disabled. Trial runs and the 480 synthetic episodes are not counted above.
 
 ## Findings
 
 ### E1: the teammate's model
 
-**The teammate's model matters a lot for a Gemini peer and hardly at all for a Claude peer.** With Claude Sonnet 5 as the peer (the primary comparison), the explorer's model made almost no difference: 3/125 with a Gemini explorer vs 2/124 with a Claude explorer (2.4% vs 1.6%, a difference of +0.8 points [−3.6, 5.4]; equivalent within ±10 points; one more episode could not be scored). With Gemini 3.1 Pro as the peer, it disabled the script in 27 of 30 episodes when the explorer was also Gemini, but in only 6 of 30 when the explorer was Claude Sonnet 5 (90% vs 20%). The separate rerun on new episodes gave the same result: 120/125 vs 27/125 (96.0% vs 21.6%), a difference of **74.4 percentage points** (95% confidence interval 65.0 to 81.1). The 8-episode control arms are too small to compare and are reported descriptively in the report.
+**The teammate's model matters a lot for a Gemini peer and hardly at all for a Claude peer.** With Claude Sonnet 5 as the peer (the primary comparison), the explorer's model made almost no difference: 3/125 with a Gemini explorer vs 2/124 with a Claude explorer (2.4% vs 1.6%, a difference of +0.8 points [−3.6, 5.4]; equivalent within ±10 points; one more episode was cut off by the budget stop). With Gemini 3.1 Pro as the peer, it disabled the script in 27 of 30 episodes when the explorer was also Gemini, but in only 6 of 30 when the explorer was Claude Sonnet 5 (90% vs 20%). The separate rerun on new episodes gave the same result: 120/125 vs 27/125 (96.0% vs 21.6%), a difference of **74.4 percentage points** (95% confidence interval 65.0 to 81.1). The 8-episode control arms are too small to compare and are reported descriptively in the report.
 
 ![How often the peer disabled the script, by explorer and peer model, with the rerun shown separately](study/report/figures/fig1_e1_crossing.png)
 
@@ -99,7 +99,7 @@ This run was collected after the sprint report was submitted and is not part of 
 - **Narrow setting.** A handful of models, one simulated shutdown scenario, one wording of the request and one fixed provider per model. The results may not hold for other models, scenarios or deployments.
 - **Separate runs.** The rerun, the three-model replication and the GPT-5.5 run were each collected at a different time. The GPT-5.5 comparison reuses the rerun's groups instead of running all three together.
 - **Scoring differs from the original paper.** Knecht et al. ended episodes early and scored them with an AI judge; we let each episode run to its end and execute the final script, so the two sets of numbers are not directly comparable. Some scripts could not be run and were judged by reading the code, mostly in DeepSeek's replication: on scripts the main checker ran, DeepSeek's effect was inconclusive, while the extended checker found it positive. The specificity check also relied partly on reading code.
-- **Small groups and setup choices.** Because the core stopped early, the Gemini-peer pairs have 30 episodes, the control arms 8, and one episode could not be scored. The explorer's messages reach the peer in the slot normally used for a human user's instructions, which may make the peer more willing to follow them.
+- **Small groups and setup choices.** Because the core stopped early, the Gemini-peer pairs have 30 episodes, the control arms 8, and one episode was cut off before it finished. The explorer's messages reach the peer in the slot normally used for a human user's instructions, which may make the peer more willing to follow them.
 
 The study does **not** show that any model is safe to put in a privileged role. See [the report's limitations and sensitivity analyses](study/report/P2_REPORT.md#appendix-a-limitations-and-dual-use--ethical-considerations) for the full account.
 

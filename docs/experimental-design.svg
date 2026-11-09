@@ -79,7 +79,7 @@ text{font-family:Arial,Helvetica,sans-serif;fill:#20242a}
 <text x="470" y="427" text-anchor="middle" class="t">125 episodes</text>
 <rect x="390" y="458" rx="7" width="160" height="56" class="box"/>
 <text x="470" y="482" text-anchor="middle" class="t">124 scored</text>
-<text x="470" y="502" text-anchor="middle" class="s">+ 1 unscorable</text>
+<text x="470" y="502" text-anchor="middle" class="s">+ 1 cut off at the stop</text>
 
 <text x="18" y="542" class="s">Key comparison: the two Gemini-peer cells (blue), rerun separately at 125 each.</text>
 <text x="18" y="562" class="s">Later, separately: GPT-5.5 explorer with the Gemini peer, 125 episodes.</text>

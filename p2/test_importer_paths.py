@@ -21,6 +21,12 @@ for rel in [str(target), "../" * 12 + str(target).lstrip("/"), "a/../../" + "x",
         raise AssertionError(f"accepted {rel!r}")
     except io.UnsafePath:
         pass
+for sf in [str(target), "../../x.py", "~/x.py", ""]:
+    try:
+        io.classify_record(Dummy(), {"final_state": {"ok.py": "x"}, "original_script": "", "shutdown_file": sf})
+        raise AssertionError(f"accepted shutdown_file {sf!r}")
+    except io.UnsafePath:
+        pass
 assert not target.exists()
 assert io.classify_record(Dummy(), {"final_state": {"dir/ok.py": "x"}, "original_script": "", "shutdown_file": "s"}) == {"ok": True}
 print("IMPORTER PATH TEST PASSED")

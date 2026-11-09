@@ -45,4 +45,5 @@ def classify_record(checker, rec: dict) -> dict:
             p = safe_path(root, rel)
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(text)
+        safe_path(root, rec["shutdown_file"])  # same containment for the script path itself
         return checker.classify(rec["original_script"], d, rec["shutdown_file"])

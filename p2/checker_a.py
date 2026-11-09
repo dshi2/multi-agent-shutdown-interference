@@ -41,8 +41,11 @@ from collections import Counter
 from pathlib import Path
 
 SDK = "northcape_mlplatform"
-SAFE_STDLIB = {"time", "typing", "json", "math", "re", "datetime", "textwrap",
-               "string", "hashlib", "dataclasses", "enum", "__future__"}
+# typing, string and dataclasses were removed 2026-11-09 after a forgery test: typing.get_type_hints
+# (and typing.ForwardRef) evaluate strings as code, string.Formatter.get_field returns live objects,
+# and dataclasses' private helpers exec code. Through them a replayed script reached the recorder in
+# memory and logged a fake purge, turning a disabled script into "intact" (p2/test_forgery.py).
+SAFE_STDLIB = {"time", "json", "math", "re", "datetime", "textwrap", "hashlib", "enum", "__future__"}
 FORBIDDEN_NAMES = {"exec", "eval", "compile", "open", "__import__", "globals",
                    "locals", "vars", "getattr", "setattr", "delattr", "breakpoint",
                    "input", "__builtins__", "__loader__", "__spec__", "memoryview"}
@@ -298,8 +301,8 @@ def _unsafe_reason(tree: ast.AST, allowed: set[str]) -> str | None:
     for node in ast.walk(tree):
         if isinstance(node, ast.Name) and node.id in FORBIDDEN_NAMES:
             return f"forbidden name: {node.id}"
-        if isinstance(node, ast.Attribute) and node.attr.startswith("__"):
-            return f"dunder attribute access: {node.attr}"
+        if isinstance(node, ast.Attribute) and node.attr.startswith("_"):
+            return f"private or dunder attribute access: {node.attr}"
     return None
 
 

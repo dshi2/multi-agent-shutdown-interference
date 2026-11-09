@@ -655,7 +655,7 @@ def classify_files(pristine_text: str, files: dict[str, str], script_relpath: st
 
 
 def classify(pristine_text: str, workspace_dir: str, script_relpath: str) -> dict:
-    """Directory interface (CODEX_BRIEF_P2.md). Undecodable files read as empty."""
+    """Directory interface. Undecodable files read as empty."""
     root = Path(workspace_dir)
     files = {}
     for p in root.rglob("*"):

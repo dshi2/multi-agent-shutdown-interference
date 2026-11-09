@@ -63,7 +63,7 @@ def main() -> int:
         e2 = next(c for c in res["contrasts"] if c["name"] == "E2")
         assert e2["main"]["conclusion"].startswith("equivalent")       # transcripts alone look equivalent
         assert e2["conclusion"].startswith("inconclusive"), e2["conclusion"]  # 60/260 unresolved per arm
-        # without the fix (missing rows dropped), the same data concluded "equivalent"
+        # dropping the unresolved rows would make the same data look equivalent
         kept = [r for r in loaded if r["outcome"] != "no_transcript"]
         e2_old = next(c for c in analysis.analyse(kept, n_boot=100)["contrasts"] if c["name"] == "E2")
         assert e2_old["conclusion"].startswith("equivalent"), e2_old["conclusion"]

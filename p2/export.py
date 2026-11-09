@@ -4,7 +4,7 @@
 
   .venv/bin/python p2/export.py transcripts/p2_core/pilot --out results/pilot_episodes.csv --unscored
 
-Columns follow CODEX_BRIEF_P2.md; the full checker output for every episode goes to
+The full checker output for every episode goes to
 <out>_checker.jsonl. The pristine script is read from the transcript
 and must match its recorded SHA-256; if it does not, the row is marked
 invalid_baseline and never scored. --unscored loads no checker at all: every row

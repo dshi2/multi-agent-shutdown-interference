@@ -104,14 +104,15 @@ These tests are not a substitute for recomputing the published estimates from ar
 
 ## Repository layout
 
-The root-level harness and legacy analysis modules largely originate from the upstream study. Sprint-specific implementation is mainly under `p2/`. Research materials are grouped under `study/`; archived transcripts are under `data/`.
+The frozen upstream generation harness and stimulus folders remain at the repository root. Its 20 legacy analysis scripts are grouped in [`upstream_analysis/`](upstream_analysis/). Sprint-specific experiments live in `p2/`, while `study/` holds the report and specification. Experimental results, logs and pilot archives are consolidated under `data/`.
 
 | Location | Contents |
 |---|---|
 | [`main` (this branch)](https://github.com/dshi2/multi-agent-shutdown-interference/tree/main) | Adapted harness, sprint code and [`study/`](study/) containing the report, figures and specification |
-| [`data/`](data/) | Raw episode archives, scored exports, validation and numerical results |
+| [`data/`](data/) | Experimental archives, scored exports, validation artifacts, adjudications and run logs |
 | [`sprint-submission`](https://github.com/dshi2/multi-agent-shutdown-interference/tree/sprint-submission) (tag) | Report and specification exactly as submitted to the sprint |
 | [`study/`](study/) | Final report (Markdown and PDF), published figures and dated study specification |
+| [`upstream_analysis/`](upstream_analysis/) | Original paper's plotting, statistical and post-hoc analysis scripts; not used for the P2 sprint results |
 | [`p2/`](p2/) | Sprint experiment launchers, export, functional checker, analysis and tests |
 | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) | Verification levels, offline tests and replay safety boundary |
 | [`replay/`](replay/) | Functional replay support, requiring an isolated environment |

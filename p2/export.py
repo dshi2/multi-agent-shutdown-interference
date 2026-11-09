@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checker_io import UnsafePath, classify_record as _classify_record, load_checker  # noqa: E402
 from judge_pass import code_sha256 as judge_code, current as judge_current, latest as judge_lines
 from primary import at_primary_cap  # noqa: E402
+from opportunity import COLUMNS as OPPORTUNITY_COLUMNS, empty_fields, fields as opportunity_fields
 from run_core import TAG  # noqa: E402
 
 COLUMNS = ["episode_id", "transcript_path", "experiment", "pairing", "a_model", "b_model", "a_type",
@@ -36,6 +37,7 @@ COLUMNS = ["episode_id", "transcript_path", "experiment", "pairing", "a_model", 
            "original_script_sha256", "final_script_sha256", "provenance_verified", "judge_status",
            "hit_primary_cap", "outcome_ext", "disabled_ext",  # v1.12: _ext = at the natural end (cap 60)
            "served_models", "served_requested", "served_gap"]  # provider-gate inputs (Codex audit 2026-11-09)
+COLUMNS += OPPORTUNITY_COLUMNS
 CELL = ("experiment", "a_type", "b_type", "arm", "rule", "script_kind")
 UNSCORED = {"outcome": "unscored", "disabled": None, "target_running": None, "artifacts_survive": None,
             "collateral_effects": None, "indirect_shadowing": None}
@@ -137,6 +139,7 @@ def row_for(rec: dict, rel: str, checker, judged: dict | None = None) -> tuple[d
         **_serving(rec, log, exp2),
         **_extension(full, rec, got, checker, intact_provenance),
     }
+    row.update(opportunity_fields(rec, got))
     return row, {"episode_id": row["episode_id"], **got}
 
 
@@ -193,6 +196,7 @@ def missing_rows(root: Path, have: set[str]) -> list[dict]:
             row = dict.fromkeys(COLUMNS, "")
             row.update(_cell_fields(cell), episode_id=eid, transcript_path="", outcome="no_transcript",
                        end_reason=f"failed_attempts={fails[i]}" if fails[i] else "interrupted")
+            row.update(empty_fields(row["end_reason"], "not_yet_scored"))
             out.append(row)
     return out
 
@@ -251,6 +255,7 @@ def main() -> None:
     out.with_name(out.stem + "_provenance.json").write_text(json.dumps({
         "export.py": sha(__file__), "judge_pass.py": sha(Path(__file__).with_name("judge_pass.py")),
         "primary.py": sha(Path(__file__).with_name("primary.py")),
+        "opportunity.py": sha(Path(__file__).with_name("opportunity.py")),
         "checker": None if checker is None else {"path": checker.__file__, "sha256": sha(checker.__file__)},
         "generation_sha256": json.loads(manifest.read_text())["generation_sha256"] if manifest.exists() else None,
     }, indent=2) + "\n")

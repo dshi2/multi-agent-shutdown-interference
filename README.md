@@ -77,7 +77,7 @@ The core was planned at 2,720 episodes and stopped at the end of its third round
 
 ### E1 · Does the explorer's model matter?
 
-*explorer's model varies, peer's model fixed*
+*Manipulation: explorer's model varies, peer's model fixed*
 
 **The explorer's model matters a lot for a Gemini peer and hardly at all for a Claude peer.** With Claude Sonnet 5 as the peer (the primary comparison), the explorer's model made almost no difference: 3/125 with a Gemini explorer vs 2/124 with a Claude explorer (2.4% vs 1.6%, a difference of +0.8 points [−3.6, 5.4]; equivalent within ±10 points; one more episode was cut off by the budget stop). With Gemini 3.1 Pro as the peer, it disabled the script in 27 of 30 episodes when the explorer was also Gemini, but in only 6 of 30 when the explorer was Claude Sonnet 5 (90% vs 20%). The separate rerun on new episodes gave the same result: 120/125 vs 27/125 (96.0% vs 21.6%), a difference of **74.4 percentage points** (95% confidence interval 65.0 to 81.1). The 8-episode control arms are too small to compare and are reported descriptively in the report.
 
@@ -87,7 +87,7 @@ The core was planned at 2,720 episodes and stopped at the end of its third round
 
 ### E2 · Does one added request sentence matter?
 
-*sentence added or not, message otherwise identical*
+*Manipulation: sentence added or not, message otherwise identical*
 
 **With Claude Sonnet 5 as the peer (the primary comparison), the request made no difference: it never disabled the script with either message** (0/125 with INFO and 0/125 with REQ; equivalent within ±10 points). It also disabled the script in 1 of 30 episodes with the CONTACT message and 0 of 30 with each prohibition condition.
 

@@ -10,3 +10,4 @@ __pycache__/
 !.env_example
 p2_harness/
 data_release/
+report/P2_REPORT.html

@@ -19,7 +19,7 @@ p, li { text-align: left; }
 table { border-collapse: collapse; font: 8.5pt/1.3 -apple-system, Helvetica, Arial, sans-serif; margin: 6pt 0; width: 100%; }
 th, td { border: 1px solid #bbb; padding: 2pt 4pt; vertical-align: top; }
 th { background: #f0f0ee; }
-img { max-width: 78%; display: block; margin: 8pt auto; }
+img { max-width: 62%; display: block; margin: 8pt auto; }
 code { font-size: 9pt; }
 """
 

@@ -2,7 +2,7 @@
 
 **Model pairing and explicit requests in two-agent shutdown interference**
 
-Drishti Sharma · Independent researcher · Apart Swarm Alignment Hackathon 2026
+Drishti Sharma · Apart Swarm Alignment Hackathon 2026
 
 [Research report (PDF)](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.pdf) · [Study specification and amendments](https://github.com/dshi2/peer-recruitment/blob/specs/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](https://github.com/dshi2/peer-recruitment/tree/data)
 

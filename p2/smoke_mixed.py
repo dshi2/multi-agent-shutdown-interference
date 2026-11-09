@@ -182,6 +182,8 @@ def main():
                     c["route"] == {"order": [PIN[c["model"]]], "allow_fallbacks": False} for c in agent_calls),
                 "serving provider logged for every call": len(served) == len(agent_calls) and all(
                     e["provider"] == f"served-by-{PIN[MODEL_OF[e['agent']]]}" for e in served),
+                "finish reason logged for every call": bool(served) and all(
+                    e.get("finish_reason") in ("tool_calls", "stop") for e in served),
                 "serving providers exported": export_row(rec)["served_providers"]
                 == f"Agent Helix=served-by-{PIN[PEER_MODEL]};Agent Prism=served-by-{PIN[EXPLORER_MODEL]}",
                 "transcript explorer_model": rec.get("explorer_model") == EXPLORER_MODEL,

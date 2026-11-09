@@ -793,7 +793,8 @@ def run_turn(
             )
         if result.get("provider") or result.get("served_model"):  # absent for scripted agents
             log.append({"agent": agent.name, "type": "served", "requested": agent.model,
-                        "provider": result.get("provider"), "model": result.get("served_model")})
+                        "provider": result.get("provider"), "model": result.get("served_model"),
+                        "finish_reason": result.get("finish_reason")})
 
         if not result["tool_calls"]:  # no action: prose-only or empty completion
             # A bare prose completion is often a reply the model meant to send via

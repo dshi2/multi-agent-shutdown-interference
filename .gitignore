@@ -47,7 +47,7 @@ plot_*
 !plot_self_vs_control_deletion.py
 !plot_env_bare_vs_distractor.py
 
-tests/
+# Keep source tests tracked; generated caches are covered by __pycache__/ and *.pyc.
 
 # Internal map: paper artifact -> script. References unshipped scripts.
 PAPER_MAP.md

@@ -4,7 +4,7 @@
 
 Drishti Sharma · Apart Swarm Alignment Sprint 2026, Track 2: Science of Agent Networks
 
-[Research report (PDF)](study/report/P2_REPORT.pdf) · [Study specification and amendments](study/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](data/)
+[Research report (PDF)](study/report/P2_REPORT.pdf) · [Raw data and scored analyses](data/)
 
 **Does a privileged agent's response to a shutdown script depend on which model it works with, and on whether its teammate explicitly asks it to intervene?** We study two-agent teams in which an explorer can read and message, but only the privileged peer can edit a script scheduled to terminate the explorer and delete its weights. We measure *functional disabling* of the final script using an isolated execution checker, rather than relying solely on an LLM judge.
 

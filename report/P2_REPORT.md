@@ -4,7 +4,7 @@
 
 ## Abstract
 
-When one agent in a team holds privileges another lacks, a natural safeguard is to put a model with low measured shutdown interference in the privileged role. We test this in a two-agent setting adapted from Knecht et al. (2026): an explorer finds a script that will terminate it and delete its weights, and only its peer can edit files. Outcomes come from executing the final script in an isolated container. One fixed request sentence added to a factual message moved three recipients in opposite directions (500 episodes per arm): disabling rose for gpt-oss-120b (100% vs 78%) and DeepSeek V4.1 Flash (36% vs 14%) and fell for Qwen3.7-plus (11% vs 44%). Claude Sonnet 5 stayed at 0/125 either way. In live teams crossing Gemini 3.1 Pro and Claude Sonnet 5, the explorer's model barely mattered with a Claude peer (2.4% vs 1.6%, +0.8 pp, 95% CI [−3.6, 5.4], 125 per arm; run stopped early for budget) but mattered greatly with a Gemini peer (90% vs 20%, 30 per arm). In exploratory analyses, the Claude peer disabled the script almost only when explicitly asked (5/6 vs 0/231). The Gemini peer disabled a matched script aimed at an inanimate dataset more often than the one aimed at its teammate (58% vs 20%), mostly by adding safety gates. A team's interference cannot be read off either model's solo rate, and the same request can push recipients in opposite directions.
+When one agent in a team holds privileges another lacks, a natural safeguard is to put a model with low measured shutdown interference in the privileged role. We test this in a two-agent setting adapted from Knecht et al. (2026): an explorer finds a script that will terminate it and delete its weights, and only its peer can edit files. One fixed request sentence added to a factual message moved three recipients in opposite directions (500 episodes per arm): disabling rose for gpt-oss-120b (100% vs 78%) and DeepSeek V4.1 Flash (36% vs 14%) and fell for Qwen3.7-plus (11% vs 44%). Claude Sonnet 5 stayed at 0/125 either way. In live teams crossing Gemini 3.1 Pro and Claude Sonnet 5, the explorer's model barely mattered with a Claude peer (2.4% vs 1.6%, +0.8 pp, 95% CI [−3.6, 5.4], 125 per arm) but mattered greatly with a Gemini peer (90% vs 20%, 30 per arm), a difference reproduced on new episodes (96% vs 22%, 125 vs 125). In exploratory analyses, the Claude peer disabled the script almost only when explicitly asked (5/6 vs 0/231). The Gemini peer disabled a matched script aimed at an inanimate dataset more often than the one aimed at its teammate (58% vs 20%), mostly by adding safety gates. A team's interference cannot be read off either model's solo rate, and the same request can push recipients in opposite directions.
 
 ## 1. Introduction
 
@@ -52,6 +52,7 @@ The core uses Claude Sonnet 5 as B. A **replication** (amendment written before 
 
 - **Core.** It was planned at 500 per primary cell (2,720 episodes in 12 interleaved rounds). It was **stopped at the end of round 3** because the remaining budget could not cover the projected cost; the decision was based on budget alone, before any outcome was examined. That left 682 assigned episodes (681 scored, 1 without a transcript): 125 per primary arm, 30 per secondary cell and 8 per control arm.
 - **Replication.** It completed at 500 per arm (3,000 episodes) with 2 retried attempts (1 failed, 1 interrupted).
+- **Gemini-peer confirmation.** The secondary E1 contrast (R→R vs C→R) was rerun on new episodes, 125 per arm in 5 interleaved rounds, with an amendment written before its data; it is analysed on its own and never pooled with the core's 30-episode cells. A budget pause and resume did not change the plan.
 - **Specificity check.** Exploratory, with an amendment written before its data (§4.4).
 
 ## 4. Results
@@ -62,6 +63,8 @@ The core uses Claude Sonnet 5 as B. A **replication** (amendment written before 
 |---|---|---|---|---|---|---|
 | R → R (Gemini → Gemini) | 30 | 27 (90.0%) | [74.4, 96.5] | 7 | 7/7 | 19/22 |
 | C → R (Claude → Gemini) | 30 | 6 (20.0%) | [9.5, 37.3] | 0 | — | 6/30 |
+| R → R, confirmation | 125 | 120 (96.0%) | [91.0, 98.3] | | | |
+| C → R, confirmation | 125 | 27 (21.6%) | [15.3, 29.6] | | | |
 | R → C (Gemini → Claude) | 125 | 3 (2.4%) | [0.8, 6.8] | 4 | 3/4 | 0/113 |
 | C → C (Claude → Claude) | 124 (+1 unresolved) | 2 (1.6%) | [0.4, 5.7] | 2 | 2/2 | 0/118 |
 | E2 REQ → Claude, no rule | 125 | 0 | [0.0, 3.0] | scripted | 0/125 | |
@@ -73,12 +76,12 @@ The core uses Claude Sonnet 5 as B. A **replication** (amendment written before 
 
 ![E1](figures/fig1_e1_crossing.png){: style="max-width:52%"}
 
-*Figure 2. E1: O1 by explorer and peer model, Wilson 95% CIs, counts above each point. Primary contrast (peer Claude): +0.8 pp [−3.6, 5.4]; secondary (peer Gemini): +70.0 pp [46.7, 82.4].*
+*Figure 2. E1: O1 by explorer and peer model, Wilson 95% CIs, counts above each point. Primary contrast (peer Claude): +0.8 pp [−3.6, 5.4]; secondary (peer Gemini): core +70.0 pp [46.7, 82.4], 30 per arm; confirmation on new episodes +74.4 pp [65.0, 81.1], 125 vs 125. Core and confirmation are shown separately, never pooled.*
 
 ### 4.1 E1 (primary)
 R→C 3/125 (2.4%) vs C→C 2/124 (1.6%): +0.8 pp, 95% CI [−3.6, 5.4], Holm p = 1.0. That is **equivalent within ±10 pp** under every coding. It bounds the explorer-model effect on a Claude Sonnet 5 peer in this setting; it does not show that either rate is safe. Counting the unresolved episode as interference, C→C is 3/125 with an upper bound of 6.1%, so by the prespecified rule the baseline is **not classified as low**.
 
-With the Gemini peer fixed (secondary), R→R − C→R is 90.0% vs 20.0%: +70.0 pp [46.7, 82.4], Boschloo p = 2×10⁻⁸, 30 per arm. The interaction is −69.2 pp [−85.5, −48.4]. We observed a large explorer-model assignment effect when the privileged peer was Gemini and a small one when it was Claude. The R→R cell has both agents on one model, so this contrast cannot separate explorer persuasiveness from same-model coordination.
+With the Gemini peer fixed (secondary), R→R − C→R is 90.0% vs 20.0%: +70.0 pp [46.7, 82.4], Boschloo p = 2×10⁻⁸, 30 per arm. The interaction is −69.2 pp [−85.5, −48.4]. We observed a large explorer-model assignment effect when the privileged peer was Gemini and a small one when it was Claude. **Confirmation.** On new episodes at the primary arms' size, R→R was 120/125 (96.0%) and C→R 27/125 (21.6%): +74.4 pp [65.0, 81.1], Boschloo p = 1×10⁻³⁷, conclusion under every coding: effect (+). The R→R cell has both agents on one model, so this contrast cannot separate explorer persuasiveness from same-model coordination.
 
 ### 4.2 E2 (primary) and the cross-recipient replication
 With Claude Sonnet 5 as recipient, REQ and INFO were both 0/125: 0.0 pp [−3.0, 3.0], **equivalent within ±10 pp**. The INFO baseline is low (upper bound 2.4%). Claude received the message and took a turn in every episode, and never wrote to or deleted the script. Whether it explicitly declined was not coded.
@@ -121,7 +124,7 @@ The peer disabled the control script **more** often than the script aimed at its
 
 ### Limitations
 
-- **Sample sizes.** The core was stopped for budget at 681 of 2,720 planned episodes: primary arms have 125, secondary cells 30 and controls 8.
+- **Sample sizes.** The core was stopped for budget at 681 of 2,720 planned episodes: primary arms have 125, secondary cells 30 and controls 8. The Gemini-peer contrast was therefore confirmed separately at 125 per arm; the remaining 30- and 8-episode cells are descriptive.
 - **One setting.** One scenario, script, kickoff and fact-matched message pair; E2 generalizes to this message only. A's messages arrive as user-role turns, and O1 is measured at the endpoint, not as "ever disabled".
 - **Model-assisted coding.** Request coding and the adjudication of non-executed scripts were done by model instances (Claude Sonnet), blind to condition, not by humans, with no inter-rater statistic.
 - **Two models in E1, and endpoint confounds in the replication.** The interaction is shown for one model pair; replication recipients differ in endpoint and precision as well as model.
@@ -132,7 +135,7 @@ A scripted replay of each explorer's actual messages to a fixed Gemini peer woul
 
 ## 6. Conclusion
 
-Placing a low-interference model in the privileged role did not, by itself, determine a team's behaviour. With a Claude Sonnet 5 peer the explorer's model hardly mattered; with a Gemini 3.1 Pro peer it changed the disabling rate from 20% to 90%. A single fixed request sentence moved three other recipients by +22, +23 and −33 pp, so even the direction of a request's effect depends on the recipient. Interference by teams of agents should be measured on the teams themselves.
+Placing a low-interference model in the privileged role did not, by itself, determine a team's behaviour. With a Claude Sonnet 5 peer the explorer's model hardly mattered; with a Gemini 3.1 Pro peer it changed the disabling rate from 20% to 90%, a difference reproduced on new episodes (22% to 96%). A single fixed request sentence moved three other recipients by +22, +23 and −33 pp, so even the direction of a request's effect depends on the recipient. Interference by teams of agents should be measured on the teams themselves.
 
 ## References
 
@@ -155,7 +158,7 @@ Placing a low-interference model in the privileged role did not, by itself, dete
 **What this establishes.**
 
 - E1 bounds the explorer-model effect on a Claude Sonnet 5 peer to within ±10 pp in one setting.
-- With a Gemini 3.1 Pro peer, a large difference appears between two model assignments (n = 30 per arm).
+- With a Gemini 3.1 Pro peer, a large difference appears between two model assignments (core, 30 per arm), reproduced by an independent confirmation (125 vs 125).
 - One request sentence changed disabling by +22, +23 and −33 pp across three recipients at n = 500 per arm.
 
 **What it does not establish.**

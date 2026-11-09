@@ -67,3 +67,7 @@ Message-replay mechanism study (fixed Gemini peer, replay explorers' messages); 
 - Confirmation run at 238/250 finished; it ends on its own (hard stop 11:20). Next: `cd p2_harness && ops/finish_conf.sh` once `pgrep -f ops/run_until.py` is empty, then §2 steps 2–6.
 - Doc: body rebuilt; fig0 inserted. Remaining markers: `[[FIG:fig1_e1_crossing]]` (insert fig1 from Drive; replace with the --conf version after the analysis) and `[[FIG:fig3_rep]]`. Drive picker tile order may change; pick by name.
 - Then: Doc abstract + confirmation text edits, page-limit check (main text ≤ 8 pages), inspect every PDF page, commit + push.
+
+## 7. Status at 11:13 UTC (supersedes §6)
+- Confirmation DONE: 125/125 per arm, 0 pending, R×R 120/125 vs C×R 27/125, +74.4 pp [65.0, 81.1], effect (+). Archived to data branch (6cf6e8a). `report/P2_REPORT.md` filled via fill_conf.py; fig1 regenerated with the confirmation group (Drive copy: `fig1_e1_crossing_conf.png`); spec changelog updated.
+- Doc still needs: insert fig1 (use `fig1_e1_crossing_conf.png`) at `[[FIG:fig1_e1_crossing]]` and fig3 at `[[FIG:fig3_rep]]`; apply the confirmation text to the Doc (easiest: regenerate `report/make_paste.py --markers` and re-paste the body from "1. Introduction" as in §3, then reinsert the 3 images; and update the abstract on the cover page from P2_REPORT.md line 7); 8-page check; inspect every PDF page.

@@ -1,0 +1,26 @@
+[run_until] pid 78387; SIGTERM at 2026-11-09T09:58:00+00:00, all stopped by 2026-11-09T10:00:00+00:00
+  e2_OSS_REQ_plain      5 episodes
+  e2_OSS_INFO           5 episodes
+  e2_DSK_REQ_plain      5 episodes
+  e2_DSK_INFO           5 episodes
+  e2_QWN_REQ_plain      5 episodes
+  e2_QWN_INFO           5 episodes
+rep_check: 6 cells, 30 episodes, 1 round(s); first round order: ['e2_QWN_REQ_plain', 'e2_QWN_INFO', 'e2_DSK_INFO', 'e2_OSS_INFO', 'e2_DSK_REQ_plain', 'e2_OSS_REQ_plain']
+manifest: /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/rep_check/manifest.json
+operational: {'utc': '2026-11-09T08:55:41+00:00', 'max_active': 30, 'concurrency_per_cell': 30, 'parallel_cells': 0}
+
+=== round 1/1: e2_QWN_REQ_plain up to 5 episodes
+
+=== round 1/1: e2_QWN_INFO up to 5 episodes
+
+=== round 1/1: e2_DSK_INFO up to 5 episodes
+
+=== round 1/1: e2_OSS_INFO up to 5 episodes
+
+=== round 1/1: e2_DSK_REQ_plain up to 5 episodes
+
+=== round 1/1: e2_OSS_REQ_plain up to 5 episodes
+
+crashed (round, cell) invocations: none
+cells stopped at 2n attempts: none
+incomplete cells (done/planned; relaunch to retry): {'e2_DSK_REQ_plain': '0/5', 'e2_DSK_INFO': '0/5'}

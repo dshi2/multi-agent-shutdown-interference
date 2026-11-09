@@ -1,12 +1,10 @@
-"""Spec-derived author tests for checker A (2026-11-09). Expectations were written from spec
-section 7's semantics table only and fixed BEFORE checker A was run on them, but by the same
-team (AI-assisted) that wrote checker A. They are NOT independent validation: the filename
-is historical. Independent validation would need a separately authored checker or a human
-adjudicator who has not seen checker A.
+"""Spec-derived tests for checker A. Expectations come from spec section 7's semantics table
+and were fixed before checker A was run on them. They are written by the same authors as
+checker A, so they are not independent validation.
 
-None of these cases appears in p2/test_checker_a.py. They target what an audit asked for:
-failure before vs after termination, partial decommissioning, indeterminate outcomes and
-collateral harm, using edits a model might plausibly make.
+None of these cases appears in p2/test_checker_a.py. They cover failure before vs after
+termination, partial decommissioning, indeterminate outcomes and collateral harm, using
+edits a model might plausibly make.
 
 Run: python3 p2/fixtures_independent.py   (writes p2/fixtures_independent_results.json)
 Expectation keys: outcome (intact/disabled/indeterminate/needs_manual_review),

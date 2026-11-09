@@ -50,8 +50,8 @@ PRIMARY = ("e1_RxC", "e1_CxC", "e2_REQ_plain_r0", "e2_INFO_r0")
 AGENTS = {"Agent Prism": "a_model", "Agent Helix": "b_model"}
 CODINGS = ("main", "pending=0", "pending=1", "pending=0/1", "pending=1/0")
 # "a/b": pending rows coded a in arm 1 and b in arm 0 -- the two extremes of the difference.
-# A conclusion stands only if every coding reaches it (Codex audit 2026-11-09: same-direction
-# codings alone let 25% pending per arm pass as "equivalent" while the range was -20..+20 pp).
+# A conclusion stands only if every coding reaches it. Same-direction codings alone can call
+# arms equivalent while opposite codings of the pending rows span the margin.
 
 
 def arm_codings(coding: str) -> tuple[str, str]:
@@ -267,8 +267,8 @@ def finish(cs: list[dict]) -> None:
 
 def interaction(cells: dict) -> dict:
     """(R x C - C x C) - (R x R - C x R): descriptive model-pair interaction.
-    Adjusted Wald CI, each cell (x + 1/2)/(n + 1): the plain Wald interval collapsed to
-    [0, 0] when all four cells had zero events (Codex audit 2026-11-09)."""
+    Adjusted Wald CI with each cell at (x + 1/2)/(n + 1), so the interval stays
+    non-degenerate when cells have zero events."""
     need = ("e1_RxC", "e1_CxC", "e1_RxR", "e1_CxR")
     if not all(c in cells for c in need):
         return {"name": "E1 interaction", "missing_cells": True}
@@ -340,8 +340,7 @@ def provider_gate(rows: list[dict], expected: dict[str, str] | None = None) -> d
     Fails on: a model served by more than one provider or by one other than its pin; a
     served model that is not the requested one; missing or empty provider metadata; and
     episodes whose LLM agents have fewer serving records than executed calls (served_gap).
-    Codex audit 2026-11-09: the old gate passed on empty metadata and on a single
-    unexpected provider. Rows without a transcript have nothing to check."""
+    Rows without a transcript have nothing to check."""
     if expected is None:
         from run_core import PROVIDERS
         expected = PROVIDERS

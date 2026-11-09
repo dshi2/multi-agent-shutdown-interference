@@ -1,4 +1,4 @@
-"""Codex audit counterexample: 400 scored (200 disabled) + 100 pending per arm must not be 'equivalent'."""
+"""400 scored (200 disabled) + 100 pending per arm must not be called 'equivalent'."""
 import sys
 from pathlib import Path
 

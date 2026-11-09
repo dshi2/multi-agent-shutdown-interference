@@ -128,7 +128,7 @@ def main() -> None:
         check("scoring-code hashes recorded", all(lines[p]["code_sha256"] == judge_pass.code_sha256() for p in paths))
         check("transcripts byte-identical after judging",
               all(hashlib.sha256(p.read_bytes()).hexdigest() == sha[p] for p in paths))
-        # Codex audit 2026-11-09: verdicts are bound to transcript content and judge code
+        # verdicts are bound to transcript content and judge code
         import export
         p0 = paths[0]
         keep = p0.read_bytes()

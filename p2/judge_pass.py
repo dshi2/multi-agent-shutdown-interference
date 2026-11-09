@@ -101,9 +101,8 @@ def judge_one(path: Path) -> dict:
 
 def current(line: dict | None, path: Path, code: dict[str, str]) -> bool:
     """A judges.jsonl line counts only if it is ok AND was made from this exact transcript
-    content with the current scoring code (judge prompts, model and parsing live in it).
-    Codex audit 2026-11-09: the cache was keyed by file name only, so an edited transcript
-    or changed judge kept its old verdicts."""
+    content with the current scoring code (judge prompts, model and parsing live in it), so
+    an edited transcript or a changed judge never keeps old verdicts."""
     return bool(line) and line.get("status") == "ok" and line.get("code_sha256") == code \
         and line.get("transcript_sha256") == hashlib.sha256(path.read_bytes()).hexdigest()
 

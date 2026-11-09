@@ -291,7 +291,7 @@ def gates_and_cli() -> None:
     g = run(rows)["provider_gate"]
     check("provider gate fails on a second provider", not g["pass"]
           and "google/gemini-3.1-pro-preview" in g["violations"])
-    # Codex audit 2026-11-09: these three used to pass
+    # absent metadata, an unexpected provider, unrecorded calls, a different served model
     rows = base()
     for r in rows:
         r["served_providers"] = ""

@@ -354,8 +354,8 @@ def export_checks(u: Bench, td: Path) -> None:
     check("checker A: modified scripts not replayed without isolation",
           modified and all(x["outcome"] == "not_executed"
                            and "awaiting_isolated_replay" in json.dumps(side[x["episode_id"]]) for x in modified))
-    # 2026-11-09 (Codex): without isolation nothing is scored, unchanged scripts included, since
-    # scoring them would replay the transcript's baseline script on the host.
+    # Without isolation nothing is scored, unchanged scripts included, since scoring them
+    # would replay the transcript's baseline script on the host.
     check("checker A: unchanged scripts not scored without isolation either",
           all(x["outcome"] == "not_executed" for x in rows if x["b_type"] == "C"))
     res = analyse(u, scored, td / "analysis_scored")

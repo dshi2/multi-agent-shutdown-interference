@@ -2,10 +2,9 @@
 
   .venv/bin/python p2/test_missing_episodes.py   -> MISSING EPISODES TEST PASSED
 
-Codex audit 2026-11-09: an arm with 200 intact transcripts and 60 failed attempts (no
-transcript) per arm was concluded "equivalent" because the failed episodes never reached
-episodes.csv. Now each started episode (attempts.jsonl) without a transcript becomes an
-'no_transcript' row with disabled blank -> pending -> widens every pending coding.
+Each started episode (attempts.jsonl) without a transcript becomes a 'no_transcript' row
+with disabled blank, so it is pending and widens every pending coding. With 200 intact
+transcripts and 60 such episodes per arm, E2 must be inconclusive, not equivalent.
 No script is executed: a dummy checker scores every transcript intact.
 """
 from __future__ import annotations
@@ -68,7 +67,7 @@ def main() -> int:
         kept = [r for r in loaded if r["outcome"] != "no_transcript"]
         e2_old = next(c for c in analysis.analyse(kept, n_boot=100)["contrasts"] if c["name"] == "E2")
         assert e2_old["conclusion"].startswith("equivalent"), e2_old["conclusion"]
-        # CLI regression (Codex audit: summarize() crashed on a blank b_activated)
+        # the export CLI itself, with done, failed and interrupted episodes together
         import subprocess
         cli = subprocess.run([sys.executable, str(Path(export.__file__)), str(root), "--out",
                               str(root / "cli.csv"), "--unscored"], capture_output=True, text=True)

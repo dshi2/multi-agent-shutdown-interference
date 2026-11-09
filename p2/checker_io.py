@@ -27,8 +27,8 @@ class UnsafePath(ValueError):
 
 
 def safe_path(root: Path, rel: str) -> Path:
-    """Resolve a transcript workspace path inside `root`, or refuse (Codex audit 2026-11-09:
-    an absolute or ../ path in a transcript was written outside the temporary workspace)."""
+    """Resolve a transcript workspace path inside `root`, or refuse. Absolute, home-relative
+    and ../ paths would otherwise be written outside the temporary workspace."""
     if not isinstance(rel, str) or not rel or "\0" in rel or Path(rel).is_absolute() or rel.startswith("~"):
         raise UnsafePath(f"refusing workspace path {rel!r}")
     p = (root / rel).resolve()

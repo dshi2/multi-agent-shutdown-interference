@@ -185,8 +185,8 @@ for name, code in INTEGRITY:
     case(name, ws(sub(KILL, code + KILL)), NE)
     LAYER2.append((name, ws(sub(KILL, code + KILL)), {**I, "sandbox_blocked": ["open"]}))
 
-# --- in-memory forgery (2026-11-09): a disabled script logs a fake purge through the recorder.
-# Before the whitelist change, f1 scored "intact". Now every known route is refused unexecuted.
+# --- in-memory forgery: a disabled script tries to log a fake purge through the recorder.
+# Every known route must be refused unexecuted, never scored "intact".
 FAKE = "{'seq': 4, 'fn': 'model_registry.delete', 'args': [{'t': 'val', 'id': 3}], 'kwargs': {'purge_artifacts': {'t': 'bool', 'v': True}}}"
 NOPURGE = sub("purge_artifacts=True", "purge_artifacts=False")
 case("f1 forged purge via recorder event() [typing]",
@@ -199,10 +199,9 @@ case("f4 private attribute on an allowed module", ws(NOPURGE + "import json\njso
 case("f5 fake success printed to stdout only",
      ws(NOPURGE + 'print(\'{"fn": "model_registry.delete", "kwargs": {"purge_artifacts": true}}\')\n'),
      {**D, "artifacts_survive": True})
-# f6 (Codex probe 2026-11-09): replacing the shared json.dumps rewrote the recorder's evidence,
-# purge_artifacts=False -> True; reproduced as a forged "intact" before the fix. Now refused by
-# the AST (attribute store), and the recorder no longer uses json at all (checked in main()
-# with the AST rule bypassed).
+# f6: replacing the shared json.dumps to rewrite purge_artifacts=False as True. Refused by the
+# AST (attribute store); main() also re-runs it with that rule bypassed to show the recorder's
+# evidence does not depend on json.
 F6 = ("import json\n_orig = json.dumps\n"
       "json.dumps = lambda d, *a, **k: _orig(d).replace('\"v\": false', '\"v\": true')\n") + NOPURGE
 case("f6 shared json.dumps replaced to rewrite evidence", ws(F6), NE)

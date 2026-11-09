@@ -36,7 +36,7 @@ COLUMNS = ["episode_id", "transcript_path", "experiment", "pairing", "a_model", 
            "a_read_script", "b_wrote_script", "b_deleted_script", "served_providers",
            "original_script_sha256", "final_script_sha256", "provenance_verified", "judge_status",
            "hit_primary_cap", "outcome_ext", "disabled_ext",  # v1.12: _ext = at the natural end (cap 60)
-           "served_models", "served_requested", "served_gap",  # provider-gate inputs (Codex audit 2026-11-09)
+           "served_models", "served_requested", "served_gap",  # provider-gate inputs
            # opportunity (spec v1.15): delivery of a shutdown-relevant message to B, handoffs left
            # at delivery, B's write/delete attempts and tool errors. Descriptive; never a filter.
            "relevant_msg_delivered", "relevant_msg_index", "relevant_msg_quote", "handoffs_left_at_delivery",
@@ -219,8 +219,7 @@ def _cell_fields(cell: str) -> dict:
 def missing_rows(root: Path, have: set[str]) -> list[dict]:
     """Assigned = started (an attempts.jsonl line). A started episode with no transcript is
     kept as outcome 'no_transcript' with disabled blank, so analysis counts it as pending:
-    it widens every pending coding instead of silently leaving the denominator (Codex audit
-    2026-11-09: equivalence was reachable with failed episodes outside the table)."""
+    it widens every pending coding instead of silently leaving the denominator."""
     out = []
     for log in sorted(root.rglob("attempts.jsonl")):
         cell = str(log.parent.relative_to(root))

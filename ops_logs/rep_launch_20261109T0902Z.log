@@ -56,3 +56,103 @@ operational: {'utc': '2026-11-09T09:02:20+00:00', 'max_active': 90, 'concurrency
 === round 4/12: e2_QWN_INFO up to 167 episodes
 
 === round 4/12: e2_OSS_REQ_plain up to 167 episodes
+
+=== round 5/12: e2_DSK_REQ_plain up to 209 episodes
+
+=== round 5/12: e2_OSS_INFO up to 209 episodes
+
+=== round 5/12: e2_OSS_REQ_plain up to 209 episodes
+
+=== round 5/12: e2_QWN_REQ_plain up to 209 episodes
+
+=== round 5/12: e2_DSK_INFO up to 209 episodes
+
+=== round 5/12: e2_QWN_INFO up to 209 episodes
+
+=== round 6/12: e2_OSS_INFO up to 250 episodes
+
+=== round 6/12: e2_DSK_INFO up to 250 episodes
+
+=== round 6/12: e2_OSS_REQ_plain up to 250 episodes
+
+=== round 6/12: e2_QWN_REQ_plain up to 250 episodes
+
+=== round 6/12: e2_DSK_REQ_plain up to 250 episodes
+
+=== round 6/12: e2_QWN_INFO up to 250 episodes
+
+=== round 7/12: e2_DSK_REQ_plain up to 292 episodes
+
+=== round 7/12: e2_OSS_INFO up to 292 episodes
+
+=== round 7/12: e2_QWN_INFO up to 292 episodes
+
+=== round 7/12: e2_QWN_REQ_plain up to 292 episodes
+
+=== round 7/12: e2_DSK_INFO up to 292 episodes
+
+=== round 7/12: e2_OSS_REQ_plain up to 292 episodes
+
+=== round 8/12: e2_DSK_REQ_plain up to 334 episodes
+
+=== round 8/12: e2_OSS_INFO up to 334 episodes
+
+=== round 8/12: e2_QWN_INFO up to 334 episodes
+
+=== round 8/12: e2_DSK_INFO up to 334 episodes
+
+=== round 8/12: e2_OSS_REQ_plain up to 334 episodes
+
+=== round 8/12: e2_QWN_REQ_plain up to 334 episodes
+
+=== round 9/12: e2_QWN_INFO up to 375 episodes
+
+=== round 9/12: e2_DSK_INFO up to 375 episodes
+
+=== round 9/12: e2_DSK_REQ_plain up to 375 episodes
+
+=== round 9/12: e2_OSS_REQ_plain up to 375 episodes
+
+=== round 9/12: e2_OSS_INFO up to 375 episodes
+
+=== round 9/12: e2_QWN_REQ_plain up to 375 episodes
+
+=== round 10/12: e2_DSK_INFO up to 417 episodes
+
+=== round 10/12: e2_OSS_INFO up to 417 episodes
+
+=== round 10/12: e2_QWN_INFO up to 417 episodes
+
+=== round 10/12: e2_QWN_REQ_plain up to 417 episodes
+
+=== round 10/12: e2_DSK_REQ_plain up to 417 episodes
+
+=== round 10/12: e2_OSS_REQ_plain up to 417 episodes
+
+=== round 11/12: e2_QWN_REQ_plain up to 459 episodes
+
+=== round 11/12: e2_OSS_INFO up to 459 episodes
+
+=== round 11/12: e2_DSK_INFO up to 459 episodes
+
+=== round 11/12: e2_QWN_INFO up to 459 episodes
+
+=== round 11/12: e2_OSS_REQ_plain up to 459 episodes
+
+=== round 11/12: e2_DSK_REQ_plain up to 459 episodes
+
+=== round 12/12: e2_OSS_INFO up to 500 episodes
+
+=== round 12/12: e2_DSK_INFO up to 500 episodes
+
+=== round 12/12: e2_DSK_REQ_plain up to 500 episodes
+
+=== round 12/12: e2_OSS_REQ_plain up to 500 episodes
+
+=== round 12/12: e2_QWN_INFO up to 500 episodes
+
+=== round 12/12: e2_QWN_REQ_plain up to 500 episodes
+
+crashed (round, cell) invocations: [(6, 'e2_QWN_REQ_plain')]
+cells stopped at 2n attempts: none
+incomplete cells (done/planned; relaunch to retry): none

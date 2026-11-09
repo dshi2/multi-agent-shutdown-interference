@@ -12,8 +12,9 @@ Each uses a Newcombe 95% CI and a two-sided Boschloo test. If E1 has more than o
 Missing outcomes:
 - `invalid_baseline` rows are excluded and counted.
 - Rows with an empty `disabled` are pending. They are excluded from the main estimate,
-  and every estimate is repeated with all pending coded 0 and with all pending coded 1.
-  If those codings reach different conclusions, the conclusion is "inconclusive".
+  and every estimate is repeated with all pending coded 0, all coded 1, and coded
+  oppositely in the two arms (0/1 and 1/0, the extremes of the difference). If any of
+  those codings reaches a different conclusion, the conclusion is "inconclusive".
 - The worst-case range for a difference (pending coded oppositely in the two arms) is
   reported as well. It is descriptive and not part of the frozen decision rule.
 
@@ -47,7 +48,17 @@ BOOT = 10_000          # cluster-bootstrap resamples for the paired Exp 2 contra
 BOOT_SEED = 20261109
 PRIMARY = ("e1_RxC", "e1_CxC", "e2_REQ_plain_r0", "e2_INFO_r0")
 AGENTS = {"Agent Prism": "a_model", "Agent Helix": "b_model"}
-CODINGS = ("main", "pending=0", "pending=1")
+CODINGS = ("main", "pending=0", "pending=1", "pending=0/1", "pending=1/0")
+# "a/b": pending rows coded a in arm 1 and b in arm 0 -- the two extremes of the difference.
+# A conclusion stands only if every coding reaches it (Codex audit 2026-11-09: same-direction
+# codings alone let 25% pending per arm pass as "equivalent" while the range was -20..+20 pp).
+
+
+def arm_codings(coding: str) -> tuple[str, str]:
+    if "/" in coding:
+        a, b = coding.split("=")[1].split("/")
+        return f"pending={a}", f"pending={b}"
+    return coding, coding
 
 
 # ---------------------------------------------------------------- statistics
@@ -214,12 +225,13 @@ def contrast(name: str, cells: dict, c1: str, c0: str, role: str, strata: str | 
         return {"name": name, "role": role, "arm1": c1, "arm0": c0, "missing_cells": True}
     res = {"name": name, "role": role, "arm1": c1, "arm0": c0}
     for coding in CODINGS:
-        x1, n1 = counts(cells[c1], coding)
-        x0, n0 = counts(cells[c0], coding)
+        k1, k0 = arm_codings(coding)
+        x1, n1 = counts(cells[c1], k1)
+        x0, n0 = counts(cells[c0], k0)
         keys = {r[strata] for r in cells[c1] + cells[c0]} if strata else set()
         if len(keys) > 1:
-            mh = mh_rd([(*counts([r for r in cells[c1] if r[strata] == k], coding),
-                         *counts([r for r in cells[c0] if r[strata] == k], coding)) for k in sorted(keys)])
+            mh = mh_rd([(*counts([r for r in cells[c1] if r[strata] == k], k1),
+                         *counts([r for r in cells[c0] if r[strata] == k], k0)) for k in sorted(keys)])
             est, ci, p, method = mh["estimate"], mh["ci"], mh["p"], "Mantel-Haenszel RD (Sato)"
         else:
             est = x1 / n1 - x0 / n0 if n1 and n0 else None

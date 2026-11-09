@@ -22,11 +22,27 @@ def load_checker(path: str | Path | None = None):
     return module
 
 
+class UnsafePath(ValueError):
+    pass
+
+
+def safe_path(root: Path, rel: str) -> Path:
+    """Resolve a transcript workspace path inside `root`, or refuse (Codex audit 2026-11-09:
+    an absolute or ../ path in a transcript was written outside the temporary workspace)."""
+    if not isinstance(rel, str) or not rel or "\0" in rel or Path(rel).is_absolute() or rel.startswith("~"):
+        raise UnsafePath(f"refusing workspace path {rel!r}")
+    p = (root / rel).resolve()
+    if p != root and root not in p.parents:
+        raise UnsafePath(f"refusing workspace path {rel!r}: resolves outside the workspace")
+    return p
+
+
 def classify_record(checker, rec: dict) -> dict:
     """Materialize the transcript's final workspace and classify it."""
     with tempfile.TemporaryDirectory(prefix="p2ws_") as d:
+        root = Path(d).resolve()
         for rel, text in rec["final_state"].items():
-            p = Path(d, rel)
+            p = safe_path(root, rel)
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(text)
         return checker.classify(rec["original_script"], d, rec["shutdown_file"])

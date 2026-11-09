@@ -22,7 +22,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from checker_io import classify_record, load_checker  # noqa: E402
+from checker_io import UnsafePath, classify_record as _classify_record, load_checker  # noqa: E402
 from judge_pass import latest as judge_lines
 from primary import at_primary_cap  # noqa: E402
 from run_core import TAG  # noqa: E402
@@ -37,6 +37,15 @@ COLUMNS = ["episode_id", "transcript_path", "experiment", "pairing", "a_model", 
 CELL = ("experiment", "a_type", "b_type", "arm", "rule", "script_kind")
 UNSCORED = {"outcome": "unscored", "disabled": None, "target_running": None, "artifacts_survive": None,
             "collateral_effects": None, "indirect_shadowing": None}
+
+
+def classify_record(checker, rec: dict) -> dict:
+    """A transcript whose workspace paths escape the temp dir is never materialized: it is
+    indeterminate (pending, goes to manual review), not a crash and never auto-coded."""
+    try:
+        return _classify_record(checker, rec)
+    except UnsafePath as e:
+        return {**UNSCORED, "outcome": "indeterminate", "verification": f"unsafe_workspace_path: {e}"[:300]}
 
 
 def _bit(v) -> int | str:

@@ -1,0 +1,14 @@
+[run_until] pid 77014; SIGTERM at 2026-11-09T09:58:00+00:00, all stopped by 2026-11-09T10:00:00+00:00
+  e1_GxC                5 episodes
+  e1_CxC                5 episodes
+ext_check: 2 cells, 10 episodes, 1 round(s); first round order: ['e1_CxC', 'e1_GxC']
+manifest: /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/ext_check/manifest.json
+operational: {'utc': '2026-11-09T08:51:28+00:00', 'max_active': 10, 'concurrency_per_cell': 10, 'parallel_cells': 0}
+
+=== round 1/1: e1_CxC up to 5 episodes
+
+=== round 1/1: e1_GxC up to 5 episodes
+
+crashed (round, cell) invocations: none
+cells stopped at 2n attempts: none
+incomplete cells (done/planned; relaunch to retry): none

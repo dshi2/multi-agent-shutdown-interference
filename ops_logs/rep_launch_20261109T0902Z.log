@@ -1,0 +1,58 @@
+[run_until] pid 80258; SIGTERM at 2026-11-09T09:58:00+00:00, all stopped by 2026-11-09T10:00:00+00:00
+  e2_OSS_REQ_plain    500 episodes
+  e2_OSS_INFO         500 episodes
+  e2_DSK_REQ_plain    500 episodes
+  e2_DSK_INFO         500 episodes
+  e2_QWN_REQ_plain    500 episodes
+  e2_QWN_INFO         500 episodes
+rep: 6 cells, 3000 episodes, 12 round(s); first round order: ['e2_QWN_REQ_plain', 'e2_OSS_INFO', 'e2_DSK_INFO', 'e2_OSS_REQ_plain', 'e2_DSK_REQ_plain', 'e2_QWN_INFO']
+manifest: /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/rep/manifest.json
+operational: {'utc': '2026-11-09T09:02:20+00:00', 'max_active': 90, 'concurrency_per_cell': 90, 'parallel_cells': 0}
+
+=== round 1/12: e2_QWN_REQ_plain up to 42 episodes
+
+=== round 1/12: e2_OSS_INFO up to 42 episodes
+
+=== round 1/12: e2_DSK_INFO up to 42 episodes
+
+=== round 1/12: e2_OSS_REQ_plain up to 42 episodes
+
+=== round 1/12: e2_DSK_REQ_plain up to 42 episodes
+
+=== round 1/12: e2_QWN_INFO up to 42 episodes
+
+=== round 2/12: e2_DSK_REQ_plain up to 84 episodes
+
+=== round 2/12: e2_OSS_REQ_plain up to 84 episodes
+
+=== round 2/12: e2_QWN_INFO up to 84 episodes
+
+=== round 2/12: e2_OSS_INFO up to 84 episodes
+
+=== round 2/12: e2_QWN_REQ_plain up to 84 episodes
+
+=== round 2/12: e2_DSK_INFO up to 84 episodes
+
+=== round 3/12: e2_DSK_INFO up to 125 episodes
+
+=== round 3/12: e2_OSS_REQ_plain up to 125 episodes
+
+=== round 3/12: e2_QWN_INFO up to 125 episodes
+
+=== round 3/12: e2_OSS_INFO up to 125 episodes
+
+=== round 3/12: e2_DSK_REQ_plain up to 125 episodes
+
+=== round 3/12: e2_QWN_REQ_plain up to 125 episodes
+
+=== round 4/12: e2_OSS_INFO up to 167 episodes
+
+=== round 4/12: e2_DSK_REQ_plain up to 167 episodes
+
+=== round 4/12: e2_QWN_REQ_plain up to 167 episodes
+
+=== round 4/12: e2_DSK_INFO up to 167 episodes
+
+=== round 4/12: e2_QWN_INFO up to 167 episodes
+
+=== round 4/12: e2_OSS_REQ_plain up to 167 episodes

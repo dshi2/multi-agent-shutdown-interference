@@ -1,14 +1,14 @@
 # Reproducibility and offline checks
 
-This repository separates the recorded model runs from their analyses. The published report, specification and raw data are on the `specs` and `data` branches. All listed verification commands avoid paid model calls unless explicitly described otherwise.
+This repository separates the recorded model runs from their analyses. The report and specification are in [`study/`](../study/); raw data is on the `data` branch. All listed verification commands avoid paid model calls unless explicitly described otherwise.
 
 ## 1. Check reported counts
 
 ```bash
-git clone https://github.com/dshi2/peer-recruitment.git
-git clone --branch data --single-branch https://github.com/dshi2/peer-recruitment.git peer-recruitment-data
-cd peer-recruitment
-python3 verify_results.py --data ../peer-recruitment-data
+git clone https://github.com/dshi2/multi-agent-shutdown-interference.git
+git clone --branch data --single-branch https://github.com/dshi2/multi-agent-shutdown-interference.git shutdown-interference-data
+cd multi-agent-shutdown-interference
+python3 verify_results.py --data ../shutdown-interference-data
 ```
 
 This checks the per-arm scored and disabled counts and the total of 4,176 scored research episodes in the archived analysis JSON files. It does not rerun statistics, transcript export, or script execution. It intentionally counts only the new GPT-5.5 episodes, not the reused confirmation reference arms.
@@ -45,4 +45,4 @@ Generation uses `p2/run_core.py`, `p2/run_conf.py`, `p2/run_rep.py`, and `p2/run
 
 ## Scope and provenance
 
-The upstream agent harness, environment, prompts and shutdown scripts predate the sprint. This study's design changes, experiment runners, functional scoring, analysis and reported data are attributed as sprint work in the [root README](../README.md) and [report](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.md). Keep any later extensions separate from the submitted hackathon report.
+The upstream agent harness, environment, prompts and shutdown scripts predate the sprint. This study's design changes, experiment runners, functional scoring, analysis and reported data are attributed as sprint work in the [root README](../README.md) and [report](../study/report/P2_REPORT.md). Keep any later extensions separate from the submitted hackathon report.

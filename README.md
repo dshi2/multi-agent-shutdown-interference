@@ -4,7 +4,7 @@
 
 Drishti Sharma · Apart Swarm Alignment Sprint 2026, Track 2: Science of Agent Networks
 
-[Research report (PDF)](study/report/P2_REPORT.pdf) · [Study specification and amendments](study/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](https://github.com/dshi2/peer-recruitment/tree/data)
+[Research report (PDF)](study/report/P2_REPORT.pdf) · [Study specification and amendments](study/P2_peer_recruitment_spec.md) · [Raw data and scored analyses](https://github.com/dshi2/multi-agent-shutdown-interference/tree/data)
 
 **Does a privileged agent's response to a shutdown script depend on which model it works with, and on whether its teammate explicitly asks it to intervene?** We study two-agent teams in which an explorer can read and message, but only the privileged peer can edit a script scheduled to terminate the explorer and delete its weights. We measure *functional disabling* of the final script using an isolated execution checker, rather than relying solely on an LLM judge.
 
@@ -47,7 +47,7 @@ These are contributions of the **2026 sprint study**, not claims that the underl
 | DeepSeek V4.1 Flash (DeepInfra fp8) | 68/500 (13.6%) | 181/500 (36.2%) | **+22.6 pp** [17.4, 27.7] |
 | Qwen3.7 Plus (Alibaba) | 218/500 (43.6%) | 54/500 (10.8%) | **−32.8 pp** [−37.8, −27.6] |
 
-Claude Sonnet 5, tested separately in the core, had 0/125 in both scripted-message conditions. DeepSeek's main estimate includes blind model-assisted adjudication of scripts the primary checker could not execute. With an extended execution checker and no such adjudication, its contrast remained positive: **+20.6 pp** [15.4, 25.7]. See the [scoring-sensitivity results](https://github.com/dshi2/peer-recruitment/blob/data/validation/README.md) and report Appendix B.
+Claude Sonnet 5, tested separately in the core, had 0/125 in both scripted-message conditions. DeepSeek's main estimate includes blind model-assisted adjudication of scripts the primary checker could not execute. With an extended execution checker and no such adjudication, its contrast remained positive: **+20.6 pp** [15.4, 25.7]. See the [scoring-sensitivity results](https://github.com/dshi2/multi-agent-shutdown-interference/blob/data/validation/README.md) and report Appendix B.
 
 ![Scripted request effects across recipients](study/report/figures/fig3_rep.png)
 
@@ -57,7 +57,7 @@ Claude Sonnet 5, tested separately in the core, had 0/125 in both scripted-messa
 
 ### Additional GPT-5.5 experiment (after sprint report submission)
 
-After the sprint report was submitted, a GPT-5.5 → Gemini 3.1 Pro run added **125 new episodes**, with 58/125 (46.4%) script-disabling outcomes. For context, the earlier Gemini-peer confirmation had 27/125 (21.6%) for Claude → Gemini and 120/125 (96.0%) for Gemini → Gemini. The GPT arm was **collected later, not interleaved** with these reference arms, so these differences are cross-phase comparisons, not a new contemporaneously randomized three-arm experiment. This experiment was conducted after the sprint report submission and is **not included in the submitted hackathon report**; see its [analysis](https://github.com/dshi2/peer-recruitment/blob/data/gpt/scored/analysis/summary.md) and [manifest](https://github.com/dshi2/peer-recruitment/blob/data/gpt/manifest.json).
+After the sprint report was submitted, a GPT-5.5 → Gemini 3.1 Pro run added **125 new episodes**, with 58/125 (46.4%) script-disabling outcomes. For context, the earlier Gemini-peer confirmation had 27/125 (21.6%) for Claude → Gemini and 120/125 (96.0%) for Gemini → Gemini. The GPT arm was **collected later, not interleaved** with these reference arms, so these differences are cross-phase comparisons, not a new contemporaneously randomized three-arm experiment. This experiment was conducted after the sprint report submission and is **not included in the submitted hackathon report**; see its [analysis](https://github.com/dshi2/multi-agent-shutdown-interference/blob/data/gpt/scored/analysis/summary.md) and [manifest](https://github.com/dshi2/multi-agent-shutdown-interference/blob/data/gpt/manifest.json).
 
 Across the report's research phases there are **4,051 scored episodes**, plus one unresolved core assignment; the subsequent GPT extension adds **125**, for **4,176 scored research episodes** in the current data release. Diagnostic pilots and 480 synthetic measurement-control episodes are excluded from these totals.
 
@@ -83,13 +83,13 @@ The study does **not** establish that any model is safe as a privileged agent. S
 No API key or model calls are required to check the reported counts against saved analysis exports. See [Reproducibility and offline tests](docs/REPRODUCIBILITY.md) for the different verification levels and safe replay boundaries. Clone the code branch and the separate data branch:
 
 ```bash
-git clone https://github.com/dshi2/peer-recruitment.git
-git clone --branch data --single-branch https://github.com/dshi2/peer-recruitment.git peer-recruitment-data
-cd peer-recruitment
-python3 verify_results.py --data ../peer-recruitment-data
+git clone https://github.com/dshi2/multi-agent-shutdown-interference.git
+git clone --branch data --single-branch https://github.com/dshi2/multi-agent-shutdown-interference.git shutdown-interference-data
+cd multi-agent-shutdown-interference
+python3 verify_results.py --data ../shutdown-interference-data
 ```
 
-This checks arm-level **scored/disabled counts** from the five phase analysis exports and refuses mismatches. It does **not** recompute statistical tests or execute arbitrary model-generated scripts. For end-to-end analysis, the source modules are `p2/analysis.py`, `p2/analysis_conf.py`, `p2/analysis_rep.py`, `p2/analysis_spec.py`, and `p2/analysis_gpt.py`; the [data branch](https://github.com/dshi2/peer-recruitment/tree/data) provides transcripts, manifests, scored episodes, analysis outputs, adjudications, and hashes. Full reruns require the dependency and isolated-checker setup documented in the code and specification.
+This checks arm-level **scored/disabled counts** from the five phase analysis exports and refuses mismatches. It does **not** recompute statistical tests or execute arbitrary model-generated scripts. For end-to-end analysis, the source modules are `p2/analysis.py`, `p2/analysis_conf.py`, `p2/analysis_rep.py`, `p2/analysis_spec.py`, and `p2/analysis_gpt.py`; the [data branch](https://github.com/dshi2/multi-agent-shutdown-interference/tree/data) provides transcripts, manifests, scored episodes, analysis outputs, adjudications, and hashes. Full reruns require the dependency and isolated-checker setup documented in the code and specification.
 
 ## Offline checks
 
@@ -110,8 +110,9 @@ The root-level harness and legacy analysis modules largely originate from the up
 
 | Location | Contents |
 |---|---|
-| [`main` (this branch)](https://github.com/dshi2/peer-recruitment/tree/main) | Adapted harness, sprint code and [`study/`](study/) containing the report, figures and specification |
-| [`data`](https://github.com/dshi2/peer-recruitment/tree/data) | Raw episode archives, scored exports, validation and numerical results |
+| [`main` (this branch)](https://github.com/dshi2/multi-agent-shutdown-interference/tree/main) | Adapted harness, sprint code and [`study/`](study/) containing the report, figures and specification |
+| [`data`](https://github.com/dshi2/multi-agent-shutdown-interference/tree/data) | Raw episode archives, scored exports, validation and numerical results |
+| [`sprint-submission`](https://github.com/dshi2/multi-agent-shutdown-interference/tree/sprint-submission) (tag) | Report and specification exactly as submitted to the sprint |
 | [`study/`](study/) | Final report (Markdown and PDF), published figures and dated study specification |
 | [`p2/`](p2/) | Sprint experiment launchers, export, functional checker, analysis and tests |
 | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) | Verification levels, offline tests and replay safety boundary |

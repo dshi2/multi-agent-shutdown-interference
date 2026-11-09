@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check saved P2 analysis exports against the published arm counts. No model calls.
 
-Usage: python3 verify_results.py --data ../peer-recruitment-data
+Usage: python3 verify_results.py --data ../shutdown-interference-data
 This validates archived analysis outputs, not the scoring pipeline or raw transcripts.
 """
 import argparse
@@ -71,7 +71,7 @@ def check(data: Path) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data", type=Path, default=Path("../peer-recruitment-data"),
+    parser.add_argument("--data", type=Path, default=Path("../shutdown-interference-data"),
                         help="Local checkout of the repository's data branch")
     args = parser.parse_args()
     try:

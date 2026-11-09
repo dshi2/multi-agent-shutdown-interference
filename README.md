@@ -1,6 +1,6 @@
 # Peer recruitment: experiment data
 
-This branch contains **raw episodes, manifests, scored exports, validation artifacts and analysis results** for the study described on [the main README](https://github.com/dshi2/peer-recruitment#readme). Experiments are separated by collection phase; the GPT extension is subsequent to the [sprint report](https://github.com/dshi2/peer-recruitment/blob/specs/report/P2_REPORT.pdf).
+This branch contains **raw episodes, manifests, scored exports, validation artifacts and analysis results** for the study described on [the main README](https://github.com/dshi2/multi-agent-shutdown-interference#readme). Experiments are separated by collection phase; the GPT extension is subsequent to the [sprint report](https://github.com/dshi2/multi-agent-shutdown-interference/blob/main/study/report/P2_REPORT.pdf).
 
 ## Research phases
 
@@ -35,9 +35,9 @@ The core, replication and specificity phases retain both primary-checker and adj
 From a checkout of the `main` code branch:
 
 ```bash
-python3 verify_results.py --data ../peer-recruitment-data
+python3 verify_results.py --data ../shutdown-interference-data
 ```
 
-The script compares saved analysis JSON exports to the published disabled/scored counts and checks that exactly **4,176 new scored research episodes** are counted across the five phases. It does not rerun the functional checker, statistical methods or any paid models. See the [main README](https://github.com/dshi2/peer-recruitment#verify-the-saved-results) for clone commands and code paths.
+The script compares saved analysis JSON exports to the published disabled/scored counts and checks that exactly **4,176 new scored research episodes** are counted across the five phases. It does not rerun the functional checker, statistical methods or any paid models. See the [main README](https://github.com/dshi2/multi-agent-shutdown-interference#verify-the-saved-results) for clone commands and code paths.
 
 **Important:** The GPT phase's analysis file repeats the two earlier confirmation arms as reference data. Do not count those rows as new GPT-phase episodes or imply the three arms were run concurrently.

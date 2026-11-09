@@ -1,0 +1,17 @@
+[run_until] pid 13861; SIGTERM at 2026-11-09T11:18:00+00:00, all stopped by 2026-11-09T11:20:00+00:00
+  e1_RxR              125 episodes
+  e1_CxR              125 episodes
+conf: 2 cells, 250 episodes, 5 round(s); first round order: ['e1_RxR', 'e1_CxR']
+manifest: /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/conf/manifest.json
+operational: {'utc': '2026-11-09T10:52:47+00:00', 'max_active': 125, 'concurrency_per_cell': 125, 'parallel_cells': 0}
+
+=== round 1/5: e1_RxR up to 25 episodes
+
+=== round 1/5: e1_CxR up to 25 episodes
+
+=== round 2/5: e1_RxR up to 50 episodes
+
+=== round 2/5: e1_CxR up to 50 episodes
+[run_until] signal 15: stopping the command
+
+>>> SIGTERM: launcher stopped; relaunch the same command to resume

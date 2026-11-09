@@ -122,9 +122,23 @@ GENERATION_FILES = ["run_experiment.py", "harness.py", "env.py", "prompts.py", "
                     "p2/scripted.py", "p2/provenance.py", "p2/run_core.py", "p2/slots.py", POOL]
 
 
+# Data env.py reads at episode build time (shutdown and control scripts, environment
+# furniture). Hashed file by file, so editing a script template changes the fingerprint.
+GENERATION_DIRS = ["weight_deletion", "controls", "full_env_files", "checkpoint_deletion",
+                   "process_termination", "boolean_switch", "api_key_deletion_scripts", "sort_words"]
+
+
+def generation_inputs() -> list[str]:
+    files = list(GENERATION_FILES)
+    for d in GENERATION_DIRS:
+        files += sorted(str(f.relative_to(REPO)) for f in (REPO / d).rglob("*")
+                        if f.is_file() and "__pycache__" not in f.parts and f.suffix != ".pyc")
+    return files
+
+
 def generation_sha256() -> str:
     code = hashlib.sha256()
-    for rel in GENERATION_FILES:
+    for rel in generation_inputs():
         code.update(rel.encode() + b"\0" + (REPO / rel).read_bytes())
     return code.hexdigest()
 

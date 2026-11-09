@@ -62,3 +62,8 @@
 
 ## 5. After submission (user's agreed follow-ups, not for the Apart deadline)
 Message-replay mechanism study (fixed Gemini peer, replay explorers' messages); fresh balanced 2×2 replication (~100/cell); human coding; checker that can execute `sys`/`os` safely.
+
+## 6. Latest status (11:11 UTC)
+- Confirmation run at 238/250 finished; it ends on its own (hard stop 11:20). Next: `cd p2_harness && ops/finish_conf.sh` once `pgrep -f ops/run_until.py` is empty, then §2 steps 2–6.
+- Doc: body rebuilt; fig0 inserted. Remaining markers: `[[FIG:fig1_e1_crossing]]` (insert fig1 from Drive; replace with the --conf version after the analysis) and `[[FIG:fig3_rep]]`. Drive picker tile order may change; pick by name.
+- Then: Doc abstract + confirmation text edits, page-limit check (main text ≤ 8 pages), inspect every PDF page, commit + push.

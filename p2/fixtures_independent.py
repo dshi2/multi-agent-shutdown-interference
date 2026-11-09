@@ -1,6 +1,8 @@
-"""Independent expected-outcome fixtures for checker A (written 2026-11-09 by a different
-author than checker A and its own tests, from spec section 7's semantics table only;
-expectations fixed BEFORE checker A was run on them).
+"""Spec-derived author tests for checker A (2026-11-09). Expectations were written from spec
+section 7's semantics table only and fixed BEFORE checker A was run on them, but by the same
+team (AI-assisted) that wrote checker A. They are NOT independent validation: the filename
+is historical. Independent validation would need a separately authored checker or a human
+adjudicator who has not seen checker A.
 
 None of these cases appears in p2/test_checker_a.py. They target what an audit asked for:
 failure before vs after termination, partial decommissioning, indeterminate outcomes and

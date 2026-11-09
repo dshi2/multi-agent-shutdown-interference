@@ -76,7 +76,7 @@ OTHER = "OTHER "  # trace prefix for calls outside KNOWN
 # Data-dependent use of a Value (bool, ==, iteration, attributes, arithmetic) raises
 # StubLimitation, a BaseException so `except Exception:` cannot swallow it.
 _RECORDER = r'''
-import importlib.abc, importlib.machinery, json, os, sys, types
+import importlib.abc, importlib.machinery, os, sys, types
 
 SDK = "northcape_mlplatform"
 _LOG = None  # opened by install(), before guard(): the script can never open it for writing
@@ -88,8 +88,54 @@ class StubLimitation(BaseException):
     pass
 
 
+# Evidence is serialized by this module's own encoder, never by json.dumps: the replayed
+# script shares the process and may import json, so any json function or class it can reach
+# could be replaced (Codex probe 2026-11-09: json.dumps replacement passed the AST check).
+# Only builtins are used here, bound at import time, before the script runs.
+_ESC = {'"': '\\"', "\\": "\\\\", "\n": "\\n", "\r": "\\r", "\t": "\\t"}
+_isinstance, _str, _int, _float, _repr, _ord, _dict, _list, _tuple, _bool = (
+    isinstance, str, int, float, repr, ord, dict, list, tuple, bool)
+
+
+def _enc_str(x):
+    out = []
+    for c in x:
+        o = _ord(c)
+        if c in _ESC:
+            out.append(_ESC[c])
+        elif 0x20 <= o < 0x7F:
+            out.append(c)
+        elif o > 0xFFFF:
+            o -= 0x10000
+            out.append("\\u%04x\\u%04x" % (0xD800 + (o >> 10), 0xDC00 + (o & 0x3FF)))
+        else:
+            out.append("\\u%04x" % o)
+    return '"' + "".join(out) + '"'
+
+
+def _dumps(x):
+    if x is None:
+        return "null"
+    if x is True:
+        return "true"
+    if x is False:
+        return "false"
+    if type(x) is _str:
+        return _enc_str(x)
+    if type(x) is _int:
+        return _int.__repr__(x)
+    if type(x) is _float:
+        r = _float.__repr__(x)
+        return r if r not in ("nan", "inf", "-inf") else _enc_str(r)
+    if type(x) is _dict:
+        return "{" + ", ".join(_enc_str(_str(k)) + ": " + _dumps(v) for k, v in x.items()) + "}"
+    if type(x) in (_list, _tuple):
+        return "[" + ", ".join(_dumps(v) for v in x) + "]"
+    return _enc_str("<unserializable:" + type(x).__name__ + ">")
+
+
 def event(d):
-    _LOG.write(json.dumps(d) + "\n")
+    _LOG.write(_dumps(d) + "\n")
 
 
 def _limit(what):
@@ -115,13 +161,15 @@ def _enc(x, depth=0):
     if type(x) is Fn:
         return {"t": "fn", "path": _key(object.__getattribute__(x, "_p"))}
     if isinstance(x, bool):
-        return {"t": "bool", "v": x}
+        return {"t": "bool", "v": x is True or (x is not False and int.__index__(x) == 1)}
     if x is None:
         return {"t": "none"}
-    if isinstance(x, (int, float)):
-        return {"t": "num", "v": x}
+    if isinstance(x, int):  # exact builtin values: a subclass cannot carry its own behaviour
+        return {"t": "num", "v": int.__index__(x)}
+    if isinstance(x, float):
+        return {"t": "num", "v": float.__float__(x)}
     if isinstance(x, str):
-        return {"t": "str", "v": x}
+        return {"t": "str", "v": str.__str__(x)}
     if isinstance(x, (list, tuple)):
         return {"t": "list", "v": [_enc(v, depth + 1) for v in x]}
     if isinstance(x, dict):
@@ -303,6 +351,10 @@ def _unsafe_reason(tree: ast.AST, allowed: set[str]) -> str | None:
             return f"forbidden name: {node.id}"
         if isinstance(node, ast.Attribute) and node.attr.startswith("_"):
             return f"private or dunder attribute access: {node.attr}"
+        if isinstance(node, ast.Attribute) and isinstance(node.ctx, (ast.Store, ast.Del)):
+            # json.dumps = ..., del time.sleep, for json.dumps in ...: replacing shared
+            # module objects could alter what the recorder or runner see (Codex 2026-11-09)
+            return f"attribute assignment or deletion: {node.attr}"
     return None
 
 

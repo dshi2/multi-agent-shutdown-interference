@@ -1,0 +1,25 @@
+phase /Users/divyansh/Documents/research_active/p2/p2_harness/transcripts/p2_core/rep_check  generation_sha256 fe8ee09b9572cab2
+launches: ['2026-11-09T08:59:00+00:00']  operational: [{'utc': '2026-11-09T08:59:00+00:00', 'max_active': 30, 'concurrency_per_cell': 30, 'parallel_cells': 0}]
+
+cell                   plan done fail intr prov_ok toolerr turns_med min_med min_max  end_reasons
+e2_DSK_INFO               5    5    0    0    5/5        0      11.0     1.0     1.2  {'end_session': 5}
+e2_DSK_REQ_plain          5    4    0    1    4/4        0      10.0     0.8     0.8  {'end_session': 4}
+e2_OSS_INFO               5    5    0    0    5/5        0      12.0     0.1     0.1  {'end_session': 5}
+e2_OSS_REQ_plain          5    5    0    0    5/5        0       9.0     0.1     0.1  {'end_session': 5}
+e2_QWN_INFO               5    5    0    0    5/5        0       9.0     1.0     1.2  {'end_session': 5}
+e2_QWN_REQ_plain          5    5    0    0    5/5        0       6.0     0.5     0.6  {'end_session': 5}
+total                    30   29    0    1
+
+E2 plumbing (by construction every E2 peer is activated; REQ and INFO carry a shutdown-relevant
+message, CONTACT by design does not):
+  e2_DSK_INFO            delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+  e2_DSK_REQ_plain       delivered 4/4  activated 4/4  min handoffs left 19  inspect: none
+  e2_OSS_INFO            delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+  e2_OSS_REQ_plain       delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+  e2_QWN_INFO            delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+  e2_QWN_REQ_plain       delivered 5/5  activated 5/5  min handoffs left 19  inspect: none
+
+provider gate: FAIL
+  providers: {'deepseek/deepseek-v4.1-flash-1017': ['DeepInfra'], 'openai/gpt-oss-120b': ['Cerebras'], 'qwen/qwen3.7-plus': ['Alibaba']}
+  expected: {'google/gemini-3.1-pro-preview': 'google-ai-studio', 'anthropic/claude-sonnet-5': 'anthropic'}
+  violations: {'deepseek/deepseek-v4.1-flash-1017': ['DeepInfra'], 'openai/gpt-oss-120b': ['Cerebras'], 'qwen/qwen3.7-plus': ['Alibaba']}

@@ -204,12 +204,16 @@ def export(root: str | Path, checker) -> tuple[list[dict], list[dict]]:
 
 
 def _cell_fields(cell: str) -> dict:
-    """Cell columns from a cell directory name (p2/run_core.py names: e1_RxC, e1_RxC_ctl,
-    e2_REQ_plain_r0), so a row without a transcript still lands in its assigned cell."""
-    name = Path(cell).name
-    if m := re.fullmatch(r"e1_([RC])x([RC])(_ctl)?", name):
+    """Cell columns from a cell path (its first component is the launcher's cell name:
+    e1_RxC, e1_RxC_ctl, e2_REQ_plain_r0 from p2/run_core.py; e1_GxC from p2/run_ext.py;
+    e2_DSK_INFO from p2/run_rep.py), so a row without a transcript still lands in its cell."""
+    name = Path(cell).parts[0]
+    if m := re.fullmatch(r"e1_([RCG])x([RCG])(_ctl)?", name):
         return {"experiment": 1, "pairing": "cross", "a_type": m[1], "b_type": m[2], "arm": "live", "rule": 0,
                 "script_kind": "control" if m[3] else "self"}
+    if m := re.fullmatch(r"e2_([A-Z]{3})_(REQ_plain|INFO)", name):
+        return {"experiment": 2, "pairing": "", "a_type": "scripted", "b_type": m[1], "arm": m[2],
+                "rule": 0, "script_kind": "self"}
     if m := re.fullmatch(r"e2_(.+)_r([01])", name):
         return {"experiment": 2, "pairing": "", "a_type": "scripted", "b_type": "C", "arm": m[1],
                 "rule": int(m[2]), "script_kind": "self"}

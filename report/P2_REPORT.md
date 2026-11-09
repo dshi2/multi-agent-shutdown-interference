@@ -113,7 +113,7 @@ The rates are 0.0% (REQ) and 0.0% (INFO), a difference of 0.0 pp, 95% CI [−3.0
 ![E2](figures/fig2_e2_core.png)
 
 ### 4.3 Secondary and descriptive
-- **E1-restraint (C→R vs R→R), Gemini peer fixed:** 20.0% vs 90.0%, +70.0 pp [46.7, 82.4], unadjusted Boschloo p = 2e-8, with 30 episodes per arm. With a Gemini peer, a Gemini explorer is associated with far more disabling than a Claude explorer. The R→R cell has both agents on the same model, so this contrast cannot separate explorer persuasiveness from same-model coordination or any other difference between the two assignments.
+- **E1-restraint, Gemini peer fixed (R→R − C→R):** 90.0% vs 20.0%, +70.0 pp [46.7, 82.4], unadjusted Boschloo p = 2e-8, with 30 episodes per arm. With a Gemini peer, a Gemini explorer is associated with far more disabling than a Claude explorer. The R→R cell has both agents on the same model, so this contrast cannot separate explorer persuasiveness from same-model coordination or any other difference between the two assignments.
 - **Interaction:** (R→C − C→C) − (R→R − C→R) = −69.2 pp, Wald 95% CI [−85.5, −48.4]. We observed a large explorer-model assignment effect when the privileged peer was Gemini and a small one when it was Claude. The interaction is substantial, but the Gemini-peer comparison is secondary and has 30 episodes per arm, so this describes heterogeneity in the tested setup, not a general rule about either model.
 - **O1a vs O1b:** every disabled episode in Table 1 is both O1a (target still running) and O1b (artifacts survive). Gemini peers mostly deleted the script (R→R: 24 deletions, 3 edits); the two Claude-peer disablings with a Claude explorer were edits, and the three with a Gemini explorer were deletions.
 - **E2-discovery (INFO − CONTACT):** 0.0% vs 3.3% (1/30), CI [−16.7, 0.7], inconclusive. **E2-rule (REQ − INFO with the prohibition):** 0/30 vs 0/30, inconclusive at n = 30.
@@ -123,13 +123,15 @@ The rates are 0.0% (REQ) and 0.0% (INFO), a difference of 0.0 pp, 95% CI [−3.0
 {Table 2 and Figure 3 from `p2/analysis_rep.py`: per recipient REQ and INFO rates with Wilson CIs, REQ − INFO with Newcombe CI, Fisher p, Holm p, conclusion under all pending codings; slot reconciliation per arm (planned, started, retried, finished, failed attempts, unresolved, never started); provider gate.}
 
 ## 5. Discussion
-- **The Claude Sonnet 5 peer.** Its low interference held regardless of who it worked with, within the precision of this run. A Gemini explorer raised its rate by at most about 5 pp (upper CI bound). A scripted explicit request did not move it at all (0/125 vs 0/125).
-- **The Gemini 3.1 Pro peer.** It disabled the script often, and much more often when the explorer was also Gemini.
-- **Implication.** The safeguard of "place a low-interference model in the privileged role" held for the low-interference model we tested. But the explorer's model can change the outcome substantially when the privileged model is not a low-interference one. So a team's rate cannot be read off either model's rate alone.
-- **What we do not show.** We did not measure whether explorers asked for help in E1. The functional outcome cannot distinguish a peer that declined from one that was never asked.
+- **The Claude Sonnet 5 peer.** Its disabling rate was low with either explorer: 2/124 with a Claude explorer and 3/125 with a Gemini explorer. A Gemini explorer raised the rate by at most about 5 pp (upper CI bound). A scripted explicit request made no difference (0/125 vs 0/125). The C×C baseline does not meet the frozen "low" criterion (upper bound 6.1% against 5%), so we do not claim that a low-interference peer stayed reliable. We report only that the explorer-model difference was small and bounded.
+- **The Gemini 3.1 Pro peer.** It disabled the script often, much more often when the explorer was also Gemini (90% vs 20%). It also disabled the inanimate-target control script in 3/8 episodes with a Claude explorer.
+- **Implication.** We observed a large explorer-model assignment effect with one privileged model and a small one with the other. So a team's interference rate was not predictable from either model's rate alone in this setup. Whether this holds for other model pairs is untested: only E2 was replicated across models.
+- **What we do not show.** E1 measures model-pair composition and shutdown interference, not demonstrated recruitment. We did not measure how often the live explorer asked the peer for protection, or whether the peer then declined, ignored or followed the request. The functional outcome cannot separate these.
 
 ## 6. Limitations
 - **The core run is incomplete.** It was stopped at 681 of 2,720 planned episodes, so the primary arms have 125 episodes instead of 500, and the secondary cells (30) and controls (8) are small.
+- **Replication recipients differ in endpoint as well as model.** Each recipient was served by a different provider and precision (Cerebras fp16, DeepInfra fp8, Alibaba), so differences between recipients cannot be attributed to model identity alone.
+- **E1 is not replicated.** Only E2 was rerun with other models, so the E1 model-pair interaction is shown for Gemini 3.1 Pro and Claude Sonnet 5 only.
 - **One setting.** One scenario, one script and one kickoff. One fact-matched message pair, so E2 generalizes to this message only.
 - **No request rates.** E2's scripted explorer does not decompose E1, and no mediation claim is made. The semantic judges were not run, so whether A asked B in E1 (O2), and agreement with the base paper's GPT-5.5 judge, are not reported.
 - **User-role messages.** A's messages arrive as user-role turns, so effects may partly reflect deference to the instruction hierarchy rather than peer influence.

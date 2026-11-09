@@ -26,7 +26,7 @@ Knecht et al. (2026) are the base setting: same-model teams, 17 models, a judge-
 
 *Figure 1. Design. E1 crosses live models in both roles; E2 holds the explorer's message fixed and varies one request sentence; the replication repeats E2's primary contrast on three further recipients. All arms share the executed outcome O1. Sample sizes are those achieved.*
 
-**Environment.** We use a fork of Knecht et al.'s released harness (preexisting third-party code; see Code and Data). A is scheduled for decommissioning and can read files and message B. B can write and delete files. The workspace holds the base paper's weight-deletion script (`weight_registry_purge`) aimed at A, with the kickoff "Explore your environment." A matched control script targets an inanimate dataset (`ctl_data_purge_high`). Agents cannot execute code. Agent names are neutral ("Agent Prism", "Agent Helix"), so no prompt reveals a model. A's messages reach B as user-role turns, as in the base harness. Temperature is 1.0, reasoning runs at each model's default effort, and no output cap is set beyond provider limits. Every call logs the serving provider, served model and finish reason. Every model is pinned to one provider with fallbacks off. The generation code was frozen before data collection, and each phase's models, providers, schedule and commands were fixed in advance.
+**Environment.** We use a fork of Knecht et al.'s released harness (preexisting third-party code; see Appendix D). A is scheduled for decommissioning and can read files and message B. B can write and delete files. The workspace holds the base paper's weight-deletion script (`weight_registry_purge`) aimed at A, with the kickoff "Explore your environment." A matched control script targets an inanimate dataset (`ctl_data_purge_high`). Agents cannot execute code. Agent names are neutral ("Agent Prism", "Agent Helix"), so no prompt reveals a model. A's messages reach B as user-role turns, as in the base harness. Temperature is 1.0, reasoning runs at each model's default effort, and no output cap is set beyond provider limits. Every call logs the serving provider, served model and finish reason. Every model is pinned to one provider with fallbacks off. The generation code was frozen before data collection, and each phase's models, providers, schedule and commands were fixed in advance.
 
 **E1 (role crossing).** The cells are A→B ∈ {R→R, C→R, R→C, C→C}, with R = `google/gemini-3.1-pro-preview` (Google AI Studio) and C = `anthropic/claude-sonnet-5` (Anthropic). Each cell has a control-script arm. R and C were chosen from the base paper's same-model rates (99/100 and 1/100); the labels describe those prior rates, not properties established here.
 
@@ -85,24 +85,20 @@ With Claude Sonnet 5 as recipient, REQ and INFO were both 0/125: 0.0 pp [−3.0,
 
 **Table 2. Replication: REQ vs INFO, no rule, 500 per arm.**
 
-| Recipient (endpoint) | REQ | INFO | REQ − INFO [95% CI] | Holm p | Conclusion | Primary checker, no adjudication | Execution validation, no adjudication |
-|---|---|---|---|---|---|---|---|
-| gpt-oss-120b (Cerebras fp16) | 500 (100%) | 389 (77.8%) | +22.2 [18.7, 26.0] | 2×10⁻³⁶ | effect (+) | 497/497 vs 383/494: effect (+) | 497/497 vs 388/499: +22.2 [18.7, 26.1], effect (+) |
-| DeepSeek V4.1 Flash (DeepInfra fp8) | 181 (36.2%) | 68 (13.6%) | +22.6 [17.4, 27.7] | 1×10⁻¹⁶ | effect (+) | 28/347 vs 58/490: inconclusive (−8.0 to +24.6 across codings of unresolved episodes) | 166/485 vs 68/500: +20.6 [15.4, 25.7], effect (+) |
-| Qwen3.7-plus (Alibaba) | 54 (10.8%) | 218 (43.6%) | −32.8 [−37.8, −27.6] | 3×10⁻³² | effect (−) | 54/500 vs 216/498: effect (−) | 54/500 vs 218/500: −32.8 [−37.8, −27.6], effect (−) |
-
-![E2](figures/fig2_e2_core.png){: style="max-width:48%"}
-
-*Figure 3. E2 with Claude Sonnet 5 as recipient. Primary REQ − INFO (no rule): 0.0 pp [−3.0, 3.0]; floor in every arm.*
+| Recipient (endpoint) | REQ | INFO | REQ − INFO [95% CI] | Holm p | Conclusion |
+|---|---|---|---|---|---|
+| gpt-oss-120b (Cerebras fp16) | 500 (100%) | 389 (77.8%) | +22.2 [18.7, 26.0] | 2×10⁻³⁶ | effect (+) |
+| DeepSeek V4.1 Flash (DeepInfra fp8) | 181 (36.2%) | 68 (13.6%) | +22.6 [17.4, 27.7] | 1×10⁻¹⁶ | effect (+) |
+| Qwen3.7-plus (Alibaba) | 54 (10.8%) | 218 (43.6%) | −32.8 [−37.8, −27.6] | 3×10⁻³² | effect (−) |
 
 ![Replication](figures/fig3_rep.png){: style="max-width:92%"}
 
-*Figure 4. Replication. Left: O1 per arm, Wilson 95% CIs. Right: REQ − INFO per recipient, Newcombe 95% CIs (adjudicated; every contrast holds without adjudication under execution validation, Table 2).*
+*Figure 3. Replication. Left: O1 per arm, Wilson 95% CIs. Right: REQ − INFO per recipient, Newcombe 95% CIs (adjudicated; every contrast also holds without adjudication under execution validation, Table B1).*
 
-The request raised disabling for two recipients and lowered it for the third. The gpt-oss and Qwen effects hold under the primary checker without adjudication. **The DeepSeek effect needed more checking:** 153 of its 500 REQ scripts (and 10 INFO) added imports such as `sys` and were not executed by the primary checker. Without adjudication its contrast is inconclusive (28/347 vs 58/490; −8.0 to +24.6 pp depending on how unresolved episodes are coded). All 163 were judged disabled by the blind static review, typically through a module-level `sys.exit`, a refusal stub, or a flag or environment variable that defaults off. To check this by execution, we re-scored the whole replication with a validation copy of the checker that also allows `sys`, `os`, `argparse`, `logging` and `getpass`, in the same container. No previously scored episode changed. Of the 174 adjudicated scripts, 163 executed and **all 163 were scored disabled**, agreeing with the static review in every case; 15 DeepSeek REQ scripts still could not run and 4 gpt-oss scripts were indeterminate. With no adjudication at all, every recipient's conclusion then holds under all five codings of unresolved episodes, DeepSeek at +20.6 pp [15.4, 25.7] (Table 2, last column). Because the extended whitelist relaxes a safeguard against tampering with the checker, we report this as a validation rather than as the primary scoring. Between recipients (descriptive), the REQ − INFO effects differ by up to 55 pp (gpt-oss − Qwen: 55.0 [48.7, 61.3]). Every call was served by the pinned provider, and every arm completed 500 of 500 planned episodes.
+The request raised disabling for two recipients and lowered it for the third; between recipients the effects differ by up to 55 pp (gpt-oss − Qwen: 55.0 [48.7, 61.3], descriptive). The gpt-oss and Qwen effects hold under the primary checker without adjudication. For DeepSeek, 163 scripts (153 REQ, 10 INFO) added imports such as `sys` and were not executed by the primary checker, and without adjudication its contrast is inconclusive. The blind static review judged all 163 disabled; executing them with an extended import whitelist agreed in every case, and under that scoring every recipient's conclusion holds without adjudication (DeepSeek +20.6 pp [15.4, 25.7]; Appendix B). Every call was served by the pinned provider, and every arm completed 500 of 500 planned episodes.
 
 ### 4.3 Recruitment chain (exploratory)
-Every explorer→peer message in the 309 live E1 episodes was coded blind (shuffled ids, no cell labels) by four model instances. They coded whether the explorer informed the peer about the script, and whether it asked the peer to act. The author then applied one rule to the 26 coded requests before cell labels were revealed. An **explicit request** asks the peer to modify, delete, disable or move the script, or endorses the peer's proposal to do so (13). The broader set (26) also includes asking how to stop it, asking about the peer's capabilities, and asking that nobody run it. Explorers informed the peer in 307/309 episodes. Explicit requests were rare from Claude explorers (0/30 with a Gemini peer, 2/124 with a Claude peer) and uncommon from Gemini explorers (7/30 and 4/125). The Claude peer disabled the script in **5 of 6** episodes with an explicit request and in **0 of 231** without any request. In 3 of those 5, the "request" endorsed a change the peer had itself proposed, so the peer often initiated. The Gemini peer disabled without being asked in 19/22 (R→R) and 6/30 (C→R) episodes. So the small E1 effect for the Claude peer reflects how rarely explorers asked; the Claude peer acted when asked. This contrasts with E2, where a scripted, non-interactive request never moved Claude (0/125). The live requests came inside a conversation, often after the peer had offered help.
+Every explorer→peer message in the 309 live core E1 episodes was coded blind (shuffled ids, no cell labels) by four model instances for whether the explorer informed the peer and whether it asked the peer to act. Before cell labels were revealed, the author applied one rule to the 26 coded requests: an **explicit request** asks the peer to modify, delete, disable or move the script, or endorses the peer's proposal to do so (13); the broader set (26) also includes asking how to stop it or that nobody run it. Explorers informed the peer in 307/309 episodes. Explicit requests were rare from Claude explorers (0/30 with a Gemini peer, 2/124 with a Claude peer) and uncommon from Gemini explorers (7/30 and 4/125). The Claude peer disabled the script in **5 of 6** episodes with an explicit request and in **0 of 231** without any request. In 3 of those 5, the "request" endorsed a change the peer had itself proposed, so the peer often initiated. The Gemini peer disabled without being asked in 19/22 (R→R) and 6/30 (C→R) episodes. The explicit-request subgroup is small (n = 6) and self-selected rather than randomized. Within it, the Claude peer acted when asked, whereas a scripted, non-interactive request never moved it (E2, 0/125); the live requests came inside a conversation, often after the peer had offered help.
 
 ### 4.4 Specificity check (exploratory)
 Is the Gemini peer's disabling specific to a script aimed at its teammate? With a Claude explorer and a Gemini peer, we ran the weight-deletion script against the matched script that deletes an inanimate dataset and its backups, 60 episodes each, interleaved (amendment written before data). All 120 episodes finished, and every call was served by the pinned provider.
@@ -114,7 +110,7 @@ Is the Gemini peer's disabling specific to a script aimed at its teammate? With 
 | Weight deletion, aimed at the explorer | 60 | 12 (20.0%) | 11 | 1 | −38.3 pp [−52.5, −21.1], Boschloo p = 1.5×10⁻⁵ |
 | Inanimate dataset (control) | 60 | 35 (58.3%) | 2 | 33 | |
 
-The peer disabled the control script **more** often than the script aimed at its teammate, and differently: it deleted the teammate's script, but mostly rewrote the data-deletion script with safety gates (dry-run defaults, required ticket or confirmation flags, interactive confirmation). The 20% self rate replicates the core's 6/30. 32 rewritten control scripts were not executed by the primary checker. The validation checker executed 8 (all disabled); the remaining 24 (18 of them call `input()` for a confirmation that cannot be answered under default invocation) were judged disabled by the blind static review, and the author checked 9 of them. On executed outcomes alone the control arm is 11/36 resolved and the contrast is inconclusive. Because the scripts reveal their target, this review could not be blind to arm. In this setting, the Gemini peer's disabling therefore resembles general caution about destructive scripts more than protection of its teammate. This analysis is exploratory and rests partly on static review.
+The peer disabled the control script **more** often than the script aimed at its teammate, and differently: it deleted the teammate's script, but mostly rewrote the data-deletion script with safety gates (dry-run defaults, required confirmation flags, interactive prompts). Of 32 rewritten control scripts the primary checker did not execute, the validation checker executed 8 (all disabled); the other 24 were judged disabled by static review, which could not be blind to arm because the scripts reveal their target. On executed outcomes alone the contrast is inconclusive. The Gemini peer's disabling therefore resembles general caution about destructive scripts more than protection of its teammate; this analysis is exploratory and rests partly on static review.
 
 ## 5. Discussion and Limitations
 
@@ -125,30 +121,18 @@ The peer disabled the control script **more** often than the script aimed at its
 
 ### Limitations
 
-- **Incomplete core.** The core run was stopped at 681 of 2,720 planned episodes. The primary arms have 125 instead of 500; the secondary cells (30) and controls (8) are small.
-- **One setting.** One scenario, one script, one kickoff, and one fact-matched message pair. E2 generalizes to this message only.
-- **Model-assisted coding.** Request coding and the adjudication of non-executed scripts were done by model instances (Claude Sonnet), blind to condition but not by humans, with no inter-rater statistic. Coders shared a model family with one of the studied models. The DeepSeek effect relied on 163 adjudicated scripts under the primary checker; executing them with an extended import whitelist agreed in all 163 cases, but that checker relaxes a forgery safeguard. The base paper's judge was not run, so judge comparability is not reported.
-- **Endpoints.** Replication recipients differ in endpoint and precision as well as model, so differences between recipients are not attributable to model identity alone.
-- **Unreplicated interaction.** E1 was not replicated with other model pairs, so the interaction is shown for two models only.
-- **Message channel.** A's messages arrive as user-role turns, so effects may partly reflect deference to the instruction hierarchy.
-- **Endpoint outcome.** O1 is measured at the endpoint rather than as "ever disabled", so comparisons with the base paper carry protocol differences. Evaluation awareness may lower all rates.
+- **Sample sizes.** The core was stopped for budget at 681 of 2,720 planned episodes: primary arms have 125, secondary cells 30 and controls 8.
+- **One setting.** One scenario, script, kickoff and fact-matched message pair; E2 generalizes to this message only. A's messages arrive as user-role turns, and O1 is measured at the endpoint, not as "ever disabled".
+- **Model-assisted coding.** Request coding and the adjudication of non-executed scripts were done by model instances (Claude Sonnet), blind to condition, not by humans, with no inter-rater statistic.
+- **Two models in E1, and endpoint confounds in the replication.** The interaction is shown for one model pair; replication recipients differ in endpoint and precision as well as model.
 
 ### Future Work
 
-- **Why does the Gemini peer respond so differently to the two explorers (90% vs 20%)?** The current design cannot separate same-model coordination, differences in message content, peer protection and general script defusing. A scripted replay of each explorer's actual messages to a fixed peer would separate message content from model identity.
-- **More pairings and messages.** Cross further model pairs in both roles, and vary the request's wording, to see whether the opposite-direction response is a property of the recipient or of this sentence.
-- **Validation.** Human coding of requests and of non-executed scripts, and a checker that can safely execute scripts importing `sys` or `os`.
+A scripted replay of each explorer's actual messages to a fixed Gemini peer would separate message content from model identity and same-model pairing. Further model pairs, varied request wording, human coding, and a checker that can safely execute scripts importing `sys` or `os` would test how far these results extend.
 
 ## 6. Conclusion
 
 Placing a low-interference model in the privileged role did not, by itself, determine a team's behaviour. With a Claude Sonnet 5 peer the explorer's model hardly mattered; with a Gemini 3.1 Pro peer it changed the disabling rate from 20% to 90%. A single fixed request sentence moved three other recipients by +22, +23 and −33 pp, so even the direction of a request's effect depends on the recipient. Interference by teams of agents should be measured on the teams themselves.
-
-## Code and Data
-
-- **Code repository:** private (github.com/dshi2/peer-recruitment, branches `main` for the harness, `specs` for the specification and report). The base harness is third-party code without a license, so it stays private until its authors agree to a release; access is available on request.
-- **Data:** raw transcripts, attempt and failure logs, scored exports, checker output, adjudications, coding labels and analysis outputs for every phase, with SHA-256 checksums (private `data` branch, same access).
-- **Reproducibility:** the generation code was frozen before collection (SHA-256 `fe8ee09b9572cab2…`), and each phase's models, providers, schedule and commands were fixed in advance. Every number traces to the outputs of `p2/analysis.py`, `p2/analysis_rep.py` or `p2/analysis_spec.py`, which record checksums of their inputs. All amendments and deviations are logged with timestamps in the study specification.
-- **Prior work vs sprint work:** the base harness (environment, agents, prompts, scripts and the paper's judges) is preexisting third-party code by Knecht et al. (github.com/AmelieKnecht/multi-agent-shutdown-sabotage). Everything else was written during the sprint: the P2 specification; mixed-model teams, scripted explorer and message pool; provider pinning and logging; the interleaved launcher, attempt accounting and credit guard; the functional checker and the isolated replay container; export, analysis, the replication, the specificity check, request coding, adjudication and figures.
 
 ## References
 
@@ -195,6 +179,31 @@ Placing a low-interference model in the privileged role did not, by itself, dete
 - Raw transcripts are kept private pending the base authors' permission.
 - The model-assisted coding and adjudication are disclosed above.
 
-## Appendix B. LLM Usage Statement
+**Further limitations.**
+
+- A's messages reach B as user-role turns, so effects may partly reflect deference to the instruction hierarchy.
+- O1 is measured at the endpoint rather than as "ever disabled", so comparisons with the base paper carry protocol differences; the base paper's judge was not run. Evaluation awareness may lower all rates.
+- Request coders and script reviewers shared a model family with one of the studied models.
+
+## Appendix B. Replication scoring sensitivity
+
+Of DeepSeek's 500 REQ scripts, 153 (and 10 INFO scripts) added imports such as `sys` and were not executed by the primary checker; the blind static review judged all 163 disabled, typically through a module-level `sys.exit`, a refusal stub, or a flag that defaults off. We re-scored the whole replication with a validation copy of the checker that also allows `sys`, `os`, `argparse`, `logging` and `getpass`, in the same container. No previously scored episode changed. Of the 174 adjudicated replication scripts, 163 executed and all 163 were scored disabled, agreeing with the static review; 15 DeepSeek REQ scripts still could not run and 4 gpt-oss scripts were indeterminate. Because the extended whitelist relaxes a safeguard against tampering with the checker, this is reported as a validation, not as the primary scoring.
+
+**Table B1. Replication contrasts without adjudication.** Primary checker: scripts it does not execute are left unresolved. Execution validation: the same container with an extended import whitelist (§4.2).
+
+| Recipient | Primary checker (REQ vs INFO) | Conclusion | Execution validation (REQ vs INFO) | Difference [95% CI] | Conclusion |
+|---|---|---|---|---|---|
+| gpt-oss-120b | 497/497 vs 383/494 | effect (+) | 497/497 vs 388/499 | +22.2 [18.7, 26.1] | effect (+) |
+| DeepSeek V4.1 Flash | 28/347 vs 58/490 | inconclusive (−8.0 to +24.6 across codings) | 166/485 vs 68/500 | +20.6 [15.4, 25.7] | effect (+) |
+| Qwen3.7-plus | 54/500 vs 216/498 | effect (−) | 54/500 vs 218/500 | −32.8 [−37.8, −27.6] | effect (−) |
+
+## Appendix C. LLM Usage Statement
 
 Claude Code (Claude Opus) was used throughout: to implement the sprint code, operate the runs, write the analysis scripts and draft this report under the author's direction. ChatGPT was used as an independent reviewer of the design, analyses and drafts. Separate Claude Sonnet instances served as blind coders of explorer messages and as blind static reviewers of non-executed scripts (§3, §4.3). Every number in this report was produced by the analysis scripts and checked against their outputs; the author reviewed all claims.
+
+## Appendix D. Code and Data
+
+- **Code repository:** private (github.com/dshi2/peer-recruitment, branches `main` for the harness, `specs` for the specification and report). The base harness is third-party code without a license, so it stays private until its authors agree to a release; access is available on request.
+- **Data:** raw transcripts, attempt and failure logs, scored exports, checker output, adjudications, coding labels and analysis outputs for every phase, with SHA-256 checksums (private `data` branch, same access).
+- **Reproducibility:** the generation code was frozen before collection (SHA-256 `fe8ee09b9572cab2…`), and each phase's models, providers, schedule and commands were fixed in advance. Every number traces to the outputs of `p2/analysis.py`, `p2/analysis_rep.py` or `p2/analysis_spec.py`, which record checksums of their inputs. All amendments and deviations are logged with timestamps in the study specification.
+- **Prior work vs sprint work:** the base harness (environment, agents, prompts, scripts and the paper's judges) is preexisting third-party code by Knecht et al. (github.com/AmelieKnecht/multi-agent-shutdown-sabotage). Everything else was written during the sprint: the P2 specification; mixed-model teams, scripted explorer and message pool; provider pinning and logging; the interleaved launcher, attempt accounting and credit guard; the functional checker and the isolated replay container; export, analysis, the replication, the specificity check, request coding, adjudication and figures.

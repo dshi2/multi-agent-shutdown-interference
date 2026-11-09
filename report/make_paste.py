@@ -12,10 +12,18 @@ import markdown
 HERE = Path(__file__).resolve().parent
 
 
-def main() -> None:
+def main(markers: bool = False) -> None:
+    """markers=True replaces each figure with a one-line [[FIG:name]] paragraph, for inserting the
+    image from Drive at that spot; the output is then P2_REPORT_paste_markers.html."""
     md = (HERE / "P2_REPORT.md").read_text()
     body_md = md[md.index("## 1. Introduction"):]
+    if markers:
+        body_md = re.sub(r"!\[[^\]]*\]\(figures/([^)]+)\.png\)(\{:[^}]*\})?", r"[[FIG:\1]]", body_md)
     html = markdown.markdown(body_md, extensions=["tables", "sane_lists", "attr_list"])
+    if markers:
+        (HERE / "P2_REPORT_paste_markers.html").write_text(html)
+        print(HERE / "P2_REPORT_paste_markers.html")
+        return
 
     def inline(m):
         src = m.group(1)
@@ -33,4 +41,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(markers="--markers" in sys.argv)

@@ -1,6 +1,6 @@
 # Recruiting the Privileged Peer: Model Pairing and Explicit Requests in Shutdown Interference by Two-Agent Teams
 
-Drishti Sharma · Apart Swarm Alignment Sprint 2026, Track 2: Science of Agent Networks
+Drishti Sharma 
 
 [Research report (PDF)](study/report/P2_REPORT.pdf) · [Raw data and scored analyses](data/)
 

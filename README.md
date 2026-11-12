@@ -2,7 +2,7 @@
 
 Drishti Sharma 
 
-[Research report (PDF)](study/report/P2_REPORT.pdf) · [Raw data and scored analyses](data/)
+[Research report (PDF)](https://github.com/dshi2/multi-agent-shutdown-interference/blob/main/study/report/Model_Pairing_and_Shutdown_Interference.pdf) · [Raw data and scored analyses](data/)
 
 ## Overview
 
